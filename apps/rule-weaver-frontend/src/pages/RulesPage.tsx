@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { useRules } from '@/hooks/useRules';
-import RuleList from '@/components/rule/RuleList';
+import { useRules } from '@/features/rules/hooks/useRules';
+import RuleList from '@/features/rules/components/RuleList';
 import { RuleWithMeta } from '@/types/rule';
 import { useNavigate } from 'react-router-dom';
 

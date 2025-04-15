@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDeleteRule } from '@/hooks/useRules';
+import { useDeleteRule } from '@/features/rules/hooks/useRules';
 
 interface RuleListProps {
   rules: RuleWithMeta[];

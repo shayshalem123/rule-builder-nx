@@ -1,4 +1,4 @@
-import { RuleWithMeta } from "@/features/rules/types/rule";
+import { RuleWithMeta, Rule } from "@/features/rules/types/rule";
 
 // Initial mock data
 const mockRules: RuleWithMeta[] = [
@@ -6,9 +6,11 @@ const mockRules: RuleWithMeta[] = [
     id: "1",
     name: "Simple Rule",
     description: "Basic metadata name equals hello rule",
-    field: "metadata.name",
-    operator: "EQUALS",
-    value: "hello",
+    rule: {
+      field: "metadata.name",
+      operator: "EQUALS",
+      value: "hello",
+    },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -16,18 +18,20 @@ const mockRules: RuleWithMeta[] = [
     id: "2",
     name: "AND Rule Example",
     description: "Example of an AND rule with nested conditions",
-    AND: [
-      {
-        field: "metadata.name",
-        operator: "EQUALS",
-        value: "test",
-      },
-      {
-        field: "metadata.namespace",
-        operator: "EQUALS",
-        value: "default",
-      },
-    ],
+    rule: {
+      AND: [
+        {
+          field: "metadata.name",
+          operator: "EQUALS",
+          value: "test",
+        },
+        {
+          field: "metadata.namespace",
+          operator: "EQUALS",
+          value: "default",
+        },
+      ],
+    },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -35,18 +39,20 @@ const mockRules: RuleWithMeta[] = [
     id: "3",
     name: "OR Rule Example",
     description: "Example of an OR rule with nested conditions",
-    OR: [
-      {
-        field: "metadata.name",
-        operator: "CONTAINS",
-        value: "app",
-      },
-      {
-        field: "metadata.name",
-        operator: "CONTAINS",
-        value: "service",
-      },
-    ],
+    rule: {
+      OR: [
+        {
+          field: "metadata.name",
+          operator: "CONTAINS",
+          value: "app",
+        },
+        {
+          field: "metadata.name",
+          operator: "CONTAINS",
+          value: "service",
+        },
+      ],
+    },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -54,27 +60,29 @@ const mockRules: RuleWithMeta[] = [
     id: "4",
     name: "Complex Nested Rule",
     description: "A complex rule with multiple nested levels",
-    AND: [
-      {
-        field: "metadata.namespace",
-        operator: "EQUALS",
-        value: "production",
-      },
-      {
-        OR: [
-          {
-            field: "spec.replicas",
-            operator: "GREATER_THAN",
-            value: "2",
-          },
-          {
-            field: "metadata.labels.tier",
-            operator: "EQUALS",
-            value: "frontend",
-          },
-        ],
-      },
-    ],
+    rule: {
+      AND: [
+        {
+          field: "metadata.namespace",
+          operator: "EQUALS",
+          value: "production",
+        },
+        {
+          OR: [
+            {
+              field: "spec.replicas",
+              operator: "GREATER_THAN",
+              value: "2",
+            },
+            {
+              field: "metadata.labels.tier",
+              operator: "EQUALS",
+              value: "frontend",
+            },
+          ],
+        },
+      ],
+    },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -98,9 +106,7 @@ export const ruleService = {
   },
 
   // Create new rule
-  createRule: async (
-    rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
-  ): Promise<RuleWithMeta> => {
+  createRule: async (rule: Omit<Rule, "id">): Promise<RuleWithMeta> => {
     await delay(500);
     const newRule: RuleWithMeta = {
       ...rule,
@@ -115,7 +121,7 @@ export const ruleService = {
   // Update existing rule
   updateRule: async (
     id: string,
-    rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+    rule: Omit<Rule, "id">
   ): Promise<RuleWithMeta> => {
     await delay(500);
     const index = mockRules.findIndex((r) => r.id === id);

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BaseRule, RuleType, RuleWithMeta } from "@/features/rules/types/rule";
+import {
+  BaseRule,
+  RuleType,
+  RuleWithMeta,
+  Rule,
+} from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
 import { Textarea } from "@/shared/components/inputs/textarea";
@@ -25,16 +30,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     initialRule?.description || ""
   );
 
-  // Extract the rule logic part (without metadata like name, description)
+  // Extract the rule logic part
   const getInitialRuleLogic = (): RuleType => {
     if (!initialRule) return ruleUtils.createEmptyBaseRule();
-
-    const { name, description, createdAt, updatedAt, ...ruleLogic } =
-      initialRule;
-    return ruleLogic as RuleType;
+    return initialRule.rule || ruleUtils.createEmptyBaseRule();
   };
 
-  const [rule, setRule] = useState<RuleType>(getInitialRuleLogic());
+  const [ruleLogic, setRuleLogic] = useState<RuleType>(getInitialRuleLogic());
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -44,9 +46,9 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
     // Combine the rule logic with metadata
     const fullRule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt"> = {
-      ...rule,
       name,
       description: description.trim() ? description : undefined,
+      rule: ruleLogic,
     };
 
     onSave(fullRule);
@@ -96,13 +98,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
       <div className="border-t border-gray-200 pt-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">Rule</h3>
-        {ruleUtils.isBaseRule(rule) ? (
+        {ruleUtils.isBaseRule(ruleLogic) ? (
           <BaseRuleComponent
-            rule={rule}
-            onChange={(updatedRule) => setRule(updatedRule)}
+            rule={ruleLogic}
+            onChange={(updatedRule) => setRuleLogic(updatedRule)}
           />
         ) : (
-          <GroupRuleComponent rule={rule} onChange={setRule} />
+          <GroupRuleComponent rule={ruleLogic} onChange={setRuleLogic} />
         )}
       </div>
 

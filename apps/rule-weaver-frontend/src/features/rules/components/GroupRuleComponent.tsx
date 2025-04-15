@@ -49,7 +49,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
     : "bg-rule-or/10 border-rule-or/30";
   const groupTextColor = isAnd ? "text-rule-and" : "text-rule-or";
 
-  const handleAddRule = (type: "BASE" | "AND" | "OR") => {
+  const handleAddRule = (type: Rules) => {
     const newRules = [...rules, ruleMap[type]()];
     onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
   };

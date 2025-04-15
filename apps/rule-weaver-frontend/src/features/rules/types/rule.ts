@@ -7,19 +7,16 @@ export type Operator =
   | "LESS_THAN";
 
 export interface BaseRule {
-  id?: string;
   field: string;
   operator: Operator;
   value: string;
 }
 
 export interface AndRule {
-  id?: string;
   AND: RuleType[];
 }
 
 export interface OrRule {
-  id?: string;
   OR: RuleType[];
 }
 
@@ -27,9 +24,14 @@ export type RuleType = BaseRule | AndRule | OrRule;
 
 export type Rules = "BASE" | "AND" | "OR";
 
-export type RuleWithMeta = RuleType & {
-  name: string;
-  description?: string;
+export type RuleWithMeta = Rule & {
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type Rule = {
+  id?: string;
+  name: string;
+  description?: string;
+  rule: RuleType;
 };

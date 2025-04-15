@@ -1,24 +1,23 @@
-
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import RuleBuilder from '@/features/rules/components/RuleBuilder';
-import { useCreateRule } from '@/features/rules/hooks/useRules';
-import { RuleWithMeta } from '@/features/rules/types/rule';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import RuleBuilder from "@/features/rules/components/RuleBuilder";
+import { useCreateRule } from "@/features/rules/hooks/useRules";
+import { Rule } from "@/features/rules/types/rule";
 
 const CreateRulePage: React.FC = () => {
   const navigate = useNavigate();
   const createRuleMutation = useCreateRule();
 
-  const handleSave = (rule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleSave = (rule: Omit<Rule, "id">) => {
     createRuleMutation.mutate(rule, {
       onSuccess: () => {
-        navigate('/rules');
+        navigate("/rules");
       },
     });
   };
 
   const handleCancel = () => {
-    navigate('/rules');
+    navigate("/rules");
   };
 
   return (

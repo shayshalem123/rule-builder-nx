@@ -4,6 +4,7 @@ import {
   AndRule,
   OrRule,
   Operator,
+  Rule,
 } from "@/features/rules/types/rule";
 
 // Check if a rule is a base rule (with field, operator, value)
@@ -44,6 +45,15 @@ export const createEmptyAndRule = (): AndRule => ({
 // Create a new empty OR rule
 export const createEmptyOrRule = (): OrRule => ({
   OR: [createEmptyBaseRule()],
+});
+
+// Create a new empty rule with metadata
+export const createEmptyRule = (
+  ruleType: RuleType = createEmptyBaseRule()
+): Rule => ({
+  name: "",
+  description: "",
+  rule: ruleType,
 });
 
 // Deep clone a rule

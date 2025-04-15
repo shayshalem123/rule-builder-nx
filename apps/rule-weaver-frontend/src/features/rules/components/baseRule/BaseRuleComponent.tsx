@@ -62,7 +62,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in">
+    <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in w-full">
       <FieldInput value={rule.field} onChange={handleFieldChange} />
       <OperatorSelect value={rule.operator} onChange={handleOperatorChange} />
       <ValueInputContainer rule={rule} onChange={handleValueChange} />

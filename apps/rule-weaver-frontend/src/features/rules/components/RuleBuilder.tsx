@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/inputs/select";
-import GroupRuleComponent from "./GroupRuleComponent";
+import GroupRuleComponent from "./groupRule/GroupRuleComponent";
 import * as ruleUtils from "@/features/rules/utils/ruleUtils";
 import BaseRuleComponent from "./baseRule";
 import { ruleService } from "@/features/rules/services/ruleService";

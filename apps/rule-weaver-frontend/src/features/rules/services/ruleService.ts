@@ -54,12 +54,12 @@ const mockRules: RuleWithMeta[] = [
       OR: [
         {
           field: "metadata.name",
-          operator: "CONTAINS",
+          operator: "EQUALS",
           value: "app",
         },
         {
           field: "metadata.name",
-          operator: "CONTAINS",
+          operator: "EQUALS",
           value: "service",
         },
       ],
@@ -84,7 +84,7 @@ const mockRules: RuleWithMeta[] = [
           OR: [
             {
               field: "spec.replicas",
-              operator: "GREATER_THAN",
+              operator: "NOT_EQUALS",
               value: "2",
             },
             {

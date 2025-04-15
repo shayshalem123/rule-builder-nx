@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { AndRule, OrRule, RuleType, BaseRule } from '@/types/rule';
-import { Box, Stack, Group, Button, Text, ActionIcon } from '@mantine/core';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { Plus, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import BaseRuleComponent from './BaseRuleComponent';
 import { createEmptyBaseRule, isBaseRule, isAndRule, isOrRule } from '@/utils/ruleUtils';
 
@@ -20,7 +20,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   const isAnd = isAndRule(rule);
   const rules = isAnd ? rule.AND : rule.OR;
   const groupType = isAnd ? 'AND' : 'OR';
-  const groupColor = isAnd ? 'blue' : 'violet';
+  const groupColor = isAnd ? 'bg-rule-and/10 border-rule-and/30' : 'bg-rule-or/10 border-rule-or/30';
+  const groupTextColor = isAnd ? 'text-rule-and' : 'text-rule-or';
 
   const handleAddRule = () => {
     const newRules = [...rules, createEmptyBaseRule()];
@@ -51,32 +52,25 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   };
 
   return (
-    <Box 
-      p="md" 
-      style={{ 
-        borderRadius: 'var(--mantine-radius-md)', 
-        backgroundColor: isAnd ? 'rgba(51, 102, 255, 0.05)' : 'rgba(134, 76, 232, 0.05)',
-        border: '1px solid',
-        borderColor: isAnd ? 'rgba(51, 102, 255, 0.2)' : 'rgba(134, 76, 232, 0.2)',
-      }}
-    >
-      <Group justify="space-between" mb="md">
-        <Text fw={500} c={groupColor}>
+    <div className={`p-4 rounded-lg border ${groupColor} animate-fade-in`}>
+      <div className="flex justify-between items-center mb-3">
+        <div className={`font-medium ${groupTextColor}`}>
           {groupType} Group (all conditions {isAnd ? 'must' : 'can'} match)
-        </Text>
+        </div>
         {onDelete && (
-          <ActionIcon
-            variant="subtle"
-            color="red"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onDelete}
+            className="text-gray-500 hover:text-red-500"
             title={`Delete ${groupType} group`}
           >
-            <IconTrash size={18} />
-          </ActionIcon>
+            <Trash2 className="h-4 w-4" />
+          </Button>
         )}
-      </Group>
+      </div>
 
-      <Stack gap="md">
+      <div className="space-y-3">
         {rules.map((nestedRule, index) => {
           if (isBaseRule(nestedRule)) {
             return (
@@ -99,19 +93,20 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
           }
           return null;
         })}
-      </Stack>
+      </div>
 
-      <Group mt="md">
-        <Button 
-          variant="light" 
-          size="sm" 
-          leftSection={<IconPlus size={16} />}
+      <div className="mt-3 flex space-x-2">
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleAddRule}
+          className="flex items-center"
         >
+          <Plus className="h-4 w-4 mr-1" />
           Add Condition
         </Button>
-      </Group>
-    </Box>
+      </div>
+    </div>
   );
 };
 

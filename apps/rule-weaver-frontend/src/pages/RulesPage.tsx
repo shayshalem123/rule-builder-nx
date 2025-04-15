@@ -1,10 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRules } from '@/hooks/useRules';
 import RuleList from '@/components/rule/RuleList';
 import { RuleWithMeta } from '@/types/rule';
 import { useNavigate } from 'react-router-dom';
-import { Container } from '@mantine/core';
 
 const RulesPage: React.FC = () => {
   const { data: rules = [], isLoading, error } = useRules();
@@ -21,7 +20,7 @@ const RulesPage: React.FC = () => {
   };
 
   return (
-    <Container size="xl" py="md">
+    <div className="container mx-auto px-4 py-8">
       <RuleList
         rules={rules}
         isLoading={isLoading}
@@ -29,7 +28,7 @@ const RulesPage: React.FC = () => {
         onCreateRule={handleCreateRule}
         onEditRule={handleEditRule}
       />
-    </Container>
+    </div>
   );
 };
 

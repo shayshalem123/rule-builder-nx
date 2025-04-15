@@ -95,11 +95,12 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
       </div>
 
       <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">
-          Rule
-        </h3>
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Rule</h3>
         {ruleUtils.isBaseRule(rule) ? (
-          <BaseRuleComponent rule={rule} onChange={setRule} />
+          <BaseRuleComponent
+            rule={rule}
+            onChange={(updatedRule) => setRule(updatedRule)}
+          />
         ) : (
           <GroupRuleComponent rule={rule} onChange={setRule} />
         )}

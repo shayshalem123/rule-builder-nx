@@ -1,15 +1,36 @@
-
-import React from 'react';
-import { BaseRule, Operator } from '@/features/rules/types/rule';
-import { Trash2, Edit } from 'lucide-react';
-import { Button } from '@/shared/components/inputs/button';
-import { Input } from '@/shared/components/inputs/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/inputs/select';
-import { operators, fieldSuggestions } from '@/features/rules/utils/ruleUtils';
+import React from "react";
+import {
+  BaseRule,
+  Operator,
+  AndRule,
+  OrRule,
+} from "@/features/rules/types/rule";
+import { Trash2, Edit, Plus } from "lucide-react";
+import { Button } from "@/shared/components/inputs/button";
+import { Input } from "@/shared/components/inputs/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/inputs/select";
+import {
+  operators,
+  fieldSuggestions,
+  createEmptyAndRule,
+  createEmptyOrRule,
+} from "@/features/rules/utils/ruleUtils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/inputs/dropdown-menu";
 
 interface BaseRuleComponentProps {
   rule: BaseRule;
-  onChange: (updatedRule: BaseRule) => void;
+  onChange: (updatedRule: BaseRule | AndRule | OrRule) => void;
   onDelete?: () => void;
   showDelete?: boolean;
 }
@@ -30,6 +51,21 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
 
   const handleValueChange = (value: string) => {
     onChange({ ...rule, value });
+  };
+
+  const convertToGroup = (type: "AND" | "OR") => {
+    // Create a new group rule with the current rule as the first condition
+    const currentRuleCopy = { ...rule };
+
+    if (type === "AND") {
+      const andRule = createEmptyAndRule();
+      andRule.AND[0] = currentRuleCopy;
+      onChange(andRule);
+    } else {
+      const orRule = createEmptyOrRule();
+      orRule.OR[0] = currentRuleCopy;
+      onChange(orRule);
+    }
   };
 
   return (
@@ -76,8 +112,29 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
         />
       </div>
 
-      {showDelete && onDelete && (
-        <div className="flex items-end">
+      <div className="flex items-end gap-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-gray-500 hover:text-blue-500"
+              title="Add condition"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => convertToGroup("AND")}>
+              Convert to AND Group
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => convertToGroup("OR")}>
+              Convert to OR Group
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {showDelete && onDelete && (
           <Button
             variant="ghost"
             size="icon"
@@ -87,8 +144,8 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

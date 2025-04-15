@@ -1,10 +1,17 @@
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/shared/utils/cn";
+import { Book, Database } from "lucide-react";
 
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/shared/utils/utils';
-import { Book, Database } from 'lucide-react';
-
-const NavLink = ({ to, children, icon }: { to: string; children: React.ReactNode; icon: React.ReactNode }) => {
+const NavLink = ({
+  to,
+  children,
+  icon,
+}: {
+  to: string;
+  children: React.ReactNode;
+  icon: React.ReactNode;
+}) => {
   const location = useLocation();
   const isActive = location.pathname.startsWith(to);
 
@@ -12,10 +19,10 @@ const NavLink = ({ to, children, icon }: { to: string; children: React.ReactNode
     <Link
       to={to}
       className={cn(
-        'flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors',
+        "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors",
         isActive
-          ? 'bg-primary text-primary-foreground'
-          : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
+          ? "bg-primary text-primary-foreground"
+          : "text-gray-700 hover:bg-primary/10 hover:text-primary"
       )}
     >
       {icon}

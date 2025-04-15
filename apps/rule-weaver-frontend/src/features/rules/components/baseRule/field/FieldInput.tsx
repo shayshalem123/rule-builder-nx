@@ -4,13 +4,25 @@ import { Input } from "@/shared/components/inputs/input";
 import { cn } from "@/shared/utils/cn";
 import { noBlackBorderFocus } from "@/shared/utils/styles";
 import { ChevronDown } from "lucide-react";
+import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
+import useSchemaFields from "@/features/schemas/hooks/useSchemaFields";
 
 interface FieldInputProps {
   value: string;
   onChange: (value: string) => void;
+  category?: string;
 }
 
-const FieldInput: React.FC<FieldInputProps> = ({ value, onChange }) => {
+const FieldInput: React.FC<FieldInputProps> = ({
+  value,
+  onChange,
+  category = "partners-images",
+}) => {
+  const { schema } = useSchemaByCategory(category);
+  const { fieldPaths } = useSchemaFields(schema);
+
+  const suggestions = fieldPaths.length > 0 ? fieldPaths : fieldSuggestions;
+
   return (
     <div className="flex-1 min-w-[200px]">
       <label className="text-xs text-gray-500 mb-1 block">Field</label>
@@ -30,7 +42,7 @@ const FieldInput: React.FC<FieldInputProps> = ({ value, onChange }) => {
         {/* Custom styled dropdown icon */}
         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50 pointer-events-none" />
         <datalist id="field-suggestions">
-          {fieldSuggestions.map((field) => (
+          {suggestions.map((field) => (
             <option key={field} value={field} />
           ))}
         </datalist>

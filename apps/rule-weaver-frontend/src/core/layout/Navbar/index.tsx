@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Book, Database } from "lucide-react";
+import { Book, Database, FileJson } from "lucide-react";
 import NavLink from "./NavLink";
 import UserMenu from "./UserMenu";
 
@@ -18,6 +18,9 @@ const Navbar: React.FC = () => {
           <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
             <NavLink to="/rules" icon={<Book className="h-4 w-4" />}>
               Rules
+            </NavLink>
+            <NavLink to="/schemas" icon={<FileJson className="h-4 w-4" />}>
+              Schemas
             </NavLink>
           </nav>
         </div>

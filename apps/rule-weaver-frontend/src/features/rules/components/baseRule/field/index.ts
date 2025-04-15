@@ -1,4 +1,4 @@
-import FieldInput from './FieldInput';
+import FieldInput from "./FieldInput";
 
 export { FieldInput };
-export default FieldInput; 
+export default FieldInput;

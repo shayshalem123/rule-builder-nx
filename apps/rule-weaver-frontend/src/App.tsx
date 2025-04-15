@@ -9,6 +9,10 @@ import Layout from "./core/layout/Layout";
 import RulesPage from "./features/rules/pages/RulesPage";
 import CreateRulePage from "./features/rules/pages/CreateRulePage";
 import EditRulePage from "./features/rules/pages/EditRulePage";
+import SchemasPage from "./features/schemas/pages/SchemasPage";
+import CreateSchemaPage from "./features/schemas/pages/CreateSchemaPage";
+import EditSchemaPage from "./features/schemas/pages/EditSchemaPage";
+import SchemaDetailsPage from "./features/schemas/pages/SchemaDetailsPage";
 import { UserProvider } from "./features/users/contexts/UserContext";
 
 const queryClient = new QueryClient({
@@ -33,6 +37,10 @@ const App = () => (
               <Route path="/rules" element={<RulesPage />} />
               <Route path="/rules/create" element={<CreateRulePage />} />
               <Route path="/rules/edit/:id" element={<EditRulePage />} />
+              <Route path="/schemas" element={<SchemasPage />} />
+              <Route path="/schemas/create" element={<CreateSchemaPage />} />
+              <Route path="/schemas/edit/:id" element={<EditSchemaPage />} />
+              <Route path="/schemas/:id" element={<SchemaDetailsPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

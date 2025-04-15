@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BaseRule,
   RuleType,
   RuleWithMeta,
   Rule,
+  destinationOptions,
+  categoryOptions,
 } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
 import { Textarea } from "@/shared/components/inputs/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/inputs/select";
 import GroupRuleComponent from "./GroupRuleComponent";
 import * as ruleUtils from "@/features/rules/utils/ruleUtils";
 import BaseRuleComponent from "./BaseRuleComponent";
+import { ruleService } from "@/features/rules/services/ruleService";
 
 interface RuleBuilderProps {
   initialRule?: RuleWithMeta;
@@ -29,6 +39,42 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   const [description, setDescription] = useState(
     initialRule?.description || ""
   );
+  const [destination, setDestination] = useState(
+    initialRule?.destination || "A"
+  );
+  const [category, setCategory] = useState(
+    initialRule?.category || "partners-images"
+  );
+
+  const [destinations, setDestinations] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+
+  // Fetch options from the server
+  useEffect(() => {
+    const fetchOptions = async () => {
+      setIsLoadingOptions(true);
+      try {
+        const [fetchedDestinations, fetchedCategories] = await Promise.all([
+          ruleService.getDestinations(),
+          ruleService.getCategories(),
+        ]);
+
+        setDestinations(fetchedDestinations);
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+        // Fallback to hardcoded options
+        setDestinations(destinationOptions);
+        setCategories(categoryOptions);
+      } finally {
+        setIsLoadingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, []);
 
   // Extract the rule logic part
   const getInitialRuleLogic = (): RuleType => {
@@ -44,10 +90,22 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
       return;
     }
 
+    if (!destination) {
+      alert("Please select a destination");
+      return;
+    }
+
+    if (!category) {
+      alert("Please select a category");
+      return;
+    }
+
     // Combine the rule logic with metadata
     const fullRule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt"> = {
       name,
       description: description.trim() ? description : undefined,
+      destination,
+      category,
       rule: ruleLogic,
     };
 
@@ -78,6 +136,58 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             />
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="destination"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Destination *
+              </label>
+              <Select
+                value={destination}
+                onValueChange={setDestination}
+                disabled={isLoadingOptions}
+              >
+                <SelectTrigger id="destination">
+                  <SelectValue placeholder="Select destination" />
+                </SelectTrigger>
+                <SelectContent>
+                  {destinations.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Category *
+              </label>
+              <Select
+                value={category}
+                onValueChange={setCategory}
+                disabled={isLoadingOptions}
+              >
+                <SelectTrigger id="category">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div>
             <label
               htmlFor="description"
@@ -97,7 +207,9 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
       </div>
 
       <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">Rule</h3>
+        <h3 className="text-lg font-medium text-gray-800 mb-4">
+          Rule Condition
+        </h3>
         {ruleUtils.isBaseRule(ruleLogic) ? (
           <BaseRuleComponent
             rule={ruleLogic}
@@ -109,10 +221,23 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
       </div>
 
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-        <Button variant="outline" onClick={onCancel} disabled={isLoading}>
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          disabled={isLoading || isLoadingOptions}
+        >
           Cancel
         </Button>
-        <Button onClick={handleSave} disabled={isLoading || !name.trim()}>
+        <Button
+          onClick={handleSave}
+          disabled={
+            isLoading ||
+            isLoadingOptions ||
+            !name.trim() ||
+            !destination ||
+            !category
+          }
+        >
           {isLoading ? "Saving..." : "Save Rule"}
         </Button>
       </div>

@@ -33,5 +33,10 @@ export type Rule = {
   id?: string;
   name: string;
   description?: string;
+  destination: string;
+  category: string;
   rule: RuleType;
 };
+
+export const destinationOptions = ["A", "B"];
+export const categoryOptions = ["partners-images", "partners-algo"];

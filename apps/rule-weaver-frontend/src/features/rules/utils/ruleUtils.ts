@@ -53,6 +53,8 @@ export const createEmptyRule = (
 ): Rule => ({
   name: "",
   description: "",
+  destination: "A", // Default destination
+  category: "partners-images", // Default category
   rule: ruleType,
 });
 

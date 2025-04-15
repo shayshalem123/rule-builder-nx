@@ -1,4 +1,9 @@
-import { RuleWithMeta, Rule } from "@/features/rules/types/rule";
+import {
+  RuleWithMeta,
+  Rule,
+  destinationOptions,
+  categoryOptions,
+} from "@/features/rules/types/rule";
 
 // Initial mock data
 const mockRules: RuleWithMeta[] = [
@@ -6,6 +11,8 @@ const mockRules: RuleWithMeta[] = [
     id: "1",
     name: "Simple Rule",
     description: "Basic metadata name equals hello rule",
+    destination: "A",
+    category: "partners-images",
     rule: {
       field: "metadata.name",
       operator: "EQUALS",
@@ -18,6 +25,8 @@ const mockRules: RuleWithMeta[] = [
     id: "2",
     name: "AND Rule Example",
     description: "Example of an AND rule with nested conditions",
+    destination: "B",
+    category: "partners-algo",
     rule: {
       AND: [
         {
@@ -39,6 +48,8 @@ const mockRules: RuleWithMeta[] = [
     id: "3",
     name: "OR Rule Example",
     description: "Example of an OR rule with nested conditions",
+    destination: "A",
+    category: "partners-algo",
     rule: {
       OR: [
         {
@@ -60,6 +71,8 @@ const mockRules: RuleWithMeta[] = [
     id: "4",
     name: "Complex Nested Rule",
     description: "A complex rule with multiple nested levels",
+    destination: "B",
+    category: "partners-images",
     rule: {
       AND: [
         {
@@ -148,5 +161,17 @@ export const ruleService = {
       throw new Error(`Rule with id ${id} not found`);
     }
     mockRules.splice(index, 1);
+  },
+
+  // Get available destination options
+  getDestinations: async (): Promise<string[]> => {
+    await delay(300);
+    return [...destinationOptions];
+  },
+
+  // Get available category options
+  getCategories: async (): Promise<string[]> => {
+    await delay(300);
+    return [...categoryOptions];
   },
 };

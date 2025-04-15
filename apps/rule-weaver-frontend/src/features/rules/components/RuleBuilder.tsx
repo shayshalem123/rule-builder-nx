@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RuleType, RuleWithMeta } from "@/features/rules/types/rule";
+import { BaseRule, RuleType, RuleWithMeta } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
 import { Textarea } from "@/shared/components/inputs/textarea";
@@ -99,9 +99,9 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           Rule
         </h3>
         {ruleUtils.isBaseRule(rule) ? (
-          <BaseRuleComponent rule={rule as any} onChange={setRule} />
+          <BaseRuleComponent rule={rule} onChange={setRule} />
         ) : (
-          <GroupRuleComponent rule={rule as any} onChange={setRule} />
+          <GroupRuleComponent rule={rule} onChange={setRule} />
         )}
       </div>
 

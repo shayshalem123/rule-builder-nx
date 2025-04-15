@@ -1,5 +1,5 @@
 import React from "react";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, UserRound } from "lucide-react";
 import { useUser } from "@/features/users/contexts/UserContext";
 import {
   DropdownMenu,
@@ -31,8 +31,8 @@ const UserMenu: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
         <Avatar className="h-8 w-8">
-          <AvatarFallback className="bg-gray-500 text-white flex items-center justify-center">
-            <UserIcon className="h-5 w-5" />
+          <AvatarFallback className="bg-slate-600 text-white flex items-center justify-center">
+            <UserRound className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
         <span className="text-sm font-medium">{currentUser.name}</span>

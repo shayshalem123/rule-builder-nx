@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { X, AlertTriangle } from "lucide-react";
 import { Badge } from "@/shared/components/inputs/badge";
+import { toast } from "sonner";
 
 interface ArrayValueInputProps {
   values: string[];
@@ -16,9 +17,22 @@ const ArrayValueInput: React.FC<ArrayValueInputProps> = ({
   const handleAddValue = () => {
     if (!inputValue.trim()) return;
 
-    const newValues = [...values, inputValue.trim()];
-    onChange(newValues);
-    setInputValue(""); // Clear input after adding
+    const trimmedValue = inputValue.trim();
+
+    if (values.includes(trimmedValue)) {
+      toast("Duplicate value detected", {
+        description: "This value already exists in the list",
+        icon: <AlertTriangle className="h-5 w-5 text-amber-500" />,
+        className: "bg-amber-50 border-amber-200 text-amber-700",
+        duration: 3000,
+      });
+      setInputValue("");
+
+      return;
+    }
+
+    onChange([...values, trimmedValue]);
+    setInputValue("");
   };
 
   const handleRemoveValue = (index: number) => {
@@ -31,7 +45,6 @@ const ArrayValueInput: React.FC<ArrayValueInputProps> = ({
       <div
         className="flex flex-wrap items-center gap-1 p-2 border rounded-md focus-within:ring-2 focus-within:ring-offset-0 focus-within:ring-blue-500 focus-within:border-blue-500 min-h-[38px]"
         onClick={() => {
-          // Focus the input when clicking anywhere in the container
           const input = document.getElementById("array-input");
           if (input) input.focus();
         }}
@@ -69,7 +82,6 @@ const ArrayValueInput: React.FC<ArrayValueInputProps> = ({
               !inputValue &&
               values.length > 0
             ) {
-              // Remove the last tag when pressing backspace in an empty input
               handleRemoveValue(values.length - 1);
             }
           }}

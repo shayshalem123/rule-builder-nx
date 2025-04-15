@@ -17,8 +17,10 @@ const GroupRuleContent: React.FC<GroupRuleContentProps> = ({
   return (
     <div
       id={`group-content-${groupType}`}
-      className={`overflow-visible transition-all duration-300 ${
-        isCollapsed ? "max-h-0 opacity-0" : "max-h-[5000px] opacity-100 pb-3"
+      className={`transition-all duration-300 ${
+        isCollapsed
+          ? "max-h-0 opacity-0 overflow-hidden pointer-events-none absolute invisible"
+          : "max-h-[5000px] opacity-100 pb-3 relative visible"
       }`}
       aria-hidden={isCollapsed}
     >

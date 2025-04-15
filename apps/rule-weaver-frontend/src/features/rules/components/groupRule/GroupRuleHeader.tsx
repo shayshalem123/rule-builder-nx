@@ -51,20 +51,17 @@ const GroupRuleHeader: React.FC<GroupRuleHeaderProps> = ({
             className={`h-4 w-4 mr-2 ${groupTextColor} transition-transform duration-200`}
           />
         )}
-        <div className={`font-medium ${groupTextColor}`}>
+        <div className={`font-medium ${groupTextColor} pointer-events-none`}>
           {groupType} Group
-          <span className="hidden sm:inline">
+          <span className="hidden sm:inline pointer-events-none">
             {" "}
             (all conditions {isAnd ? "must" : "can"} match)
           </span>
-          <span className="ml-2 text-xs text-gray-500 font-normal">
+          <span className="ml-2 text-xs text-gray-500 font-normal pointer-events-none">
             {rulesCount} condition{rulesCount !== 1 ? "s" : ""}
           </span>
           {isCollapsed && (
-            <span
-              className="ml-2 text-xs text-gray-500 italic"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span className="ml-2 text-xs text-gray-500 italic pointer-events-none">
               Click to expand
             </span>
           )}

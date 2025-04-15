@@ -109,7 +109,9 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   );
 
   return (
-    <div className={`rounded-lg border ${groupColor} animate-fade-in w-full`}>
+    <div
+      className={`rounded-lg border ${groupColor} animate-fade-in w-full relative`}
+    >
       <GroupRuleHeader
         isCollapsed={isCollapsed}
         isAnd={isAnd}

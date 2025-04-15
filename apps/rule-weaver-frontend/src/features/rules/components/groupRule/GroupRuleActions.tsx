@@ -25,7 +25,7 @@ const GroupRuleActions: React.FC<GroupRuleActionsProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 z-10">
       {!isCollapsed && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -33,6 +33,7 @@ const GroupRuleActions: React.FC<GroupRuleActionsProps> = ({
               variant="ghost"
               size="sm"
               className="h-7 px-2 hover:bg-white/30"
+              onClick={(e) => e.stopPropagation()}
             >
               <Plus className="h-4 w-4 mr-1" />
               Add

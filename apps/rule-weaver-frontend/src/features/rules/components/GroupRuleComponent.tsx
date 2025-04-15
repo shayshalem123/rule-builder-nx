@@ -1,10 +1,27 @@
-
-import React from 'react';
-import { AndRule, OrRule, RuleType, BaseRule } from '@/features/rules/types/rule';
-import { Plus, Trash2 } from 'lucide-react';
-import { Button } from '@/shared/components/inputs/button';
-import BaseRuleComponent from './BaseRuleComponent';
-import { createEmptyBaseRule, isBaseRule, isAndRule, isOrRule } from '@/features/rules/utils/ruleUtils';
+import React from "react";
+import {
+  AndRule,
+  OrRule,
+  RuleType,
+  BaseRule,
+} from "@/features/rules/types/rule";
+import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/shared/components/inputs/button";
+import BaseRuleComponent from "./BaseRuleComponent";
+import {
+  createEmptyBaseRule,
+  createEmptyAndRule,
+  createEmptyOrRule,
+  isBaseRule,
+  isAndRule,
+  isOrRule,
+} from "@/features/rules/utils/ruleUtils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/inputs/dropdown-menu";
 
 interface GroupRuleComponentProps {
   rule: AndRule | OrRule;
@@ -19,23 +36,31 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
 }) => {
   const isAnd = isAndRule(rule);
   const rules = isAnd ? rule.AND : rule.OR;
-  const groupType = isAnd ? 'AND' : 'OR';
-  const groupColor = isAnd ? 'bg-rule-and/10 border-rule-and/30' : 'bg-rule-or/10 border-rule-or/30';
-  const groupTextColor = isAnd ? 'text-rule-and' : 'text-rule-or';
+  const groupType = isAnd ? "AND" : "OR";
+  const groupColor = isAnd
+    ? "bg-rule-and/10 border-rule-and/30"
+    : "bg-rule-or/10 border-rule-or/30";
+  const groupTextColor = isAnd ? "text-rule-and" : "text-rule-or";
 
-  const handleAddRule = () => {
+  const handleAddBaseRule = () => {
     const newRules = [...rules, createEmptyBaseRule()];
-    onChange(
-      isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-    );
+    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
+  };
+
+  const handleAddAndRule = () => {
+    const newRules = [...rules, createEmptyAndRule()];
+    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
+  };
+
+  const handleAddOrRule = () => {
+    const newRules = [...rules, createEmptyOrRule()];
+    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
   };
 
   const handleRuleChange = (index: number, updatedRule: RuleType) => {
     const newRules = [...rules];
     newRules[index] = updatedRule;
-    onChange(
-      isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-    );
+    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
   };
 
   const handleRuleDelete = (index: number) => {
@@ -43,19 +68,17 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
       onDelete?.();
       return;
     }
-    
+
     const newRules = [...rules];
     newRules.splice(index, 1);
-    onChange(
-      isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-    );
+    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
   };
 
   return (
     <div className={`p-4 rounded-lg border ${groupColor} animate-fade-in`}>
       <div className="flex justify-between items-center mb-3">
         <div className={`font-medium ${groupTextColor}`}>
-          {groupType} Group (all conditions {isAnd ? 'must' : 'can'} match)
+          {groupType} Group (all conditions {isAnd ? "must" : "can"} match)
         </div>
         {onDelete && (
           <Button
@@ -77,7 +100,9 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
               <BaseRuleComponent
                 key={index}
                 rule={nestedRule}
-                onChange={(updatedRule: BaseRule) => handleRuleChange(index, updatedRule)}
+                onChange={(updatedRule: BaseRule) =>
+                  handleRuleChange(index, updatedRule)
+                }
                 onDelete={() => handleRuleDelete(index)}
               />
             );
@@ -96,15 +121,28 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
       </div>
 
       <div className="mt-3 flex space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleAddRule}
-          className="flex items-center"
-        >
-          <Plus className="h-4 w-4 mr-1" />
-          Add Condition
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="flex items-center">
+              <Plus className="h-4 w-4 mr-1" />
+              Add Condition
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem onClick={handleAddBaseRule}>
+              Condition
+            </DropdownMenuItem>
+            {!isAnd ? (
+              <DropdownMenuItem onClick={handleAddAndRule}>
+                AND Group
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={handleAddOrRule}>
+                OR Group
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

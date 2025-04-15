@@ -20,7 +20,7 @@ export interface OrRule {
 
 export type RuleType = BaseRule | AndRule | OrRule;
 
-export interface RuleWithMeta extends RuleType {
+export type RuleWithMeta =  RuleType & {
   name: string;
   description?: string;
   createdAt?: string;

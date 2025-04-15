@@ -96,7 +96,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
       <div className="border-t border-gray-200 pt-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">
-          Rule Configuration
+          Rule
         </h3>
         {ruleUtils.isBaseRule(rule) ? (
           <BaseRuleComponent rule={rule as any} onChange={setRule} />

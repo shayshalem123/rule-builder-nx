@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRules } from '@/hooks/useRules';
 import RuleList from '@/components/rule/RuleList';
 import { RuleWithMeta } from '@/types/rule';
@@ -20,15 +20,13 @@ const RulesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <RuleList
-        rules={rules}
-        isLoading={isLoading}
-        error={error as Error}
-        onCreateRule={handleCreateRule}
-        onEditRule={handleEditRule}
-      />
-    </div>
+    <RuleList
+      rules={rules}
+      isLoading={isLoading}
+      error={error as Error}
+      onCreateRule={handleCreateRule}
+      onEditRule={handleEditRule}
+    />
   );
 };
 

@@ -4,8 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import RuleBuilder from '@/components/rule/RuleBuilder';
 import { useRule, useUpdateRule } from '@/hooks/useRules';
 import { RuleWithMeta } from '@/types/rule';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Container, Paper, Loader, Text, Group, Button } from '@mantine/core';
+import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
 
 const EditRulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,43 +32,42 @@ const EditRulePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="animate-pulse max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-sm border">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-          <div className="space-y-4">
-            <div className="h-10 bg-gray-200 rounded"></div>
-            <div className="h-24 bg-gray-200 rounded"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
+      <Container size="xl" py="xl">
+        <Paper p="xl" withBorder>
+          <Group justify="center" py="xl">
+            <Loader size="lg" />
+          </Group>
+        </Paper>
+      </Container>
     );
   }
 
   if (error || !rule) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <div className="flex flex-col items-center text-red-500 py-12">
-          <AlertCircle className="h-12 w-12 mb-4" />
-          <h3 className="text-lg font-medium">Error loading rule</h3>
-          <p className="mt-1">{error?.message || 'Rule not found'}</p>
-          <Button variant="outline" className="mt-4" onClick={() => navigate('/rules')}>
-            Back to Rules
-          </Button>
-        </div>
-      </div>
+      <Container size="xl" py="xl" ta="center">
+        <Paper p="xl" withBorder>
+          <Group direction="column" position="center" spacing="md">
+            <IconAlertCircle size={48} color="red" />
+            <Text size="lg" fw={500} c="red">Error loading rule</Text>
+            <Text c="dimmed">{error?.message || 'Rule not found'}</Text>
+            <Button variant="outline" onClick={() => navigate('/rules')} leftIcon={<IconArrowLeft size={16} />}>
+              Back to Rules
+            </Button>
+          </Group>
+        </Paper>
+      </Container>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <Container size="xl" py="md">
       <RuleBuilder
         initialRule={rule}
         onSave={handleSave}
         onCancel={handleCancel}
         isLoading={updateRuleMutation.isPending}
       />
-    </div>
+    </Container>
   );
 };
 

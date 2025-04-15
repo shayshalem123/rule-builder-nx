@@ -1,10 +1,8 @@
 
 import React from 'react';
 import { BaseRule, Operator } from '@/types/rule';
-import { Trash2, Edit } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Group, TextInput, Select, ActionIcon, Box, Stack } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 import { operators, fieldSuggestions } from '@/utils/ruleUtils';
 
 interface BaseRuleComponentProps {
@@ -24,8 +22,10 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
     onChange({ ...rule, field: value });
   };
 
-  const handleOperatorChange = (value: string) => {
-    onChange({ ...rule, operator: value as Operator });
+  const handleOperatorChange = (value: string | null) => {
+    if (value) {
+      onChange({ ...rule, operator: value as Operator });
+    }
   };
 
   const handleValueChange = (value: string) => {
@@ -33,63 +33,46 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in">
-      <div className="flex-1 min-w-[200px]">
-        <label className="text-xs text-gray-500 mb-1 block">Field</label>
-        <Input
-          list="field-suggestions"
-          value={rule.field}
-          onChange={(e) => handleFieldChange(e.target.value)}
-          placeholder="Enter field path (e.g. metadata.name)"
-          className="w-full"
-        />
-        <datalist id="field-suggestions">
-          {fieldSuggestions.map((field) => (
-            <option key={field} value={field} />
-          ))}
-        </datalist>
-      </div>
-
-      <div className="w-[140px]">
-        <label className="text-xs text-gray-500 mb-1 block">Operator</label>
-        <Select value={rule.operator} onValueChange={handleOperatorChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select operator" />
-          </SelectTrigger>
-          <SelectContent>
-            {operators.map((op) => (
-              <SelectItem key={op.value} value={op.value}>
-                {op.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="flex-1 min-w-[200px]">
-        <label className="text-xs text-gray-500 mb-1 block">Value</label>
-        <Input
-          value={rule.value}
-          onChange={(e) => handleValueChange(e.target.value)}
-          placeholder="Enter value"
-          className="w-full"
-        />
-      </div>
-
-      {showDelete && onDelete && (
-        <div className="flex items-end">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onDelete}
-            className="text-gray-500 hover:text-red-500"
-            title="Delete rule"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-    </div>
+    <Box p="md" bg="gray.0" sx={{ border: '1px solid', borderColor: 'gray.3', borderRadius: 'md' }}>
+      <Stack spacing="sm">
+        <Group grow align="flex-start">
+          <TextInput
+            label="Field"
+            value={rule.field}
+            onChange={(e) => handleFieldChange(e.target.value)}
+            placeholder="Enter field path (e.g. metadata.name)"
+            data-list="field-suggestions"
+          />
+          
+          <Select
+            label="Operator"
+            value={rule.operator}
+            onChange={handleOperatorChange}
+            data={operators.map(op => ({ value: op.value, label: op.label }))}
+            placeholder="Select operator"
+          />
+          
+          <TextInput
+            label="Value"
+            value={rule.value}
+            onChange={(e) => handleValueChange(e.target.value)}
+            placeholder="Enter value"
+          />
+          
+          {showDelete && onDelete && (
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={onDelete}
+              title="Delete rule"
+              mt={28}
+            >
+              <IconTrash size={20} />
+            </ActionIcon>
+          )}
+        </Group>
+      </Stack>
+    </Box>
   );
 };
 

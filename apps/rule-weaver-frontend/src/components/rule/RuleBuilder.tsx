@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { RuleType, BaseRule, AndRule, OrRule, RuleWithMeta } from '@/types/rule';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  TextInput, Textarea, Button, Paper, Title, Tabs, 
+  Stack, Group, Box, Space
+} from '@mantine/core';
 import BaseRuleComponent from './BaseRuleComponent';
 import GroupRuleComponent from './GroupRuleComponent';
 import {
@@ -36,8 +36,19 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   const getInitialRuleLogic = (): RuleType => {
     if (!initialRule) return createEmptyBaseRule();
     
-    const { name, description, createdAt, updatedAt, ...ruleLogic } = initialRule;
-    return ruleLogic;
+    if (initialRule.field && initialRule.operator && initialRule.value !== undefined) {
+      return {
+        field: initialRule.field,
+        operator: initialRule.operator,
+        value: initialRule.value,
+      } as BaseRule;
+    } else if (initialRule.AND) {
+      return { AND: initialRule.AND } as AndRule;
+    } else if (initialRule.OR) {
+      return { OR: initialRule.OR } as OrRule;
+    }
+    
+    return createEmptyBaseRule();
   };
   
   const [rule, setRule] = useState<RuleType>(getInitialRuleLogic());
@@ -49,16 +60,34 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     }
     
     // Combine the rule logic with metadata
-    const fullRule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'> = {
-      ...rule,
-      name,
-      description: description.trim() ? description : undefined,
-    };
+    let fullRule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>;
+    
+    if (isBaseRule(rule)) {
+      fullRule = {
+        name,
+        description: description.trim() ? description : undefined,
+        field: rule.field,
+        operator: rule.operator,
+        value: rule.value,
+      };
+    } else if (isAndRule(rule)) {
+      fullRule = {
+        name,
+        description: description.trim() ? description : undefined,
+        AND: rule.AND,
+      };
+    } else {
+      fullRule = {
+        name,
+        description: description.trim() ? description : undefined,
+        OR: rule.OR,
+      };
+    }
     
     onSave(fullRule);
   };
   
-  const handleRuleTypeChange = (type: 'BASE' | 'AND' | 'OR') => {
+  const handleRuleTypeChange = (type: string) => {
     if (type === 'BASE') {
       setRule(createEmptyBaseRule());
     } else if (type === 'AND') {
@@ -77,100 +106,95 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   };
   
   return (
-    <div className="space-y-6 max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-sm border">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800">
+    <Paper p="lg" radius="md" withBorder>
+      <Stack spacing="lg">
+        <Title order={2} size="h3">
           {initialRule ? 'Edit Rule' : 'Create New Rule'}
-        </h2>
+        </Title>
         
-        <div className="space-y-3">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Rule Name *
-            </label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter a descriptive name for this rule"
-              required
-            />
-          </div>
+        <Stack spacing="md">
+          <TextInput
+            label="Rule Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter a descriptive name for this rule"
+            required
+            withAsterisk
+          />
           
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description (optional)
-            </label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the purpose of this rule"
-              rows={3}
-            />
-          </div>
-        </div>
-      </div>
-      
-      <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">Rule Configuration</h3>
+          <Textarea
+            label="Description (optional)"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe the purpose of this rule"
+            minRows={3}
+          />
+        </Stack>
         
-        <Tabs value={getCurrentRuleType()} onValueChange={handleRuleTypeChange as any}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="BASE">Simple Rule</TabsTrigger>
-            <TabsTrigger value="AND">AND Group</TabsTrigger>
-            <TabsTrigger value="OR">OR Group</TabsTrigger>
-          </TabsList>
+        <Box pt="md">
+          <Title order={3} size="h4" mb="md">
+            Rule Configuration
+          </Title>
           
-          <TabsContent value="BASE">
-            {isBaseRule(rule) && (
-              <BaseRuleComponent
-                rule={rule}
-                onChange={setRule as (rule: BaseRule) => void}
-                showDelete={false}
-              />
-            )}
-          </TabsContent>
-          
-          <TabsContent value="AND">
-            {isAndRule(rule) ? (
-              <GroupRuleComponent
-                rule={rule}
-                onChange={setRule as (rule: AndRule) => void}
-              />
-            ) : (
-              <GroupRuleComponent
-                rule={createEmptyAndRule()}
-                onChange={setRule as (rule: AndRule) => void}
-              />
-            )}
-          </TabsContent>
-          
-          <TabsContent value="OR">
-            {isOrRule(rule) ? (
-              <GroupRuleComponent
-                rule={rule}
-                onChange={setRule as (rule: OrRule) => void}
-              />
-            ) : (
-              <GroupRuleComponent
-                rule={createEmptyOrRule()}
-                onChange={setRule as (rule: OrRule) => void}
-              />
-            )}
-          </TabsContent>
-        </Tabs>
-      </div>
-      
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-        <Button variant="outline" onClick={onCancel} disabled={isLoading}>
-          Cancel
-        </Button>
-        <Button onClick={handleSave} disabled={isLoading || !name.trim()}>
-          {isLoading ? 'Saving...' : 'Save Rule'}
-        </Button>
-      </div>
-    </div>
+          <Tabs value={getCurrentRuleType()} onChange={handleRuleTypeChange}>
+            <Tabs.List>
+              <Tabs.Tab value="BASE">Simple Rule</Tabs.Tab>
+              <Tabs.Tab value="AND">AND Group</Tabs.Tab>
+              <Tabs.Tab value="OR">OR Group</Tabs.Tab>
+            </Tabs.List>
+            
+            <Space h="md" />
+            
+            <Tabs.Panel value="BASE">
+              {isBaseRule(rule) && (
+                <BaseRuleComponent
+                  rule={rule}
+                  onChange={setRule as (rule: BaseRule) => void}
+                  showDelete={false}
+                />
+              )}
+            </Tabs.Panel>
+            
+            <Tabs.Panel value="AND">
+              {isAndRule(rule) ? (
+                <GroupRuleComponent
+                  rule={rule}
+                  onChange={setRule as (rule: AndRule) => void}
+                />
+              ) : (
+                <GroupRuleComponent
+                  rule={createEmptyAndRule()}
+                  onChange={setRule as (rule: AndRule) => void}
+                />
+              )}
+            </Tabs.Panel>
+            
+            <Tabs.Panel value="OR">
+              {isOrRule(rule) ? (
+                <GroupRuleComponent
+                  rule={rule}
+                  onChange={setRule as (rule: OrRule) => void}
+                />
+              ) : (
+                <GroupRuleComponent
+                  rule={createEmptyOrRule()}
+                  onChange={setRule as (rule: OrRule) => void}
+                />
+              )}
+            </Tabs.Panel>
+          </Tabs>
+        </Box>
+        
+        <Group position="right" spacing="sm" mt="md">
+          <Button variant="outline" onClick={onCancel} disabled={isLoading}>
+            Cancel
+          </Button>
+          <Button onClick={handleSave} disabled={isLoading || !name.trim()} loading={isLoading}>
+            {isLoading ? 'Saving...' : 'Save Rule'}
+          </Button>
+        </Group>
+      </Stack>
+    </Paper>
   );
 };
 

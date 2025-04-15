@@ -10,19 +10,26 @@ export interface BaseRule {
 
 export interface AndRule {
   id?: string;
-  AND: (RuleType)[];
+  AND: RuleType[];
 }
 
 export interface OrRule {
   id?: string;
-  OR: (RuleType)[];
+  OR: RuleType[];
 }
 
 export type RuleType = BaseRule | AndRule | OrRule;
 
-export interface RuleWithMeta extends RuleType {
+// Separate from RuleType to avoid extending RuleType directly
+export interface RuleWithMeta {
+  id?: string;
   name: string;
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  field?: string;
+  operator?: Operator;
+  value?: string;
+  AND?: RuleType[];
+  OR?: RuleType[];
 }

@@ -4,6 +4,13 @@ import {
   destinationOptions,
   categoryOptions,
 } from "@/features/rules/types/rule";
+import { User } from "@/features/users/types/user";
+
+// Default user for mock data
+const defaultUser = {
+  id: "1",
+  name: "Jane Doe",
+};
 
 // Initial mock data
 const mockRules: RuleWithMeta[] = [
@@ -20,6 +27,8 @@ const mockRules: RuleWithMeta[] = [
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
   },
   {
     id: "2",
@@ -43,6 +52,8 @@ const mockRules: RuleWithMeta[] = [
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
   },
   {
     id: "3",
@@ -66,6 +77,8 @@ const mockRules: RuleWithMeta[] = [
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
   },
   {
     id: "4",
@@ -98,6 +111,8 @@ const mockRules: RuleWithMeta[] = [
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
   },
 ];
 
@@ -119,13 +134,18 @@ export const ruleService = {
   },
 
   // Create new rule
-  createRule: async (rule: Omit<Rule, "id">): Promise<RuleWithMeta> => {
+  createRule: async (
+    rule: Omit<Rule, "id">,
+    user: User
+  ): Promise<RuleWithMeta> => {
     await delay(500);
     const newRule: RuleWithMeta = {
       ...rule,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      createdBy: { id: user.id, name: user.name },
+      updatedBy: { id: user.id, name: user.name },
     };
     mockRules.push(newRule);
     return newRule;
@@ -134,7 +154,8 @@ export const ruleService = {
   // Update existing rule
   updateRule: async (
     id: string,
-    rule: Omit<Rule, "id">
+    rule: Omit<Rule, "id">,
+    user: User
   ): Promise<RuleWithMeta> => {
     await delay(500);
     const index = mockRules.findIndex((r) => r.id === id);
@@ -146,7 +167,9 @@ export const ruleService = {
       ...rule,
       id,
       createdAt: mockRules[index].createdAt,
+      createdBy: mockRules[index].createdBy,
       updatedAt: new Date().toISOString(),
+      updatedBy: { id: user.id, name: user.name },
     };
 
     mockRules[index] = updatedRule;

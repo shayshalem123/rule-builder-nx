@@ -1,9 +1,8 @@
-
-import React, { useState } from 'react';
-import { RuleWithMeta } from '@/features/rules/types/rule';
-import { Button } from '@/shared/components/inputs/button';
-import { Plus, AlertCircle } from 'lucide-react';
-import RuleCard from './RuleCard';
+import React, { useState } from "react";
+import { RuleWithMeta } from "@/features/rules/types/rule";
+import { Button } from "@/shared/components/inputs/button";
+import { Plus, AlertCircle } from "lucide-react";
+import RuleCard from "./ruleCard/RuleCard";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/inputs/alert-dialog";
-import { useDeleteRule } from '@/features/rules/hooks/useRules';
+import { useDeleteRule } from "@/features/rules/hooks/useRules";
 
 interface RuleListProps {
   rules: RuleWithMeta[];
@@ -63,7 +62,11 @@ const RuleList: React.FC<RuleListProps> = ({
           <AlertCircle className="h-12 w-12 mb-4" />
           <h3 className="text-lg font-medium">Error loading rules</h3>
           <p className="mt-1">{error.message}</p>
-          <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => window.location.reload()}
+          >
             Retry
           </Button>
         </div>
@@ -83,15 +86,19 @@ const RuleList: React.FC<RuleListProps> = ({
 
       {rules.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-          <h3 className="text-lg font-medium text-gray-600 mb-2">No rules found</h3>
-          <p className="text-gray-500 mb-4">Get started by creating your first rule.</p>
+          <h3 className="text-lg font-medium text-gray-600 mb-2">
+            No rules found
+          </h3>
+          <p className="text-gray-500 mb-4">
+            Get started by creating your first rule.
+          </p>
           <Button onClick={onCreateRule} className="flex items-center mx-auto">
             <Plus className="h-4 w-4 mr-1" />
             Create Rule
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {rules.map((rule) => (
             <RuleCard
               key={rule.id}
@@ -103,17 +110,24 @@ const RuleList: React.FC<RuleListProps> = ({
         </div>
       )}
 
-      <AlertDialog open={!!ruleToDelete} onOpenChange={(open) => !open && setRuleToDelete(null)}>
+      <AlertDialog
+        open={!!ruleToDelete}
+        onOpenChange={(open) => !open && setRuleToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Rule</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{ruleToDelete?.name}"? This action cannot be undone.
+              Are you sure you want to delete "{ruleToDelete?.name}"? This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={handleDeleteConfirm}>
+            <AlertDialogAction
+              className="bg-red-500 hover:bg-red-600"
+              onClick={handleDeleteConfirm}
+            >
               {deleteRuleMutation.isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>

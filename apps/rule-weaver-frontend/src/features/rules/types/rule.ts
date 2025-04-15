@@ -21,6 +21,14 @@ export type Rules = "BASE" | "AND" | "OR";
 export type RuleWithMeta = Rule & {
   createdAt?: string;
   updatedAt?: string;
+  createdBy?: {
+    id: string;
+    name: string;
+  };
+  updatedBy?: {
+    id: string;
+    name: string;
+  };
 };
 
 export type Rule = {

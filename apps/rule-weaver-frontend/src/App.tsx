@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/shared/components/inputs/toaster";
 import { Toaster as Sonner } from "@/shared/components/inputs/sonner";
 import { TooltipProvider } from "@/shared/components/inputs/tooltip";
@@ -10,6 +9,7 @@ import Layout from "./core/layout/Layout";
 import RulesPage from "./features/rules/pages/RulesPage";
 import CreateRulePage from "./features/rules/pages/CreateRulePage";
 import EditRulePage from "./features/rules/pages/EditRulePage";
+import { UserProvider } from "./features/users/contexts/UserContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,21 +22,23 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/rules" element={<RulesPage />} />
-            <Route path="/rules/create" element={<CreateRulePage />} />
-            <Route path="/rules/edit/:id" element={<EditRulePage />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <UserProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/rules" element={<RulesPage />} />
+              <Route path="/rules/create" element={<CreateRulePage />} />
+              <Route path="/rules/edit/:id" element={<EditRulePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </UserProvider>
   </QueryClientProvider>
 );
 

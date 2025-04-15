@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ruleService } from "@/features/rules/services/ruleService";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import { toast } from "sonner";
+import { useUser } from "@/features/users/contexts/UserContext";
 
 export const useRules = () => {
   return useQuery({
@@ -20,10 +21,17 @@ export const useRule = (id: string) => {
 
 export const useCreateRule = () => {
   const queryClient = useQueryClient();
+  const { currentUser } = useUser();
 
   return useMutation({
-    mutationFn: (rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">) =>
-      ruleService.createRule(rule),
+    mutationFn: (
+      rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+    ) => {
+      if (!currentUser) {
+        throw new Error("User must be logged in to create a rule");
+      }
+      return ruleService.createRule(rule, currentUser);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rules"] });
       toast.success("Rule created successfully");
@@ -36,6 +44,7 @@ export const useCreateRule = () => {
 
 export const useUpdateRule = () => {
   const queryClient = useQueryClient();
+  const { currentUser } = useUser();
 
   return useMutation({
     mutationFn: ({
@@ -44,7 +53,12 @@ export const useUpdateRule = () => {
     }: {
       id: string;
       rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">;
-    }) => ruleService.updateRule(id, rule),
+    }) => {
+      if (!currentUser) {
+        throw new Error("User must be logged in to update a rule");
+      }
+      return ruleService.updateRule(id, rule, currentUser);
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["rules"] });
       queryClient.invalidateQueries({ queryKey: ["rules", variables.id] });

@@ -4,6 +4,7 @@ import {
   OrRule,
   RuleType,
   BaseRule,
+  Rules,
 } from "@/features/rules/types/rule";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/shared/components/inputs/button";
@@ -29,6 +30,12 @@ interface GroupRuleComponentProps {
   onDelete?: () => void;
 }
 
+const ruleMap: Record<Rules, () => RuleType> = {
+  BASE: createEmptyBaseRule,
+  AND: createEmptyAndRule,
+  OR: createEmptyOrRule,
+};
+
 const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   rule,
   onChange,
@@ -42,18 +49,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
     : "bg-rule-or/10 border-rule-or/30";
   const groupTextColor = isAnd ? "text-rule-and" : "text-rule-or";
 
-  const handleAddBaseRule = () => {
-    const newRules = [...rules, createEmptyBaseRule()];
-    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
-  };
-
-  const handleAddAndRule = () => {
-    const newRules = [...rules, createEmptyAndRule()];
-    onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
-  };
-
-  const handleAddOrRule = () => {
-    const newRules = [...rules, createEmptyOrRule()];
+  const handleAddRule = (type: "BASE" | "AND" | "OR") => {
+    const newRules = [...rules, ruleMap[type]()];
     onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
   };
 
@@ -129,15 +126,15 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={handleAddBaseRule}>
+            <DropdownMenuItem onClick={() => handleAddRule("BASE")}>
               Condition
             </DropdownMenuItem>
             {!isAnd ? (
-              <DropdownMenuItem onClick={handleAddAndRule}>
+              <DropdownMenuItem onClick={() => handleAddRule("AND")}>
                 AND Group
               </DropdownMenuItem>
             ) : (
-              <DropdownMenuItem onClick={handleAddOrRule}>
+              <DropdownMenuItem onClick={() => handleAddRule("OR")}>
                 OR Group
               </DropdownMenuItem>
             )}

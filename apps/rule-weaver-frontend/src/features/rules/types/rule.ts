@@ -1,5 +1,10 @@
-
-export type Operator = 'EQUALS' | 'NOT_EQUALS' | 'CONTAINS' | 'NOT_CONTAINS' | 'GREATER_THAN' | 'LESS_THAN';
+export type Operator =
+  | "EQUALS"
+  | "NOT_EQUALS"
+  | "CONTAINS"
+  | "NOT_CONTAINS"
+  | "GREATER_THAN"
+  | "LESS_THAN";
 
 export interface BaseRule {
   id?: string;
@@ -10,19 +15,21 @@ export interface BaseRule {
 
 export interface AndRule {
   id?: string;
-  AND: (RuleType)[];
+  AND: RuleType[];
 }
 
 export interface OrRule {
   id?: string;
-  OR: (RuleType)[];
+  OR: RuleType[];
 }
 
 export type RuleType = BaseRule | AndRule | OrRule;
 
-export type RuleWithMeta =  RuleType & {
+export type Rules = "BASE" | "AND" | "OR";
+
+export type RuleWithMeta = RuleType & {
   name: string;
   description?: string;
   createdAt?: string;
   updatedAt?: string;
-}
+};

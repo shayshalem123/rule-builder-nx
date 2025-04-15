@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRules } from '@/hooks/useRules';
 import RuleList from '@/components/rule/RuleList';
 import { RuleWithMeta } from '@/types/rule';

@@ -26,7 +26,7 @@ const Layout: React.FC = () => {
           </Container>
         </AppShell.Main>
         
-        <AppShell.Footer height={50} p="md">
+        <AppShell.Footer p="md">
           <Box ta="center">
             <Text size="sm" c="dimmed">
               Rule Builder - {new Date().getFullYear()}

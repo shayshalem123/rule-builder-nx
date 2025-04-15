@@ -46,11 +46,11 @@ const EditRulePage: React.FC = () => {
     return (
       <Container size="xl" py="xl" ta="center">
         <Paper p="xl" withBorder>
-          <Group direction="column" position="center" spacing="md">
+          <Group direction="column" align="center" gap="md">
             <IconAlertCircle size={48} color="red" />
             <Text size="lg" fw={500} c="red">Error loading rule</Text>
             <Text c="dimmed">{error?.message || 'Rule not found'}</Text>
-            <Button variant="outline" onClick={() => navigate('/rules')} leftIcon={<IconArrowLeft size={16} />}>
+            <Button variant="outline" onClick={() => navigate('/rules')} leftSection={<IconArrowLeft size={16} />}>
               Back to Rules
             </Button>
           </Group>

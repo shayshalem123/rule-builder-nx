@@ -107,12 +107,12 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   
   return (
     <Paper p="lg" radius="md" withBorder>
-      <Stack spacing="lg">
+      <Stack gap="lg">
         <Title order={2} size="h3">
           {initialRule ? 'Edit Rule' : 'Create New Rule'}
         </Title>
         
-        <Stack spacing="md">
+        <Stack gap="md">
           <TextInput
             label="Rule Name"
             value={name}
@@ -185,7 +185,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           </Tabs>
         </Box>
         
-        <Group position="right" spacing="sm" mt="md">
+        <Group justify="flex-end" gap="sm" mt="md">
           <Button variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>

@@ -33,8 +33,8 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   };
 
   return (
-    <Box p="md" bg="gray.0" sx={{ border: '1px solid', borderColor: 'gray.3', borderRadius: 'md' }}>
-      <Stack spacing="sm">
+    <Box p="md" bg="gray.0" style={{ border: '1px solid', borderColor: 'var(--mantine-color-gray-3)', borderRadius: 'var(--mantine-radius-md)' }}>
+      <Stack gap="sm">
         <Group grow align="flex-start">
           <TextInput
             label="Field"

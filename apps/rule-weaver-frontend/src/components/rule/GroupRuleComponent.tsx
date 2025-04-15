@@ -53,15 +53,15 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   return (
     <Box 
       p="md" 
-      sx={{ 
-        borderRadius: 'md', 
+      style={{ 
+        borderRadius: 'var(--mantine-radius-md)', 
         backgroundColor: isAnd ? 'rgba(51, 102, 255, 0.05)' : 'rgba(134, 76, 232, 0.05)',
         border: '1px solid',
         borderColor: isAnd ? 'rgba(51, 102, 255, 0.2)' : 'rgba(134, 76, 232, 0.2)',
       }}
     >
-      <Group position="apart" mb="md">
-        <Text fw={500} color={groupColor}>
+      <Group justify="space-between" mb="md">
+        <Text fw={500} c={groupColor}>
           {groupType} Group (all conditions {isAnd ? 'must' : 'can'} match)
         </Text>
         {onDelete && (
@@ -76,7 +76,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
         )}
       </Group>
 
-      <Stack spacing="md">
+      <Stack gap="md">
         {rules.map((nestedRule, index) => {
           if (isBaseRule(nestedRule)) {
             return (
@@ -105,7 +105,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
         <Button 
           variant="light" 
           size="sm" 
-          leftIcon={<IconPlus size={16} />}
+          leftSection={<IconPlus size={16} />}
           onClick={handleAddRule}
         >
           Add Condition

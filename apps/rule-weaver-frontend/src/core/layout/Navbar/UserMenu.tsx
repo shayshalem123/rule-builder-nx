@@ -1,14 +1,6 @@
 import React from "react";
-import { User as UserIcon, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { useUser } from "@/features/users/contexts/UserContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/shared/components/inputs/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/shared/components/inputs/avatar";
 
 const UserMenu: React.FC = () => {
@@ -28,24 +20,14 @@ const UserMenu: React.FC = () => {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className="bg-slate-600 text-white flex items-center justify-center">
-            <UserRound className="h-5 w-5" />
-          </AvatarFallback>
-        </Avatar>
-        <span className="text-sm font-medium">{currentUser.name}</span>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <UserIcon className="mr-2 h-4 w-4" />
-          <span>Profile</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex items-center gap-2">
+      <Avatar className="h-8 w-8">
+        <AvatarFallback className="bg-slate-600 text-white flex items-center justify-center">
+          <UserRound className="h-5 w-5" />
+        </AvatarFallback>
+      </Avatar>
+      <span className="text-sm font-medium">{currentUser.name}</span>
+    </div>
   );
 };
 

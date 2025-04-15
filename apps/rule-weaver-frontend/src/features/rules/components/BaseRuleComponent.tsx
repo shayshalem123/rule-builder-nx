@@ -112,13 +112,13 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
         />
       </div>
 
-      <div className="flex items-end gap-1">
+      <div className="flex items-center self-end gap-1">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-500 hover:text-blue-500"
+              className="text-gray-500 hover:text-blue-500 flex items-center justify-center"
               title="Add condition"
             >
               <Plus className="h-4 w-4" />
@@ -139,7 +139,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
             variant="ghost"
             size="icon"
             onClick={onDelete}
-            className="text-gray-500 hover:text-red-500"
+            className="text-gray-500 hover:text-red-500 flex items-center justify-center"
             title="Delete rule"
           >
             <Trash2 className="h-4 w-4" />

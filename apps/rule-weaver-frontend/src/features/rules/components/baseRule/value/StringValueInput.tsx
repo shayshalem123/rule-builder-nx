@@ -1,5 +1,7 @@
 import React from "react";
 import { Input } from "@/shared/components/inputs/input";
+import { cn } from "@/shared/utils/cn";
+import { noBlackBorderFocus } from "@/shared/utils/styles";
 
 interface StringValueInputProps {
   value: string;
@@ -15,9 +17,9 @@ const StringValueInput: React.FC<StringValueInputProps> = ({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Enter value"
-      className="w-full"
+      className={cn("w-full", noBlackBorderFocus())}
     />
   );
 };
 
-export default StringValueInput; 
+export default StringValueInput;

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { X, AlertTriangle } from "lucide-react";
 import { Badge } from "@/shared/components/inputs/badge";
 import { toast } from "sonner";
+import { cn } from "@/shared/utils/cn";
+import { noBlackBorderFocus } from "@/shared/utils/styles";
 
 interface ArrayValueInputProps {
   values: string[];
@@ -43,7 +45,11 @@ const ArrayValueInput: React.FC<ArrayValueInputProps> = ({
   return (
     <div className="relative">
       <div
-        className="flex flex-wrap items-center gap-1 p-2 border rounded-md focus-within:ring-2 focus-within:ring-offset-0 focus-within:ring-blue-500 focus-within:border-blue-500 min-h-[38px]"
+        className={cn(
+          "flex flex-wrap items-center gap-1 p-2 border rounded-md min-h-[38px]",
+          "focus-within:border-input",
+          noBlackBorderFocus()
+        )}
         onClick={() => {
           const input = document.getElementById("array-input");
           if (input) input.focus();
@@ -70,7 +76,7 @@ const ArrayValueInput: React.FC<ArrayValueInputProps> = ({
         ))}
         <input
           id="array-input"
-          className="outline-none border-none flex-1 min-w-[60px] bg-transparent"
+          className="outline-none border-none flex-1 min-w-[60px] bg-transparent focus:outline-none focus:ring-0"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => {

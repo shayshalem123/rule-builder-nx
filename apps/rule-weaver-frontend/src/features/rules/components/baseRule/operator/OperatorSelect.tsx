@@ -8,6 +8,8 @@ import {
   SelectValue,
 } from "@/shared/components/inputs/select";
 import { operators } from "@/features/rules/utils/ruleUtils";
+import { cn } from "@/shared/utils/cn";
+import { noBlackBorderFocus } from "@/shared/utils/styles";
 
 interface OperatorSelectProps {
   value: Operator;
@@ -19,7 +21,7 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({ value, onChange }) => {
     <div className="w-[140px]">
       <label className="text-xs text-gray-500 mb-1 block">Operator</label>
       <Select value={value} onValueChange={(val) => onChange(val as Operator)}>
-        <SelectTrigger>
+        <SelectTrigger className={noBlackBorderFocus()}>
           <SelectValue placeholder="Select operator" />
         </SelectTrigger>
         <SelectContent>
@@ -34,4 +36,4 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({ value, onChange }) => {
   );
 };
 
-export default OperatorSelect; 
+export default OperatorSelect;

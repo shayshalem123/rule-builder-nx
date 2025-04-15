@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/inputs/button';
 import { Link } from 'react-router-dom';
 import { Database, ArrowRight } from 'lucide-react';
 

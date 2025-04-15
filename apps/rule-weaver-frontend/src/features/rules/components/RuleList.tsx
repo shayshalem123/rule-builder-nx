@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { RuleWithMeta } from '@/types/rule';
-import { Button } from '@/components/ui/button';
+import { RuleWithMeta } from '@/features/rules/types/rule';
+import { Button } from '@/shared/components/inputs/button';
 import { Plus, AlertCircle } from 'lucide-react';
 import RuleCard from './RuleCard';
 import {
@@ -13,7 +13,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/components/inputs/alert-dialog";
 import { useDeleteRule } from '@/features/rules/hooks/useRules';
 
 interface RuleListProps {

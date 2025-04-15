@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { RuleType, BaseRule, AndRule, OrRule, RuleWithMeta } from '@/types/rule';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RuleType, BaseRule, AndRule, OrRule, RuleWithMeta } from '@/features/rules/types/rule';
+import { Button } from '@/shared/components/inputs/button';
+import { Input } from '@/shared/components/inputs/input';
+import { Textarea } from '@/shared/components/inputs/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/inputs/tabs';
 import BaseRuleComponent from './BaseRuleComponent';
 import GroupRuleComponent from './GroupRuleComponent';
 import {
@@ -14,7 +14,7 @@ import {
   createEmptyBaseRule,
   createEmptyAndRule,
   createEmptyOrRule,
-} from '@/utils/ruleUtils';
+} from '@/features/rules/utils/ruleUtils';
 
 interface RuleBuilderProps {
   initialRule?: RuleWithMeta;

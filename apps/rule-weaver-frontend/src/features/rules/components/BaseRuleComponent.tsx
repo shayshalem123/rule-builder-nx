@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { BaseRule, Operator } from '@/types/rule';
+import { BaseRule, Operator } from '@/features/rules/types/rule';
 import { Trash2, Edit } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { operators, fieldSuggestions } from '@/utils/ruleUtils';
+import { Button } from '@/shared/components/inputs/button';
+import { Input } from '@/shared/components/inputs/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/inputs/select';
+import { operators, fieldSuggestions } from '@/features/rules/utils/ruleUtils';
 
 interface BaseRuleComponentProps {
   rule: BaseRule;

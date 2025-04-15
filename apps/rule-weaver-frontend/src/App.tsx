@@ -1,15 +1,15 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/shared/components/inputs/toaster";
+import { Toaster as Sonner } from "@/shared/components/inputs/sonner";
+import { TooltipProvider } from "@/shared/components/inputs/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/layout/Layout";
-import RulesPage from "./pages/RulesPage";
-import CreateRulePage from "./pages/CreateRulePage";
-import EditRulePage from "./pages/EditRulePage";
+import RulesPage from "./features/rules/pages/RulesPage";
+import CreateRulePage from "./features/rules/pages/CreateRulePage";
+import EditRulePage from "./features/rules/pages/EditRulePage";
 
 const queryClient = new QueryClient({
   defaultOptions: {

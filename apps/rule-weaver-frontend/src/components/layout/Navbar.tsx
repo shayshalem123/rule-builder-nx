@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
+import { cn } from '@/shared/utils/utils';
 import { Book, Database } from 'lucide-react';
 
 const NavLink = ({ to, children, icon }: { to: string; children: React.ReactNode; icon: React.ReactNode }) => {

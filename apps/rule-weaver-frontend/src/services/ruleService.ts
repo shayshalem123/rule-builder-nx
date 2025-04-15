@@ -1,5 +1,4 @@
-
-import { RuleWithMeta } from "@/types/rule";
+import { RuleWithMeta } from "@/features/rules/types/rule";
 
 // Initial mock data
 const mockRules: RuleWithMeta[] = [
@@ -82,7 +81,7 @@ const mockRules: RuleWithMeta[] = [
 ];
 
 // Helper function to simulate API delay
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Mock API service
 export const ruleService = {
@@ -95,11 +94,13 @@ export const ruleService = {
   // Get rule by ID
   getRule: async (id: string): Promise<RuleWithMeta | undefined> => {
     await delay(300);
-    return mockRules.find(rule => rule.id === id);
+    return mockRules.find((rule) => rule.id === id);
   },
 
   // Create new rule
-  createRule: async (rule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>): Promise<RuleWithMeta> => {
+  createRule: async (
+    rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+  ): Promise<RuleWithMeta> => {
     await delay(500);
     const newRule: RuleWithMeta = {
       ...rule,
@@ -112,20 +113,23 @@ export const ruleService = {
   },
 
   // Update existing rule
-  updateRule: async (id: string, rule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>): Promise<RuleWithMeta> => {
+  updateRule: async (
+    id: string,
+    rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+  ): Promise<RuleWithMeta> => {
     await delay(500);
-    const index = mockRules.findIndex(r => r.id === id);
+    const index = mockRules.findIndex((r) => r.id === id);
     if (index === -1) {
       throw new Error(`Rule with id ${id} not found`);
     }
-    
+
     const updatedRule: RuleWithMeta = {
       ...rule,
       id,
       createdAt: mockRules[index].createdAt,
       updatedAt: new Date().toISOString(),
     };
-    
+
     mockRules[index] = updatedRule;
     return updatedRule;
   },
@@ -133,7 +137,7 @@ export const ruleService = {
   // Delete rule
   deleteRule: async (id: string): Promise<void> => {
     await delay(300);
-    const index = mockRules.findIndex(rule => rule.id === id);
+    const index = mockRules.findIndex((rule) => rule.id === id);
     if (index === -1) {
       throw new Error(`Rule with id ${id} not found`);
     }

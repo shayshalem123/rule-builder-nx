@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { RuleWithMeta } from '@/types/rule';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { RuleWithMeta } from '@/features/rules/types/rule';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/shared/components/inputs/card';
+import { Button } from '@/shared/components/inputs/button';
 import { Edit, Trash2 } from 'lucide-react';
-import { isBaseRule, isAndRule, isOrRule } from '@/utils/ruleUtils';
-import { Badge } from '@/components/ui/badge';
+import { isBaseRule, isAndRule, isOrRule } from '@/features/rules/utils/ruleUtils';
+import { Badge } from '@/shared/components/inputs/badge';
 import { formatDistanceToNow } from 'date-fns';
 
 interface RuleCardProps {

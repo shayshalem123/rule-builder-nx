@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { AndRule, OrRule, RuleType, BaseRule } from '@/types/rule';
+import { AndRule, OrRule, RuleType, BaseRule } from '@/features/rules/types/rule';
 import { Plus, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/inputs/button';
 import BaseRuleComponent from './BaseRuleComponent';
-import { createEmptyBaseRule, isBaseRule, isAndRule, isOrRule } from '@/utils/ruleUtils';
+import { createEmptyBaseRule, isBaseRule, isAndRule, isOrRule } from '@/features/rules/utils/ruleUtils';
 
 interface GroupRuleComponentProps {
   rule: AndRule | OrRule;

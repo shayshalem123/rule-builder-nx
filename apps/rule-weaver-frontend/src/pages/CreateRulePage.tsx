@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import RuleBuilder from '@/components/rule/RuleBuilder';
+import RuleBuilder from '@/features/rules/components/RuleBuilder';
 import { useCreateRule } from '@/hooks/useRules';
 import { RuleWithMeta } from '@/types/rule';
 

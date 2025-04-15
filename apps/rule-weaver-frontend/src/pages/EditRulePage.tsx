@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import RuleBuilder from '@/components/rule/RuleBuilder';
+import RuleBuilder from '@/features/rules/components/RuleBuilder';
 import { useRule, useUpdateRule } from '@/hooks/useRules';
 import { RuleWithMeta } from '@/types/rule';
 import { AlertCircle } from 'lucide-react';

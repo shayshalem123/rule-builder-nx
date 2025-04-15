@@ -37,7 +37,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     if (!initialRule) return createEmptyBaseRule();
     
     const { name, description, createdAt, updatedAt, ...ruleLogic } = initialRule;
-    return ruleLogic;
+    return ruleLogic as RuleType;
   };
   
   const [rule, setRule] = useState<RuleType>(getInitialRuleLogic());

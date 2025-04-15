@@ -67,10 +67,7 @@ export const cloneRule = (rule: RuleType): RuleType => {
 export const operators: { value: Operator; label: string }[] = [
   { value: "EQUALS", label: "Equals" },
   { value: "NOT_EQUALS", label: "Not Equals" },
-  { value: "CONTAINS", label: "Contains" },
-  { value: "NOT_CONTAINS", label: "Not Contains" },
-  { value: "GREATER_THAN", label: "Greater Than" },
-  { value: "LESS_THAN", label: "Less Than" },
+  { value: "IN", label: "In" },
 ];
 
 // Common field suggestions

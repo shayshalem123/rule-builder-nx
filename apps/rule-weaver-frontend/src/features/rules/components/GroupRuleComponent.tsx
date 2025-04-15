@@ -8,7 +8,7 @@ import {
 } from "@/features/rules/types/rule";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/shared/components/inputs/button";
-import BaseRuleComponent from "./BaseRuleComponent";
+import BaseRuleComponent from "./baseRule";
 import {
   createEmptyBaseRule,
   createEmptyAndRule,

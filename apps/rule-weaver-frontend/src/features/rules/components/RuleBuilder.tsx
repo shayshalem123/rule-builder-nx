@@ -19,7 +19,7 @@ import {
 } from "@/shared/components/inputs/select";
 import GroupRuleComponent from "./GroupRuleComponent";
 import * as ruleUtils from "@/features/rules/utils/ruleUtils";
-import BaseRuleComponent from "./BaseRuleComponent";
+import BaseRuleComponent from "./baseRule";
 import { ruleService } from "@/features/rules/services/ruleService";
 
 interface RuleBuilderProps {

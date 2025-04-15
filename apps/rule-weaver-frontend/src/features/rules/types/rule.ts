@@ -1,15 +1,9 @@
-export type Operator =
-  | "EQUALS"
-  | "NOT_EQUALS"
-  | "CONTAINS"
-  | "NOT_CONTAINS"
-  | "GREATER_THAN"
-  | "LESS_THAN";
+export type Operator = "EQUALS" | "NOT_EQUALS" | "IN";
 
 export interface BaseRule {
   field: string;
   operator: Operator;
-  value: string;
+  value: string | string[];
 }
 
 export interface AndRule {

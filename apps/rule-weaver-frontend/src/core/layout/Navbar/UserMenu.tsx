@@ -9,15 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/inputs/dropdown-menu";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/shared/components/inputs/avatar";
-
-// Anonymous user avatar URL
-const ANONYMOUS_AVATAR =
-  "https://api.dicebear.com/7.x/personas/svg?seed=anonymous";
+import { Avatar, AvatarFallback } from "@/shared/components/inputs/avatar";
 
 const UserMenu: React.FC = () => {
   const { currentUser, isLoading } = useUser();
@@ -39,10 +31,8 @@ const UserMenu: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 outline-none">
         <Avatar className="h-8 w-8">
-          {/* Use anonymous avatar instead of user-specific one */}
-          <AvatarImage src={ANONYMOUS_AVATAR} alt={currentUser.name} />
-          <AvatarFallback>
-            {currentUser.name.substring(0, 2).toUpperCase()}
+          <AvatarFallback className="bg-gray-500 text-white flex items-center justify-center">
+            <UserIcon className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
         <span className="text-sm font-medium">{currentUser.name}</span>

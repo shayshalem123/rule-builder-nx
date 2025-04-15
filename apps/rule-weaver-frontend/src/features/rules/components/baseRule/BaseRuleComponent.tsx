@@ -19,6 +19,7 @@ interface BaseRuleComponentProps {
   onChange: (updatedRule: BaseRule | AndRule | OrRule) => void;
   onDelete?: () => void;
   showDelete?: boolean;
+  parentGroupType?: "AND" | "OR" | null;
 }
 
 const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
@@ -26,6 +27,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   onChange,
   onDelete,
   showDelete = true,
+  parentGroupType = null,
 }) => {
   const handleFieldChange = (value: string) => {
     onChange({ ...rule, field: value });
@@ -70,6 +72,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
         onConvertToGroup={handleConvertToGroup}
         onDelete={onDelete}
         showDelete={showDelete}
+        parentGroupType={parentGroupType}
       />
     </div>
   );

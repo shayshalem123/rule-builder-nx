@@ -83,6 +83,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
             handleRuleChange(index, updatedRule)
           }
           onDelete={() => handleRuleDelete(index)}
+          parentGroupType={groupType as "AND" | "OR"}
         />
       );
     } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {

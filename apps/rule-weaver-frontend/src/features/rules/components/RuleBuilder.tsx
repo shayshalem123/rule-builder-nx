@@ -214,6 +214,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           <BaseRuleComponent
             rule={ruleLogic}
             onChange={(updatedRule) => setRuleLogic(updatedRule)}
+            parentGroupType={null}
           />
         ) : (
           <GroupRuleComponent rule={ruleLogic} onChange={setRuleLogic} />

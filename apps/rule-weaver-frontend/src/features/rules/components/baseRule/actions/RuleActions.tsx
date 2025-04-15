@@ -12,13 +12,18 @@ interface RuleActionsProps {
   onConvertToGroup: (type: "AND" | "OR") => void;
   onDelete?: () => void;
   showDelete?: boolean;
+  parentGroupType?: "AND" | "OR" | null;
 }
 
 const RuleActions: React.FC<RuleActionsProps> = ({
   onConvertToGroup,
   onDelete,
   showDelete = true,
+  parentGroupType = null,
 }) => {
+  const showAndOption = parentGroupType !== "AND";
+  const showOrOption = parentGroupType !== "OR";
+  
   return (
     <div className="flex items-center self-end gap-1">
       <DropdownMenu>
@@ -33,12 +38,16 @@ const RuleActions: React.FC<RuleActionsProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => onConvertToGroup("AND")}>
-            Convert to AND Group
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onConvertToGroup("OR")}>
-            Convert to OR Group
-          </DropdownMenuItem>
+          {showAndOption && (
+            <DropdownMenuItem onClick={() => onConvertToGroup("AND")}>
+              Convert to AND Group
+            </DropdownMenuItem>
+          )}
+          {showOrOption && (
+            <DropdownMenuItem onClick={() => onConvertToGroup("OR")}>
+              Convert to OR Group
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       {showDelete && onDelete && (

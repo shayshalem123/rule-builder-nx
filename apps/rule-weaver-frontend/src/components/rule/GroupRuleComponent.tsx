@@ -40,7 +40,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
 
   const handleRuleDelete = (index: number) => {
     if (rules.length <= 1) {
-      onDelete && onDelete();
+      onDelete?.();
       return;
     }
     

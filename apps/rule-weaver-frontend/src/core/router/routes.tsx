@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "../pages/Index";
-import NotFound from "../pages/NotFound";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
 import Layout from "../features/layout/components/Layout";
-import RulesPage from "../features/rules/pages/RulesPage";
-import CreateRulePage from "../features/rules/pages/CreateRulePage";
-import EditRulePage from "../features/rules/pages/EditRulePage";
+import RulesPage from "./features/rules/pages/RulesPage";
+import CreateRulePage from "./features/rules/pages/CreateRulePage";
+import EditRulePage from "./features/rules/pages/EditRulePage";
 
 export const AppRoutes = () => (
   <BrowserRouter>

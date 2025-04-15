@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ruleService } from "@/services/ruleService";
+import { ruleService } from "@/features/rules/services/ruleService";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import { toast } from "sonner";
 

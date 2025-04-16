@@ -1,7 +1,7 @@
 import React from "react";
 import { SchemaWithMeta } from "../types/schema";
 import { Badge } from "@/shared/components/inputs/badge";
-import useSchemaFields from "../hooks/useSchemaFields";
+import useSchemaFields from "@/shared/hooks/useSchemaFields";
 import EntityCard from "@/shared/components/EntityCard";
 import EntityUserInfo from "@/shared/components/EntityUserInfo";
 import EntityCardActions from "@/shared/components/EntityCardActions";
@@ -19,7 +19,7 @@ const SchemaCard: React.FC<SchemaCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { leafFieldCount } = useSchemaFields(schema);
+  const { fieldCount } = useSchemaFields(schema);
 
   const schemaTags: EntityTag[] = [
     {
@@ -29,7 +29,7 @@ const SchemaCard: React.FC<SchemaCardProps> = ({
     },
     {
       icon: <Book className="h-3 w-3" />,
-      label: `${leafFieldCount} Fields`,
+      label: `${fieldCount} Fields`,
       color: "purple",
     },
   ];

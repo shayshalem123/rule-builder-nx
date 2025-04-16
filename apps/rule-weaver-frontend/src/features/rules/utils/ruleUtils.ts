@@ -5,6 +5,7 @@ import {
   OrRule,
   Operator,
   Rule,
+  RuleWithMeta,
 } from "@/features/rules/types/rule";
 
 // Check if a rule is a base rule (with field, operator, value)
@@ -69,3 +70,17 @@ export const operators: { value: Operator; label: string }[] = [
   { value: "NOT_EQUALS", label: "Not Equals" },
   { value: "IN", label: "In" },
 ];
+
+// Group rules by destination
+export const getGroupedRulesByDestination = (
+  rules: RuleWithMeta[]
+): Record<string, RuleWithMeta[]> => {
+  return rules.reduce<Record<string, RuleWithMeta[]>>((acc, rule) => {
+    const destination = rule.destination;
+    if (!acc[destination]) {
+      acc[destination] = [];
+    }
+    acc[destination].push(rule);
+    return acc;
+  }, {});
+};

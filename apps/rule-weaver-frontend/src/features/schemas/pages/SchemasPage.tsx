@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSchemas, useDeleteSchema } from "../hooks/useSchemas";
 import SchemaCard from "../components/SchemaCard";
 import { Button } from "@/shared/components/inputs/button";
@@ -15,6 +15,8 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/inputs/alert-dialog";
 import { useToast } from "@/shared/components/inputs/use-toast";
+import SchemaSearch from "../components/SchemaSearch";
+import { SchemaWithMeta } from "../types/schema";
 
 const SchemasPage: React.FC = () => {
   const { schemas, isLoading, error } = useSchemas();
@@ -24,6 +26,14 @@ const SchemasPage: React.FC = () => {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [schemaToDelete, setSchemaToDelete] = useState<string | null>(null);
+  const [filteredSchemas, setFilteredSchemas] = useState<SchemaWithMeta[]>([]);
+
+  // Set initial filtered schemas when schemas data loads
+  useEffect(() => {
+    if (schemas.length > 0) {
+      setFilteredSchemas(schemas);
+    }
+  }, [schemas]);
 
   const handleEdit = (id: string) => {
     navigate(`/schemas/edit/${id}`);
@@ -115,17 +125,37 @@ const SchemasPage: React.FC = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {schemas.map((schema) => (
-            <SchemaCard
-              key={schema.id}
-              schema={schema}
-              onEdit={() => handleEdit(schema.id)}
-              onDelete={() => confirmDelete(schema.id)}
-              onView={() => handleView(schema.id)}
+        <>
+          <div className="mb-6">
+            <SchemaSearch
+              schemas={schemas}
+              onFilteredSchemasChange={setFilteredSchemas}
             />
-          ))}
-        </div>
+          </div>
+
+          {filteredSchemas.length === 0 ? (
+            <div className="text-center py-10 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-medium text-gray-600 mb-2">
+                No Schemas Match Your Search
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search query or clear the search.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredSchemas.map((schema) => (
+                <SchemaCard
+                  key={schema.id}
+                  schema={schema}
+                  onEdit={() => handleEdit(schema.id)}
+                  onDelete={() => confirmDelete(schema.id)}
+                  onView={() => handleView(schema.id)}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

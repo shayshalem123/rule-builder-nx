@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Plus, AlertCircle } from "lucide-react";
@@ -22,6 +22,9 @@ interface RuleListProps {
   onCreateRule: () => void;
   onEditRule: (rule: RuleWithMeta) => void;
   onViewRule?: (rule: RuleWithMeta) => void;
+  onDelete?: () => void;
+  showHeader?: boolean;
+  headerTitle?: string;
 }
 
 const RuleList: React.FC<RuleListProps> = ({
@@ -31,9 +34,18 @@ const RuleList: React.FC<RuleListProps> = ({
   onCreateRule,
   onEditRule,
   onViewRule,
+  onDelete,
+  showHeader = true,
+  headerTitle = "Rules",
 }) => {
   const [ruleToDelete, setRuleToDelete] = useState<RuleWithMeta | null>(null);
   const deleteRuleMutation = useDeleteRule();
+
+  useEffect(() => {
+    if (deleteRuleMutation.isSuccess && onDelete) {
+      onDelete();
+    }
+  }, [deleteRuleMutation.isSuccess, onDelete]);
 
   const handleDeleteConfirm = () => {
     if (ruleToDelete?.id) {
@@ -78,13 +90,15 @@ const RuleList: React.FC<RuleListProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Rules</h1>
-        <Button onClick={onCreateRule} className="flex items-center">
-          <Plus className="h-4 w-4 mr-1" />
-          Create Rule
-        </Button>
-      </div>
+      {showHeader && (
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">{headerTitle}</h1>
+          <Button onClick={onCreateRule} className="flex items-center">
+            <Plus className="h-4 w-4 mr-1" />
+            Create Rule
+          </Button>
+        </div>
+      )}
 
       {rules.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
@@ -92,12 +106,19 @@ const RuleList: React.FC<RuleListProps> = ({
             No rules found
           </h3>
           <p className="text-gray-500 mb-4">
-            Get started by creating your first rule.
+            {showHeader
+              ? "Get started by creating your first rule."
+              : "No rules exist for this destination yet."}
           </p>
-          <Button onClick={onCreateRule} className="flex items-center mx-auto">
-            <Plus className="h-4 w-4 mr-1" />
-            Create Rule
-          </Button>
+          {showHeader && (
+            <Button
+              onClick={onCreateRule}
+              className="flex items-center mx-auto"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Create Rule
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

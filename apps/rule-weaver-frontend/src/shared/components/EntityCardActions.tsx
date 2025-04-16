@@ -2,12 +2,12 @@ import React from "react";
 import { Button } from "@/shared/components/inputs/button";
 import { Edit, Trash2 } from "lucide-react";
 
-interface RuleCardActionsProps {
+export interface EntityCardActionsProps {
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const RuleCardActions: React.FC<RuleCardActionsProps> = ({
+const EntityCardActions: React.FC<EntityCardActionsProps> = ({
   onEdit,
   onDelete,
 }) => {
@@ -30,4 +30,4 @@ const RuleCardActions: React.FC<RuleCardActionsProps> = ({
   );
 };
 
-export default RuleCardActions;
+export default EntityCardActions;

@@ -7,13 +7,13 @@ interface UserInfo {
   name: string;
 }
 
-interface RuleUserInfoProps {
+export interface EntityUserInfoProps {
   createdBy?: UserInfo;
   updatedBy?: UserInfo;
   updatedAt?: string;
 }
 
-const RuleUserInfo: React.FC<RuleUserInfoProps> = ({
+const EntityUserInfo: React.FC<EntityUserInfoProps> = ({
   createdBy,
   updatedBy,
   updatedAt,
@@ -48,4 +48,4 @@ const RuleUserInfo: React.FC<RuleUserInfoProps> = ({
   );
 };
 
-export default RuleUserInfo;
+export default EntityUserInfo;

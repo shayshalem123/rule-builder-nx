@@ -1,16 +1,10 @@
 import React from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/inputs/card";
-
-import RuleLabels from "./RuleLabels";
-import RuleUserInfo from "./RuleUserInfo";
-import RuleCardActions from "./RuleCardActions";
+import EntityCard from "@/shared/components/EntityCard";
+import EntityUserInfo from "@/shared/components/EntityUserInfo";
+import EntityCardActions from "@/shared/components/EntityCardActions";
+import EntityCardTags, { EntityTag } from "@/shared/components/EntityCardTags";
+import { MapPin, Tag } from "lucide-react";
 
 interface RuleCardProps {
   rule: RuleWithMeta;
@@ -19,38 +13,33 @@ interface RuleCardProps {
 }
 
 const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) => {
+  const ruleTags: EntityTag[] = [
+    {
+      icon: <MapPin className="h-3 w-3" />,
+      label: `Destination ${rule.destination}`,
+      color: "amber",
+    },
+    {
+      icon: <Tag className="h-3 w-3" />,
+      label: rule.category,
+      color: "green",
+    },
+  ];
+
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md flex flex-col h-full">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-semibold text-gray-800 line-clamp-1">
-            {rule.name}
-          </CardTitle>
-        </div>
-      </CardHeader>
-
-      <CardContent className="pb-2 flex-grow">
-        {rule.description && (
-          <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-            {rule.description}
-          </p>
-        )}
-
-        <RuleLabels destination={rule.destination} category={rule.category} />
-
-        <div className="mt-auto">
-          <RuleUserInfo
-            createdBy={rule.createdBy}
-            updatedBy={rule.updatedBy}
-            updatedAt={rule.updatedAt}
-          />
-        </div>
-      </CardContent>
-
-      <CardFooter className="mt-auto pt-2">
-        <RuleCardActions onEdit={onEdit} onDelete={onDelete} />
-      </CardFooter>
-    </Card>
+    <EntityCard
+      title={rule.name}
+      description={rule.description}
+      labels={<EntityCardTags tags={ruleTags} />}
+      userInfo={
+        <EntityUserInfo
+          createdBy={rule.createdBy}
+          updatedBy={rule.updatedBy}
+          updatedAt={rule.updatedAt}
+        />
+      }
+      actions={<EntityCardActions onEdit={onEdit} onDelete={onDelete} />}
+    />
   );
 };
 

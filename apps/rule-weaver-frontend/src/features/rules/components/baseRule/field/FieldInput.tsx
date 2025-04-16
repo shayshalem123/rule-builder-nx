@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { fieldSuggestions } from "@/features/rules/utils/ruleUtils";
 import { Input } from "@/shared/components/inputs/input";
 import { cn } from "@/shared/utils/cn";
 import { noBlackBorderFocus } from "@/shared/utils/styles";
-import { ChevronDown, Eye, Search } from "lucide-react";
+import { ChevronDown, FileJson, Search } from "lucide-react";
 import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
 import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
 import { useNavigate } from "react-router-dom";
@@ -55,11 +54,11 @@ const FieldInput: React.FC<FieldInputProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 p-0 text-blue-600 hover:text-blue-800"
+            className="h-6 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-800 rounded-full transition-colors gap-1 px-2"
             onClick={handleViewSchema}
           >
-            <Eye className="h-3 w-3 mr-1" />
-            <span className="text-xs">View Schema</span>
+            <FileJson className="h-3.5 w-3.5" />
+            <span className="text-xs">Schema</span>
           </Button>
         )}
       </div>

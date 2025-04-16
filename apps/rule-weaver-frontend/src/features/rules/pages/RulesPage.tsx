@@ -41,6 +41,12 @@ const RulesPage: React.FC = () => {
     }
   };
 
+  const handleViewRule = (rule: RuleWithMeta) => {
+    if (rule.id) {
+      navigate(`/rules/${rule.id}`);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
@@ -72,6 +78,7 @@ const RulesPage: React.FC = () => {
                   error={error as Error}
                   onCreateRule={handleCreateRule}
                   onEditRule={handleEditRule}
+                  // onViewRule={handleViewRule}
                 />
               </TabsContent>
             ))}

@@ -21,6 +21,7 @@ interface RuleListProps {
   error: Error | null;
   onCreateRule: () => void;
   onEditRule: (rule: RuleWithMeta) => void;
+  onViewRule?: (rule: RuleWithMeta) => void;
 }
 
 const RuleList: React.FC<RuleListProps> = ({
@@ -29,6 +30,7 @@ const RuleList: React.FC<RuleListProps> = ({
   error,
   onCreateRule,
   onEditRule,
+  onViewRule,
 }) => {
   const [ruleToDelete, setRuleToDelete] = useState<RuleWithMeta | null>(null);
   const deleteRuleMutation = useDeleteRule();
@@ -105,6 +107,7 @@ const RuleList: React.FC<RuleListProps> = ({
               rule={rule}
               onEdit={() => onEditRule(rule)}
               onDelete={() => setRuleToDelete(rule)}
+              onView={onViewRule ? () => onViewRule(rule) : undefined}
             />
           ))}
         </div>

@@ -5,7 +5,7 @@ import { cn } from "@/shared/utils/cn";
 import { noBlackBorderFocus } from "@/shared/utils/styles";
 import { ChevronDown } from "lucide-react";
 import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
-import useSchemaFields from "@/features/schemas/hooks/useSchemaFields";
+import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
 
 interface FieldInputProps {
   value: string;

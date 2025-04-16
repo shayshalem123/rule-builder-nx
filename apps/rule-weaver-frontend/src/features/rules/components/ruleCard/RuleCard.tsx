@@ -10,9 +10,15 @@ interface RuleCardProps {
   rule: RuleWithMeta;
   onEdit: () => void;
   onDelete: () => void;
+  onView?: () => void;
 }
 
-const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) => {
+const RuleCard: React.FC<RuleCardProps> = ({
+  rule,
+  onEdit,
+  onDelete,
+  onView,
+}) => {
   const ruleTags: EntityTag[] = [
     {
       icon: <MapPin className="h-3 w-3" />,
@@ -38,7 +44,13 @@ const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) => {
           updatedAt={rule.updatedAt}
         />
       }
-      actions={<EntityCardActions onEdit={onEdit} onDelete={onDelete} />}
+      actions={
+        <EntityCardActions
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onView={onView}
+        />
+      }
     />
   );
 };

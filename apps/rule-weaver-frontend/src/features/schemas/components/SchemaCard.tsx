@@ -12,12 +12,14 @@ interface SchemaCardProps {
   schema: SchemaWithMeta;
   onEdit: () => void;
   onDelete: () => void;
+  onView?: () => void;
 }
 
 const SchemaCard: React.FC<SchemaCardProps> = ({
   schema,
   onEdit,
   onDelete,
+  onView,
 }) => {
   const { fieldCount } = useSchemaFields(schema);
 
@@ -53,7 +55,13 @@ const SchemaCard: React.FC<SchemaCardProps> = ({
           updatedAt={schema.updatedAt}
         />
       }
-      actions={<EntityCardActions onEdit={onEdit} onDelete={onDelete} />}
+      actions={
+        <EntityCardActions
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onView={onView}
+        />
+      }
     />
   );
 };

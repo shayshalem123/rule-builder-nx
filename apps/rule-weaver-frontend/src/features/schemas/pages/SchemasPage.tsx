@@ -29,6 +29,10 @@ const SchemasPage: React.FC = () => {
     navigate(`/schemas/edit/${id}`);
   };
 
+  const handleView = (id: string) => {
+    navigate(`/schemas/${id}`);
+  };
+
   const confirmDelete = (id: string) => {
     setSchemaToDelete(id);
     setDeleteDialogOpen(true);
@@ -118,6 +122,7 @@ const SchemasPage: React.FC = () => {
               schema={schema}
               onEdit={() => handleEdit(schema.id!)}
               onDelete={() => confirmDelete(schema.id!)}
+              onView={() => handleView(schema.id!)}
             />
           ))}
         </div>

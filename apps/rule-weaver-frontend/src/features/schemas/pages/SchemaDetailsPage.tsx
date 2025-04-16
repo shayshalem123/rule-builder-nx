@@ -5,13 +5,13 @@ import { Button } from "@/shared/components/inputs/button";
 import { ArrowLeft, Book, Calendar, Tag, User } from "lucide-react";
 import { Badge } from "@/shared/components/inputs/badge";
 import SchemaViewer from "../components/SchemaViewer";
-import useSchemaFields from "../hooks/useSchemaFields";
+import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
 
 const SchemaDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { schema, isLoading, error } = useSchema(id!);
-  const { leafFieldCount } = useSchemaFields(schema);
+  const { fieldCount } = useSchemaFields(schema);
 
   if (isLoading) {
     return (
@@ -118,7 +118,7 @@ const SchemaDetailsPage: React.FC = () => {
                 <div className="mt-1 flex items-center gap-1">
                   <Book className="h-4 w-4 text-purple-600" />
                   <span className="text-sm text-gray-900">
-                    {leafFieldCount} value fields defined
+                    {fieldCount} value fields defined
                   </span>
                 </div>
               </div>

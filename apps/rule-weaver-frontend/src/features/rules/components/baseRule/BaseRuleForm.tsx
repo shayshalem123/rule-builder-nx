@@ -40,7 +40,7 @@ const BaseRuleForm: React.FC<BaseRuleFormProps> = ({
   };
 
   return (
-    <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-2 ${className || ""}`}>
       <FieldInput
         value={rule.field}
         onChange={handleFieldChange}

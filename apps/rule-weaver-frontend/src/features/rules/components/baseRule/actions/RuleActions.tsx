@@ -23,15 +23,15 @@ const RuleActions: React.FC<RuleActionsProps> = ({
 }) => {
   const showAndOption = parentGroupType !== "AND";
   const showOrOption = parentGroupType !== "OR";
-  
+
   return (
-    <div className="flex items-center self-end gap-1">
+    <div className="flex items-center gap-1 ml-2 whitespace-nowrap">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            className="text-gray-500 hover:text-blue-500 flex items-center justify-center"
+            className="text-gray-500 hover:text-blue-500 flex items-center justify-center h-8 w-8"
             title="Add condition"
           >
             <Plus className="h-4 w-4" />
@@ -55,7 +55,7 @@ const RuleActions: React.FC<RuleActionsProps> = ({
           variant="ghost"
           size="icon"
           onClick={onDelete}
-          className="text-gray-500 hover:text-red-500 flex items-center justify-center"
+          className="text-gray-500 hover:text-red-500 flex items-center justify-center h-8 w-8"
           title="Delete rule"
         >
           <Trash2 className="h-4 w-4" />

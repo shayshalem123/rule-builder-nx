@@ -78,7 +78,7 @@ const RulesPage: React.FC = () => {
                   error={error as Error}
                   onCreateRule={handleCreateRule}
                   onEditRule={handleEditRule}
-                  // onViewRule={handleViewRule}
+                  onViewRule={handleViewRule}
                 />
               </TabsContent>
             ))}

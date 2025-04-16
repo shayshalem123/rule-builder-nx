@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/shared/components/inputs/input";
 import { cn } from "@/shared/utils/cn";
 import { noBlackBorderFocus } from "@/shared/utils/styles";
-import { ChevronDown, FileJson, Search } from "lucide-react";
+import { Book, ChevronDown, FileJson, Search } from "lucide-react";
 import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
 import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Command,
   CommandEmpty,
@@ -33,6 +33,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
   category = "partners-images",
 }) => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const { schema } = useSchemaByCategory(category);
   const { fieldPaths } = useSchemaFields(schema);
   const [open, setOpen] = useState(false);
@@ -46,21 +47,40 @@ const FieldInput: React.FC<FieldInputProps> = ({
     navigate(`/schemas/${schema.id}`);
   };
 
+  const handleViewRule = () => {
+    if (id) {
+      navigate(`/rules/${id}`);
+    }
+  };
+
   return (
     <div className="flex-1 min-w-[200px]">
       <div className="flex justify-between items-center mb-1">
         <label className="text-xs text-gray-500 block">Field</label>
-        {schema && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-800 rounded-full transition-colors gap-1 px-2"
-            onClick={handleViewSchema}
-          >
-            <FileJson className="h-3.5 w-3.5" />
-            <span className="text-xs">Schema</span>
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {id && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 p-0 text-purple-600 hover:bg-purple-50 hover:text-purple-800 rounded-full transition-colors gap-1 px-2"
+              onClick={handleViewRule}
+            >
+              <Book className="h-3.5 w-3.5" />
+              <span className="text-xs">Rule</span>
+            </Button>
+          )}
+          {schema && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-800 rounded-full transition-colors gap-1 px-2"
+              onClick={handleViewSchema}
+            >
+              <FileJson className="h-3.5 w-3.5" />
+              <span className="text-xs">Schema</span>
+            </Button>
+          )}
+        </div>
       </div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

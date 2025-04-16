@@ -26,6 +26,7 @@ interface GroupRuleComponentProps {
   rule: AndRule | OrRule;
   onChange: (updatedRule: AndRule | OrRule) => void;
   onDelete?: () => void;
+  category?: string;
 }
 
 const ruleMap: Record<Rules, () => RuleType> = {
@@ -38,6 +39,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
   rule,
   onChange,
   onDelete,
+  category = "partners-images",
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const isAnd = isAndRule(rule);
@@ -84,6 +86,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
           }
           onDelete={() => handleRuleDelete(index)}
           parentGroupType={groupType as "AND" | "OR"}
+          category={category}
         />
       );
     } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
@@ -93,6 +96,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = ({
           rule={nestedRule}
           onChange={(updatedRule) => handleRuleChange(index, updatedRule)}
           onDelete={() => handleRuleDelete(index)}
+          category={category}
         />
       );
     }

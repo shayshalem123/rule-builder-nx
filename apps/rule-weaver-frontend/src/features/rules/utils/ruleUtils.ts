@@ -69,13 +69,3 @@ export const operators: { value: Operator; label: string }[] = [
   { value: "NOT_EQUALS", label: "Not Equals" },
   { value: "IN", label: "In" },
 ];
-
-// Common field suggestions
-export const fieldSuggestions = [
-  "metadata.name",
-  "metadata.namespace",
-  "metadata.labels.app",
-  "metadata.labels.tier",
-  "spec.replicas",
-  "status.phase",
-];

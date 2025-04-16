@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-  BaseRule,
   RuleType,
   RuleWithMeta,
-  Rule,
   destinationOptions,
   categoryOptions,
+  AndRule,
+  OrRule,
 } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
@@ -206,18 +206,25 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
         </div>
       </div>
 
-      <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">
-          Rule Condition
-        </h3>
+      <div className="mt-8 space-y-4">
+        <h3 className="text-lg font-semibold text-gray-800">Rule Logic</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Define the conditions that determine when this rule should be applied.
+        </p>
+
         {ruleUtils.isBaseRule(ruleLogic) ? (
           <BaseRuleComponent
             rule={ruleLogic}
-            onChange={(updatedRule) => setRuleLogic(updatedRule)}
-            parentGroupType={null}
+            onChange={setRuleLogic}
+            showDelete={false}
+            category={category}
           />
         ) : (
-          <GroupRuleComponent rule={ruleLogic} onChange={setRuleLogic} />
+          <GroupRuleComponent
+            rule={ruleLogic}
+            onChange={setRuleLogic}
+            category={category}
+          />
         )}
       </div>
 

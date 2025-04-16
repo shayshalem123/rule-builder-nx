@@ -20,6 +20,7 @@ interface BaseRuleComponentProps {
   onDelete?: () => void;
   showDelete?: boolean;
   parentGroupType?: "AND" | "OR" | null;
+  category?: string;
 }
 
 const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
@@ -28,6 +29,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   onDelete,
   showDelete = true,
   parentGroupType = null,
+  category = "partners-images",
 }) => {
   const handleFieldChange = (value: string) => {
     onChange({ ...rule, field: value });
@@ -65,7 +67,11 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
 
   return (
     <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in w-full">
-      <FieldInput value={rule.field} onChange={handleFieldChange} />
+      <FieldInput
+        value={rule.field}
+        onChange={handleFieldChange}
+        category={category}
+      />
       <OperatorSelect value={rule.operator} onChange={handleOperatorChange} />
       <ValueInputContainer rule={rule} onChange={handleValueChange} />
       <RuleActions

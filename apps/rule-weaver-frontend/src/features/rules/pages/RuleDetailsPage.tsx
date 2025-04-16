@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRule } from "../hooks/useRules";
 import { Button } from "@/shared/components/inputs/button";
 import { ArrowLeft, Calendar, MapPin, Tag, User } from "lucide-react";
-import { Badge } from "@/shared/components/inputs/badge";
 import RuleViewer from "../components/ruleViewer";
 
 const RuleDetailsPage: React.FC = () => {

@@ -1,5 +1,6 @@
 import React from "react";
 import { RuleType } from "../../types/rule";
+import { RULE_DESCRIPTIONS } from "../../constants/ruleDescriptions";
 
 interface GroupRuleViewerProps {
   rules: RuleType[];
@@ -18,13 +19,13 @@ const GroupRuleViewer: React.FC<GroupRuleViewerProps> = ({
       borderColor: "border-blue-200",
       bgColor: "bg-blue-50",
       textColor: "text-blue-800",
-      description: "All conditions must match",
+      description: RULE_DESCRIPTIONS.AND.FULL,
     },
     OR: {
       borderColor: "border-orange-200",
       bgColor: "bg-orange-50",
       textColor: "text-orange-800",
-      description: "Any condition may match",
+      description: RULE_DESCRIPTIONS.OR.FULL,
     },
   };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Rules } from "@/features/rules/types/rule";
 import { getGroupStyles } from "./groupStyles";
+import { RULE_DESCRIPTIONS } from "../../constants/ruleDescriptions";
 
 interface GroupRuleHeaderProps {
   isCollapsed: boolean;
@@ -23,6 +24,9 @@ const GroupRuleHeader: React.FC<GroupRuleHeaderProps> = ({
   actionsComponent,
 }) => {
   const { groupTextColor, groupHighlightColor } = getGroupStyles(isAnd);
+  const ruleTypeDescription = isAnd
+    ? RULE_DESCRIPTIONS.AND.SHORT
+    : RULE_DESCRIPTIONS.OR.SHORT;
 
   return (
     <div
@@ -55,7 +59,7 @@ const GroupRuleHeader: React.FC<GroupRuleHeaderProps> = ({
           {groupType} Group
           <span className="hidden sm:inline pointer-events-none">
             {" "}
-            (all conditions {isAnd ? "must" : "can"} match)
+            (all conditions {ruleTypeDescription} match)
           </span>
           <span className="ml-2 text-xs text-gray-500 font-normal pointer-events-none">
             {rulesCount} condition{rulesCount !== 1 ? "s" : ""}

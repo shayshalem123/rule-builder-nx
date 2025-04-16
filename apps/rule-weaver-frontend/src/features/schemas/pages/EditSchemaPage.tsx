@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Schema } from "../types/schema";
+import { Schema, CreateSchema } from "../types/schema";
 import { useSchema, useUpdateSchema } from "../hooks/useSchemas";
 import SchemaForm from "../components/SchemaForm";
 import { useToast } from "@/shared/components/inputs/use-toast";
@@ -10,13 +10,21 @@ import { ArrowLeft } from "lucide-react";
 const EditSchemaPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { schema, isLoading, error } = useSchema(id!);
+  const { schema, isLoading, error } = useSchema(id || "");
   const { updateSchema, isPending } = useUpdateSchema();
   const { toast } = useToast();
 
-  const handleSubmit = async (data: Schema) => {
+  const handleSubmit = async (data: CreateSchema) => {
+    if (!id) return;
+
     try {
-      await updateSchema({ id: id!, schema: data });
+      // Create a complete Schema object with the ID
+      const completeSchema: Schema = {
+        ...data,
+        id, // Add the ID from the URL
+      };
+
+      await updateSchema({ id, schema: completeSchema });
       toast({
         title: "Schema updated",
         description: "The schema has been successfully updated.",

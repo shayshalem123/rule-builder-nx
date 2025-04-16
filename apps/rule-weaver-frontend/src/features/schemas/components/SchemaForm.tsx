@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Schema } from "../types/schema";
+import { Schema, CreateSchema } from "../types/schema";
 import { categoryOptions } from "../types/schema";
 import {
   Form,
@@ -51,7 +51,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface SchemaFormProps {
   initialData?: Schema;
-  onSubmit: (data: Schema) => void;
+  onSubmit: (data: CreateSchema) => void;
   isSubmitting?: boolean;
 }
 
@@ -100,14 +100,15 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
   const handleSubmit = (values: FormValues) => {
     try {
       const definition = JSON.parse(values.definitionJson);
-      onSubmit({
-        ...initialData,
+      const schemaData: CreateSchema = {
         name: values.name,
         description: values.description,
         category: values.category,
         version: values.version,
         definition,
-      });
+      };
+
+      onSubmit(schemaData);
     } catch (error) {
       form.setError("definitionJson", {
         type: "manual",

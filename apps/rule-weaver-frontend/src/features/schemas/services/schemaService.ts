@@ -1,4 +1,9 @@
-import { Schema, SchemaWithMeta, categoryOptions } from "../types/schema";
+import {
+  Schema,
+  SchemaWithMeta,
+  CreateSchema,
+  categoryOptions,
+} from "../types/schema";
 import { User } from "@/features/users/types/user";
 
 // Default user for mock data
@@ -175,7 +180,7 @@ export const schemaService = {
 
   // Create new schema
   createSchema: async (
-    schema: Omit<Schema, "id">,
+    schema: CreateSchema,
     user: User
   ): Promise<SchemaWithMeta> => {
     await delay(500);
@@ -194,7 +199,7 @@ export const schemaService = {
   // Update existing schema
   updateSchema: async (
     id: string,
-    schema: Omit<Schema, "id">,
+    schema: Schema,
     user: User
   ): Promise<SchemaWithMeta> => {
     await delay(500);

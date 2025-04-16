@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Schema } from "../types/schema";
+import { CreateSchema } from "../types/schema";
 import { useCreateSchema } from "../hooks/useSchemas";
 import SchemaForm from "../components/SchemaForm";
 import { useToast } from "@/shared/components/inputs/use-toast";
@@ -12,7 +12,7 @@ const CreateSchemaPage: React.FC = () => {
   const { createSchema, isPending } = useCreateSchema();
   const { toast } = useToast();
 
-  const handleSubmit = async (data: Schema) => {
+  const handleSubmit = async (data: CreateSchema) => {
     try {
       await createSchema(data);
       toast({

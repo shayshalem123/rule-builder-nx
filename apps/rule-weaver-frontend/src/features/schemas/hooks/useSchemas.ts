@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { schemaService } from "../services/schemaService";
-import { Schema } from "../types/schema";
+import { Schema, CreateSchema } from "../types/schema";
 import { useUser } from "@/features/users/contexts/UserContext";
 
 export const useSchemas = () => {
@@ -49,7 +49,7 @@ export const useCreateSchema = () => {
   const { currentUser } = useUser();
 
   const { mutateAsync, isPending, error } = useMutation({
-    mutationFn: (schema: Omit<Schema, "id">) => {
+    mutationFn: (schema: CreateSchema) => {
       if (!currentUser) {
         throw new Error("User not authenticated");
       }
@@ -68,13 +68,7 @@ export const useUpdateSchema = () => {
   const { currentUser } = useUser();
 
   const { mutateAsync, isPending, error } = useMutation({
-    mutationFn: ({
-      id,
-      schema,
-    }: {
-      id: string;
-      schema: Omit<Schema, "id">;
-    }) => {
+    mutationFn: ({ id, schema }: { id: string; schema: Schema }) => {
       if (!currentUser) {
         throw new Error("User not authenticated");
       }

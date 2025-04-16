@@ -120,9 +120,9 @@ const SchemasPage: React.FC = () => {
             <SchemaCard
               key={schema.id}
               schema={schema}
-              onEdit={() => handleEdit(schema.id!)}
-              onDelete={() => confirmDelete(schema.id!)}
-              onView={() => handleView(schema.id!)}
+              onEdit={() => handleEdit(schema.id)}
+              onDelete={() => confirmDelete(schema.id)}
+              onView={() => handleView(schema.id)}
             />
           ))}
         </div>

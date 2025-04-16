@@ -4,8 +4,6 @@ import {
   RuleWithMeta,
   destinationOptions,
   categoryOptions,
-  AndRule,
-  OrRule,
 } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
@@ -21,6 +19,8 @@ import GroupRuleComponent from "./groupRule/GroupRuleComponent";
 import * as ruleUtils from "@/features/rules/utils/ruleUtils";
 import BaseRuleComponent from "./baseRule";
 import { ruleService } from "@/features/rules/services/ruleService";
+import { RuleBuilderHeader } from "./ruleEditor";
+import useRuleHistory from "../hooks/useRuleHistory";
 
 interface RuleBuilderProps {
   initialRule?: RuleWithMeta;
@@ -51,7 +51,20 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
-  // Fetch options from the server
+  const getInitialRuleLogic = (): RuleType => {
+    if (!initialRule) return ruleUtils.createEmptyBaseRule();
+    return initialRule.rule || ruleUtils.createEmptyBaseRule();
+  };
+
+  const {
+    rule: ruleLogic,
+    updateRule: handleRuleLogicChange,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useRuleHistory(getInitialRuleLogic());
+
   useEffect(() => {
     const fetchOptions = async () => {
       setIsLoadingOptions(true);
@@ -75,14 +88,6 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
     fetchOptions();
   }, []);
-
-  // Extract the rule logic part
-  const getInitialRuleLogic = (): RuleType => {
-    if (!initialRule) return ruleUtils.createEmptyBaseRule();
-    return initialRule.rule || ruleUtils.createEmptyBaseRule();
-  };
-
-  const [ruleLogic, setRuleLogic] = useState<RuleType>(getInitialRuleLogic());
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -207,22 +212,24 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
       </div>
 
       <div className="mt-8 space-y-4">
-        <h3 className="text-lg font-semibold text-gray-800">Rule Logic</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Define the conditions that determine when this rule should be applied.
-        </p>
+        <RuleBuilderHeader
+          onUndo={undo}
+          onRedo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+        />
 
         {ruleUtils.isBaseRule(ruleLogic) ? (
           <BaseRuleComponent
             rule={ruleLogic}
-            onChange={setRuleLogic}
+            onChange={handleRuleLogicChange}
             showDelete={false}
             category={category}
           />
         ) : (
           <GroupRuleComponent
             rule={ruleLogic}
-            onChange={setRuleLogic}
+            onChange={handleRuleLogicChange}
             category={category}
           />
         )}

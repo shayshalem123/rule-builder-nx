@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  BaseRule,
-  Operator,
-  AndRule,
-  OrRule,
-} from "@/features/rules/types/rule";
+import { BaseRule, AndRule, OrRule } from "@/features/rules/types/rule";
 import {
   createEmptyAndRule,
   createEmptyOrRule,
 } from "@/features/rules/utils/ruleUtils";
-import FieldInput from "./field";
-import OperatorSelect from "./operator";
-import ValueInputContainer from "./value";
+import BaseRuleForm from "./BaseRuleForm";
 import RuleActions from "./actions";
 
 interface BaseRuleComponentProps {
@@ -31,25 +24,6 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   parentGroupType = null,
   category = "partners-images",
 }) => {
-  const handleFieldChange = (value: string) => {
-    onChange({ ...rule, field: value });
-  };
-
-  const handleOperatorChange = (value: Operator) => {
-    // Clear value when switching operators
-    if (value === "IN") {
-      // When switching to IN, set empty array
-      onChange({ ...rule, operator: value, value: [] });
-    } else {
-      // When switching to other operators, set empty string
-      onChange({ ...rule, operator: value, value: "" });
-    }
-  };
-
-  const handleValueChange = (value: string | string[]) => {
-    onChange({ ...rule, value });
-  };
-
   const handleConvertToGroup = (type: "AND" | "OR") => {
     // Create a new group rule with the current rule as the first condition
     const currentRuleCopy = { ...rule };
@@ -66,14 +40,8 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in w-full">
-      <FieldInput
-        value={rule.field}
-        onChange={handleFieldChange}
-        category={category}
-      />
-      <OperatorSelect value={rule.operator} onChange={handleOperatorChange} />
-      <ValueInputContainer rule={rule} onChange={handleValueChange} />
+    <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in w-full">
+      <BaseRuleForm rule={rule} onChange={onChange} category={category} />
       <RuleActions
         onConvertToGroup={handleConvertToGroup}
         onDelete={onDelete}

@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseRule, Operator } from "@/features/rules/types/rule";
-import FieldInput from "./field";
-import OperatorSelect from "./operator";
+import FieldInput from "./FieldInput";
+import OperatorSelect from "./OperatorSelect";
 import ValueInputContainer from "./value";
 
 interface BaseRuleFormProps {

@@ -5,8 +5,7 @@ import {
   createEmptyOrRule,
 } from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleForm from "./BaseRuleForm";
-import RuleActions from "./actions";
-
+import RuleActions from "./RuleActions";
 interface BaseRuleComponentProps {
   rule: BaseRule;
   onChange: (updatedRule: BaseRule | AndRule | OrRule) => void;

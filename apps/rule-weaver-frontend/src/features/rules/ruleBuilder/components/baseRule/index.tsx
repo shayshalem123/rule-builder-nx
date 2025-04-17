@@ -1,12 +1,12 @@
 import BaseRuleComponent from "./BaseRuleComponent";
-import { FieldInput } from "./field";
-import { OperatorSelect } from "./operator";
+import FieldInput from "./FieldInput";
+import OperatorSelect from "./OperatorSelect";
+import RuleActions from "./RuleActions";
 import {
   StringValueInput,
   ArrayValueInput,
   ValueInputContainer,
 } from "./value";
-import { RuleActions } from "./actions";
 
 export {
   FieldInput,

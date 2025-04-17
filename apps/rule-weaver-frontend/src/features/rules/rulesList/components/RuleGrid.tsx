@@ -1,6 +1,6 @@
 import React from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
-import RuleCard from "@/features/rules/components/ruleCard/RuleCard";
+import RuleCard from "./ruleCard/RuleCard";
 
 interface RuleGridProps {
   rules: RuleWithMeta[];

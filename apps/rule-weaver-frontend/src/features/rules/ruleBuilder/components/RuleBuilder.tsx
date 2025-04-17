@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
   RuleType,
   RuleWithMeta,
-  destinationOptions,
-  categoryOptions,
+  destinationOptions as defaultDestinationOptions,
+  categoryOptions as defaultCategoryOptions,
 } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
 import { Input } from "@/shared/components/inputs/input";
@@ -19,8 +21,8 @@ import GroupRuleComponent from "../components/groupRule/GroupRuleComponent";
 import * as ruleUtils from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleComponent from "../components/baseRule";
 import { ruleService } from "@/features/rules/services/ruleService";
-import { RuleBuilderHeader } from "./ruleEditor";
 import useRuleHistory from "../hooks/useRuleHistory";
+import RuleBuilderHeader from "./ruleEditor/RuleBuilderHeader";
 
 interface RuleBuilderProps {
   initialRule?: RuleWithMeta;
@@ -29,26 +31,24 @@ interface RuleBuilderProps {
   isLoading?: boolean;
 }
 
+// Form validation schema
+const validationSchema = Yup.object({
+  name: Yup.string().required("Rule name is required"),
+  description: Yup.string(),
+  destination: Yup.string().required("Destination is required"),
+  category: Yup.string().required("Category is required"),
+});
+
 const RuleBuilder: React.FC<RuleBuilderProps> = ({
   initialRule,
   onSave,
   onCancel,
   isLoading = false,
 }) => {
-  const [name, setName] = useState(initialRule?.name || "");
-  const [description, setDescription] = useState(
-    initialRule?.description || ""
-  );
-  const [destination, setDestination] = useState(
-    initialRule?.destination || "A"
-  );
-  const [category, setCategory] = useState(
-    initialRule?.category || "partners-images"
-  );
-
-  const [destinations, setDestinations] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-
+  const [optionLists, setOptionLists] = useState({
+    destinationOptions: defaultDestinationOptions,
+    categoryOptions: defaultCategoryOptions,
+  });
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
   const getInitialRuleLogic = (): RuleType => {
@@ -65,22 +65,44 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     canRedo,
   } = useRuleHistory(getInitialRuleLogic());
 
+  const formik = useFormik({
+    initialValues: {
+      name: initialRule?.name || "",
+      description: initialRule?.description || "",
+      destination: initialRule?.destination || "A",
+      category: initialRule?.category || "partners-images",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      // Combine form values with rule logic
+      const fullRule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt"> = {
+        ...values,
+        description: values.description.trim() ? values.description : undefined,
+        rule: ruleLogic,
+      };
+
+      onSave(fullRule);
+    },
+  });
+
+  // Fetch option lists
   useEffect(() => {
     const fetchOptions = async () => {
       setIsLoadingOptions(true);
+
       try {
         const [fetchedDestinations, fetchedCategories] = await Promise.all([
           ruleService.getDestinations(),
           ruleService.getCategories(),
         ]);
 
-        setDestinations(fetchedDestinations);
-        setCategories(fetchedCategories);
+        setOptionLists({
+          destinationOptions: fetchedDestinations,
+          categoryOptions: fetchedCategories,
+        });
       } catch (error) {
         console.error("Error fetching options:", error);
-        // Fallback to hardcoded options
-        setDestinations(destinationOptions);
-        setCategories(categoryOptions);
+        // Fallback to defaults is handled by initial state
       } finally {
         setIsLoadingOptions(false);
       }
@@ -89,34 +111,6 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     fetchOptions();
   }, []);
 
-  const handleSave = () => {
-    if (!name.trim()) {
-      alert("Please provide a name for the rule");
-      return;
-    }
-
-    if (!destination) {
-      alert("Please select a destination");
-      return;
-    }
-
-    if (!category) {
-      alert("Please select a category");
-      return;
-    }
-
-    // Combine the rule logic with metadata
-    const fullRule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt"> = {
-      name,
-      description: description.trim() ? description : undefined,
-      destination,
-      category,
-      rule: ruleLogic,
-    };
-
-    onSave(fullRule);
-  };
-
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-sm border">
       <div className="space-y-4">
@@ -124,7 +118,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           {initialRule ? "Edit Rule" : "Create New Rule"}
         </h2>
 
-        <div className="space-y-3">
+        <form onSubmit={formik.handleSubmit} className="space-y-3">
           <div>
             <label
               htmlFor="name"
@@ -134,11 +128,23 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             </label>
             <Input
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="Enter a descriptive name for this rule"
               required
+              className={
+                formik.touched.name && formik.errors.name
+                  ? "border-red-500"
+                  : ""
+              }
             />
+            {formik.touched.name && formik.errors.name && (
+              <div className="text-red-500 text-sm mt-1">
+                {formik.errors.name}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,21 +156,36 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
                 Destination *
               </label>
               <Select
-                value={destination}
-                onValueChange={setDestination}
+                name="destination"
+                value={formik.values.destination}
+                onValueChange={(value) =>
+                  formik.setFieldValue("destination", value)
+                }
                 disabled={isLoadingOptions}
               >
-                <SelectTrigger id="destination">
+                <SelectTrigger
+                  id="destination"
+                  className={
+                    formik.touched.destination && formik.errors.destination
+                      ? "border-red-500"
+                      : ""
+                  }
+                >
                   <SelectValue placeholder="Select destination" />
                 </SelectTrigger>
                 <SelectContent>
-                  {destinations.map((option) => (
+                  {optionLists.destinationOptions.map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {formik.touched.destination && formik.errors.destination && (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.destination}
+                </div>
+              )}
             </div>
 
             <div>
@@ -175,21 +196,36 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
                 Category *
               </label>
               <Select
-                value={category}
-                onValueChange={setCategory}
+                name="category"
+                value={formik.values.category}
+                onValueChange={(value) =>
+                  formik.setFieldValue("category", value)
+                }
                 disabled={isLoadingOptions}
               >
-                <SelectTrigger id="category">
+                <SelectTrigger
+                  id="category"
+                  className={
+                    formik.touched.category && formik.errors.category
+                      ? "border-red-500"
+                      : ""
+                  }
+                >
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((option) => (
+                  {optionLists.categoryOptions.map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {formik.touched.category && formik.errors.category && (
+                <div className="text-red-500 text-sm mt-1">
+                  {formik.errors.category}
+                </div>
+              )}
             </div>
           </div>
 
@@ -202,13 +238,15 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             </label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="Describe the purpose of this rule"
               rows={3}
             />
           </div>
-        </div>
+        </form>
       </div>
 
       <div className="mt-8 space-y-4">
@@ -224,13 +262,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             rule={ruleLogic}
             onChange={handleRuleLogicChange}
             showDelete={false}
-            category={category}
+            category={formik.values.category}
           />
         ) : (
           <GroupRuleComponent
             rule={ruleLogic}
             onChange={handleRuleLogicChange}
-            category={category}
+            category={formik.values.category}
           />
         )}
       </div>
@@ -240,18 +278,16 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           variant="outline"
           onClick={onCancel}
           disabled={isLoading || isLoadingOptions}
+          type="button"
         >
           Cancel
         </Button>
         <Button
-          onClick={handleSave}
+          onClick={() => formik.handleSubmit()}
           disabled={
-            isLoading ||
-            isLoadingOptions ||
-            !name.trim() ||
-            !destination ||
-            !category
+            isLoading || isLoadingOptions || !formik.isValid || !formik.dirty
           }
+          type="button"
         >
           {isLoading ? "Saving..." : "Save Rule"}
         </Button>

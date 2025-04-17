@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { RuleWithMeta } from "../types/rule";
+
+import { RuleWithMeta } from "@/features/rules/types/rule";
 import RuleList from "./RuleList";
 
 interface DestinationRulesSectionProps {

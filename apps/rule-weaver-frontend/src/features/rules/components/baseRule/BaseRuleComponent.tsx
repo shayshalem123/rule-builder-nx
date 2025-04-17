@@ -3,7 +3,7 @@ import { BaseRule, AndRule, OrRule } from "@/features/rules/types/rule";
 import {
   createEmptyAndRule,
   createEmptyOrRule,
-} from "@/features/rules/utils/ruleUtils";
+} from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleForm from "./BaseRuleForm";
 import RuleActions from "./actions";
 

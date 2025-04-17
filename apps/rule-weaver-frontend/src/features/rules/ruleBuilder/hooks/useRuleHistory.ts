@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RuleType } from "../types/rule";
+import { RuleType } from "@/features/rules/types/rule";
 
 /**
  * Custom hook for managing rule history and providing undo/redo functionality

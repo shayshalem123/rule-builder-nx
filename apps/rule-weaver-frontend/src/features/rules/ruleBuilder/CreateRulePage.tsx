@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import RuleBuilder from "@/features/rules/components/RuleBuilder";
-import { useCreateRule } from "@/features/rules/hooks/useRules";
+import { RuleBuilder } from "./components";
+import { useCreateRule } from "./hooks/useRuleBuilder";
 import { Rule } from "@/features/rules/types/rule";
 
 const CreateRulePage: React.FC = () => {

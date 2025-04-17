@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRule } from "../hooks/useRules";
+import { useRuleDetails } from "./hooks/useRuleDetails";
 import { Button } from "@/shared/components/inputs/button";
 import { ArrowLeft, Calendar, MapPin, Tag, User } from "lucide-react";
-import RuleViewer from "../components/ruleViewer";
+import { RuleViewer } from "./components/ruleViewer";
 
 const RuleDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: rule, isLoading, error } = useRule(id || "");
+  const { data: rule, isLoading, error } = useRuleDetails(id || "");
 
   if (isLoading) {
     return (

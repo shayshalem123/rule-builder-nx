@@ -1,25 +1,27 @@
-
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import RuleBuilder from '@/features/rules/components/RuleBuilder';
-import { useRule, useUpdateRule } from '@/features/rules/hooks/useRules';
-import { RuleWithMeta } from '@/features/rules/types/rule';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/shared/components/inputs/button';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { RuleBuilder } from "./components";
+import { useUpdateRule } from "./hooks/useRuleBuilder";
+import { useRuleDetails } from "../ruleDetails/hooks/useRuleDetails";
+import { RuleWithMeta } from "@/features/rules/types/rule";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/shared/components/inputs/button";
 
 const EditRulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: rule, isLoading, error } = useRule(id || '');
+  const { data: rule, isLoading, error } = useRuleDetails(id || "");
   const updateRuleMutation = useUpdateRule();
 
-  const handleSave = (updatedRule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleSave = (
+    updatedRule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+  ) => {
     if (id) {
       updateRuleMutation.mutate(
         { id, rule: updatedRule },
         {
           onSuccess: () => {
-            navigate('/rules');
+            navigate("/rules");
           },
         }
       );
@@ -27,7 +29,7 @@ const EditRulePage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    navigate('/rules');
+    navigate("/rules");
   };
 
   if (isLoading) {
@@ -51,8 +53,12 @@ const EditRulePage: React.FC = () => {
         <div className="flex flex-col items-center text-red-500 py-12">
           <AlertCircle className="h-12 w-12 mb-4" />
           <h3 className="text-lg font-medium">Error loading rule</h3>
-          <p className="mt-1">{error?.message || 'Rule not found'}</p>
-          <Button variant="outline" className="mt-4" onClick={() => navigate('/rules')}>
+          <p className="mt-1">{error?.message || "Rule not found"}</p>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => navigate("/rules")}
+          >
             Back to Rules
           </Button>
         </div>

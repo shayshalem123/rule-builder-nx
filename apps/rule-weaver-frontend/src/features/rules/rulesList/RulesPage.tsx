@@ -1,18 +1,21 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
-import { useRules } from "../hooks/useRules";
-import { getGroupedRulesByDestination } from "../utils/ruleUtils";
-import RuleSearch from "../components/RuleSearch";
-import { RuleWithMeta } from "../types/rule";
+import { useRulesList } from "./hooks/useRulesList";
+import {
+  getGroupedRulesByDestination,
+  filterRulesByQuery,
+} from "./utils/listingUtils";
+import RuleSearch from "./components/RuleSearch";
+import { RuleWithMeta } from "@/features/rules/types/rule";
 import PageHeader from "@/shared/components/PageHeader";
-import EmptyStateMessage from "../components/EmptyStateMessage";
+import EmptyStateMessage from "@/features/rules/shared/components/EmptyStateMessage";
 import ErrorMessage from "@/shared/components/ErrorMessage";
-import DestinationRulesSection from "../components/DestinationRulesSection";
+import DestinationRulesSection from "./components/DestinationRulesSection";
 
 const RulesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: rules = [], isLoading, error, refetch } = useRules();
+  const { data: rules = [], isLoading, error, refetch } = useRulesList();
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleCreateRule = () => {
@@ -20,19 +23,7 @@ const RulesPage: React.FC = () => {
   };
 
   const filteredRules = useMemo(() => {
-    if (!searchQuery.trim()) return rules;
-
-    const lowerQuery = searchQuery.toLowerCase();
-    return rules.filter((rule) => {
-      const searchableValues = [
-        rule.name,
-        rule.description || "",
-        rule.category,
-        rule.destination,
-      ].map((value) => value.toLowerCase());
-
-      return searchableValues.some((value) => value.includes(lowerQuery));
-    });
+    return filterRulesByQuery(rules, searchQuery);
   }, [rules, searchQuery]);
 
   const groupedRules = useMemo(() => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseRule } from "../../types/rule";
+import { BaseRule } from "@/features/rules/types/rule";
 
 interface BaseRuleViewerProps {
   rule: BaseRule;

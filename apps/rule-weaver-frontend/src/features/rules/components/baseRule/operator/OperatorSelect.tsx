@@ -7,8 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/inputs/select";
-import { operators } from "@/features/rules/utils/ruleUtils";
-import { cn } from "@/shared/utils/cn";
+import { operators } from "@/features/rules/shared/utils/ruleUtils";
 import { noBlackBorderFocus } from "@/shared/utils/styles";
 
 interface OperatorSelectProps {

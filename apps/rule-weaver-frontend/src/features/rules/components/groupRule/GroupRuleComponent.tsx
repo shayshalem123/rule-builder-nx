@@ -6,14 +6,6 @@ import {
   BaseRule,
   Rules,
 } from "@/features/rules/types/rule";
-import {
-  createEmptyBaseRule,
-  createEmptyAndRule,
-  createEmptyOrRule,
-  isBaseRule,
-  isAndRule,
-  isOrRule,
-} from "@/features/rules/utils/ruleUtils";
 import GroupRuleHeader from "./GroupRuleHeader";
 import GroupRuleContent from "./GroupRuleContent";
 import GroupRuleActions from "./GroupRuleActions";
@@ -21,7 +13,14 @@ import { getGroupStyles } from "./groupStyles";
 import BaseRuleComponent from "../baseRule";
 import { Button } from "@/shared/components/inputs/button";
 import { Plus } from "lucide-react";
-
+import {
+  createEmptyBaseRule,
+  createEmptyAndRule,
+  createEmptyOrRule,
+  isBaseRule,
+  isAndRule,
+  isOrRule,
+} from "@/features/rules/shared/utils/ruleUtils";
 interface GroupRuleComponentProps {
   rule: AndRule | OrRule;
   onChange: (updatedRule: AndRule | OrRule) => void;

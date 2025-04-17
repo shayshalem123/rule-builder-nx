@@ -1,6 +1,10 @@
 import React from "react";
-import { RuleType } from "../../types/rule";
-import { isBaseRule, isAndRule, isOrRule } from "../../utils/ruleUtils";
+import { RuleType } from "@/features/rules/types/rule";
+import {
+  isBaseRule,
+  isAndRule,
+  isOrRule,
+} from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleViewer from "./BaseRuleViewer";
 import GroupRuleViewer from "./GroupRuleViewer";
 

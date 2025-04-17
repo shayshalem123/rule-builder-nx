@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
-import { useDeleteRule } from "@/features/rules/hooks/useRules";
+import { useDeleteRule } from "../hooks/useRulesList";
 import DeleteConfirmationDialog from "@/shared/components/DeleteConfirmationDialog";
-import EmptyStateMessage from "./EmptyStateMessage";
+import EmptyStateMessage from "@/features/rules/shared/components/EmptyStateMessage";
 import ErrorMessage from "@/shared/components/ErrorMessage";
 import LoadingState from "@/shared/components/LoadingState";
 import RuleGrid from "./RuleGrid";

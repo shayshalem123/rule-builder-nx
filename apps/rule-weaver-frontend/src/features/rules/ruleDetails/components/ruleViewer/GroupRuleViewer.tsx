@@ -1,6 +1,6 @@
 import React from "react";
-import { RuleType } from "../../types/rule";
-import { RULE_DESCRIPTIONS } from "../../constants/ruleDescriptions";
+import { RuleType } from "@/features/rules/types/rule";
+import { RULE_DESCRIPTIONS } from "@/features/rules/shared/constants/ruleDescriptions";
 
 interface GroupRuleViewerProps {
   rules: RuleType[];

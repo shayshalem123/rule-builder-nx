@@ -2,7 +2,7 @@ import React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Rules } from "@/features/rules/types/rule";
 import { getGroupStyles } from "./groupStyles";
-import { RULE_DESCRIPTIONS } from "../../constants/ruleDescriptions";
+import { RULE_DESCRIPTIONS } from "@/features/rules/shared/constants/ruleDescriptions";
 
 interface GroupRuleHeaderProps {
   isCollapsed: boolean;

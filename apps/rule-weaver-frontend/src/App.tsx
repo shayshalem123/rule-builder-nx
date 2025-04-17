@@ -6,15 +6,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./core/pages/Index";
 import NotFound from "./core/pages/NotFound";
 import Layout from "./core/layout/Layout";
-import RulesPage from "./features/rules/pages/RulesPage";
-import CreateRulePage from "./features/rules/pages/CreateRulePage";
-import EditRulePage from "./features/rules/pages/EditRulePage";
-import RuleDetailsPage from "./features/rules/pages/RuleDetailsPage";
 import SchemasPage from "./features/schemas/pages/SchemasPage";
 import CreateSchemaPage from "./features/schemas/pages/CreateSchemaPage";
 import EditSchemaPage from "./features/schemas/pages/EditSchemaPage";
 import SchemaDetailsPage from "./features/schemas/pages/SchemaDetailsPage";
 import { UserProvider } from "./features/users/contexts/UserContext";
+import { RuleDetailsPage } from "./features/rules/ruleDetails";
+import { CreateRulePage, EditRulePage } from "./features/rules/ruleBuilder";
+import RulesPage from "./features/rules/rulesList/RulesPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {

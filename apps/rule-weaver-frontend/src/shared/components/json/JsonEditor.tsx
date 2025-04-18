@@ -141,17 +141,17 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
 
   return (
     <div className="space-y-0">
-      <div className="relative border rounded-md shadow-sm">
+      <div className="relative border rounded-md shadow-sm" style={{ height }}>
         {renderButtons()}
         <textarea
           ref={textareaRef}
-          className={`w-full p-4 font-mono text-sm bg-gray-50 rounded-md ${className}`}
+          className={`w-full h-full p-4 font-mono text-sm bg-gray-50 rounded-md ${className}`}
           value={jsonText}
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
           readOnly={readOnly}
-          style={{ resize: "none", height }}
+          style={{ resize: "none" }}
         />
       </div>
 

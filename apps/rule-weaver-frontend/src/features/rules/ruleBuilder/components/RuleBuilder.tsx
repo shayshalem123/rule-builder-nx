@@ -4,8 +4,13 @@ import { RuleLogicBuilder } from "./RuleLogicBuilder";
 import { RuleFormFields } from "./RuleFormFields";
 import { FormActions } from "./FormActions";
 import { RuleWithMeta } from "@/features/rules/types/rule";
-import TabNavigation from "../../shared/components/TabNavigation";
 import RuleJsonEditor from "../../shared/components/RuleJsonEditor";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/shared/components/inputs/tabs";
 
 interface RuleBuilderProps {
   onSave: (
@@ -17,11 +22,6 @@ interface RuleBuilderProps {
 }
 
 type TabId = "visual" | "json";
-
-const TABS: Array<{ id: TabId; label: string }> = [
-  { id: "visual", label: "Visual Builder" },
-  { id: "json", label: "JSON Editor" },
-];
 
 const RuleBuilder: React.FC<RuleBuilderProps> = ({
   onSave,
@@ -47,22 +47,28 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">
         {initialRule ? "Edit Rule" : "Create Rule"}
       </h1>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <TabNavigation
-          tabs={TABS}
-          activeTab={activeTab}
-          onTabChange={(tabId: TabId) => setActiveTab(tabId)}
-        />
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
+        <Tabs
+          defaultValue="visual"
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as TabId)}
+          className="w-full"
+        >
+          <TabsList className="mb-6 grid grid-cols-2 w-full">
+            <TabsTrigger value="visual" className="w-full">
+              <span className="relative">Visual Builder</span>
+            </TabsTrigger>
+            <TabsTrigger value="json" className="w-full">
+              <span className="relative">JSON Editor</span>
+            </TabsTrigger>
+          </TabsList>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
-          {activeTab === "json" ? (
-            <RuleJsonEditor formik={formik} updateFormik={updateFormik} />
-          ) : (
-            <>
+          <form onSubmit={formik.handleSubmit} className="space-y-6 w-full">
+            <TabsContent value="visual" className="w-full">
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-4">Rule Properties</h2>
                 <RuleFormFields
@@ -83,16 +89,20 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
                   canRedo={canRedo}
                 />
               </div>
-            </>
-          )}
+            </TabsContent>
 
-          <FormActions
-            onCancel={onCancel}
-            onSubmit={formik.handleSubmit}
-            isLoading={isLoading}
-            isDisabled={!formik.isValid || !formik.dirty}
-          />
-        </form>
+            <TabsContent value="json" className="w-full">
+              <RuleJsonEditor formik={formik} updateFormik={updateFormik} />
+            </TabsContent>
+
+            <FormActions
+              onCancel={onCancel}
+              onSubmit={formik.handleSubmit}
+              isLoading={isLoading}
+              isDisabled={!formik.isValid || !formik.dirty}
+            />
+          </form>
+        </Tabs>
       </div>
     </div>
   );

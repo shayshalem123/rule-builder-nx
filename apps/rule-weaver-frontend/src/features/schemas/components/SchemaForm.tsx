@@ -220,13 +220,15 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
           )}
         />
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? "Saving..."
-            : initialData
-            ? "Update Schema"
-            : "Create Schema"}
-        </Button>
+        <div className="flex w-full justify-end">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting
+              ? "Saving..."
+              : initialData
+              ? "Update Schema"
+              : "Create Schema"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

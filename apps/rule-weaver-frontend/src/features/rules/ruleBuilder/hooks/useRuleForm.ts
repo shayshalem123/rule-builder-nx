@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   RuleType,
   RuleWithMeta,
@@ -20,17 +20,6 @@ export interface RuleFormValues {
   rule: RuleType;
 }
 
-const validationSchema = Yup.object({
-  name: Yup.string().required("Rule name is required"),
-  description: Yup.string(),
-  destination: Yup.string().required("Destination is required"),
-  category: Yup.string()
-    .oneOf(defaultCategoryOptions)
-    .required("Category is required"),
-  // We could add rule validation here if needed
-  rule: Yup.mixed().required("Rule logic is required"),
-});
-
 export const useRuleForm = (
   initialRule?: RuleWithMeta,
   onSave?: (rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">) => void
@@ -41,13 +30,33 @@ export const useRuleForm = (
   });
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
-  // Initialize the rule logic
+  const validationSchema = useMemo(() => {
+    return Yup.object({
+      name: Yup.string().required("Rule name is required"),
+      description: Yup.string(),
+      destination: Yup.string()
+        .required("Destination is required")
+        .oneOf(
+          optionLists.destinationOptions,
+          `Destination must be one of: ${optionLists.destinationOptions.join(
+            ", "
+          )}`
+        ),
+      category: Yup.string()
+        .required("Category is required")
+        .oneOf(
+          optionLists.categoryOptions,
+          `Category must be one of: ${optionLists.categoryOptions.join(", ")}`
+        ),
+      rule: Yup.mixed().required("Rule logic is required"),
+    });
+  }, [optionLists.destinationOptions, optionLists.categoryOptions]);
+
   const getInitialRuleLogic = (): RuleType => {
     if (!initialRule) return ruleUtils.createEmptyBaseRule();
     return initialRule.rule || ruleUtils.createEmptyBaseRule();
   };
 
-  // Use the existing useRuleHistory hook
   const {
     rule: currentRule,
     updateRule,
@@ -61,9 +70,10 @@ export const useRuleForm = (
     initialValues: {
       name: initialRule?.name || "",
       description: initialRule?.description || "",
-      destination: initialRule?.destination || "A",
-      category: initialRule?.category || "partners-images",
-      rule: currentRule, // Use the rule from useRuleHistory
+      destination:
+        initialRule?.destination || optionLists.destinationOptions[0] || "",
+      category: initialRule?.category || optionLists.categoryOptions[0] || "",
+      rule: currentRule,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -78,17 +88,14 @@ export const useRuleForm = (
     },
   });
 
-  // Connect rule logic updates to both history management and form state
   const updateRuleLogic = (newRule: RuleType) => {
-    // Update the history first
     updateRule(newRule);
-    // Update the Formik state to match
     formik.setFieldValue("rule", newRule);
   };
 
-  // Keep Formik state in sync with history changes when undo/redo are used
   useEffect(() => {
     formik.setFieldValue("rule", currentRule);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRule]);
 
   useEffect(() => {
@@ -112,6 +119,7 @@ export const useRuleForm = (
     };
 
     fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

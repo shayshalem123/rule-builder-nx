@@ -8,6 +8,7 @@ import {
   Terminal,
   AlertTriangle,
   Keyboard,
+  Sparkles,
 } from "lucide-react";
 import NavLink from "./NavLink";
 import UserMenu from "./UserMenu";
@@ -30,8 +31,8 @@ const Navbar: React.FC = () => {
             <NavLink to="/schemas" icon={<FileJson className="h-4 w-4" />}>
               Schemas
             </NavLink>
-            <NavLink to="/monaco-demo" icon={<Code className="h-4 w-4" />}>
-              Monaco Demo
+            <NavLink to="/react-monaco" icon={<Sparkles className="h-4 w-4" />}>
+              Monaco Editor
             </NavLink>
           </nav>
         </div>

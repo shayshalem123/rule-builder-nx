@@ -14,7 +14,7 @@ import { UserProvider } from "./features/users/contexts/UserContext";
 import { RuleDetailsPage } from "./features/rules/ruleDetails";
 import { CreateRulePage, EditRulePage } from "./features/rules/ruleBuilder";
 import RulesPage from "./features/rules/rulesList/RulesPage";
-import MonacoEditorDemo from "./pages/MonacoEditorDemo";
+import ReactMonacoDemo from "./pages/ReactMonacoDemo";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +43,7 @@ const App = () => (
               <Route path="/schemas/create" element={<CreateSchemaPage />} />
               <Route path="/schemas/edit/:id" element={<EditSchemaPage />} />
               <Route path="/schemas/:id" element={<SchemaDetailsPage />} />
-              <Route path="/monaco-demo" element={<MonacoEditorDemo />} />
+              <Route path="/react-monaco" element={<ReactMonacoDemo />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

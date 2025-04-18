@@ -19,7 +19,11 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   const [jsonText, setJsonText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
+  const isUserEditing = useRef(false);
+
   useEffect(() => {
+    if (isUserEditing.current) return;
+
     try {
       setJsonText(JSON.stringify(value, null, 2));
     } catch (err) {
@@ -46,6 +50,14 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     }
   };
 
+  const handleBlur = () => {
+    isUserEditing.current = false;
+  };
+
+  const handleFocus = () => {
+    isUserEditing.current = true;
+  };
+
   const renderErrors = () => {
     if (!error) return null;
 
@@ -64,6 +76,8 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
           className={`w-full p-4 font-mono text-sm bg-gray-50 rounded-md ${className}`}
           value={jsonText}
           onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           readOnly={readOnly}
           style={{ resize: "none", height }}
         />

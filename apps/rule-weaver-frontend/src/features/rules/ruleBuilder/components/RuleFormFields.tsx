@@ -60,77 +60,6 @@ export const RuleFormFields: React.FC<RuleFormFieldsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label
-            htmlFor="destination"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Destination *
-          </label>
-          <Select
-            name="destination"
-            value={formik.values.destination}
-            onValueChange={(value) => {
-              formik.setFieldValue("destination", value);
-              formik.setFieldTouched("destination", true);
-            }}
-            disabled={isLoadingOptions}
-          >
-            <SelectTrigger
-              id="destination"
-              className={
-                (formik.touched.destination && formik.errors.destination) ||
-                !isValueInOptions(
-                  formik.values.destination,
-                  optionLists.destinationOptions
-                )
-                  ? "border-red-500"
-                  : ""
-              }
-            >
-              <SelectValue
-                placeholder={
-                  isLoadingOptions ? "Loading..." : "Select destination"
-                }
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {optionLists.destinationOptions.length > 0 ? (
-                optionLists.destinationOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))
-              ) : (
-                <SelectItem value="" disabled>
-                  {isLoadingOptions
-                    ? "Loading destinations..."
-                    : "No destinations available"}
-                </SelectItem>
-              )}
-            </SelectContent>
-          </Select>
-          {formik.touched.destination && formik.errors.destination && (
-            <div className="text-red-500 text-sm mt-1 flex items-start">
-              <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
-              <span>{formik.errors.destination}</span>
-            </div>
-          )}
-          {!isValueInOptions(
-            formik.values.destination,
-            optionLists.destinationOptions
-          ) &&
-            !formik.errors.destination && (
-              <div className="text-amber-500 text-sm mt-1 flex items-start">
-                <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
-                <span>
-                  Warning: Selected value '{formik.values.destination}' is not
-                  in the current list of available destinations
-                </span>
-              </div>
-            )}
-        </div>
-
-        <div>
-          <label
             htmlFor="category"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
@@ -195,6 +124,77 @@ export const RuleFormFields: React.FC<RuleFormFieldsProps> = ({
                 <span>
                   Warning: Selected value '{formik.values.category}' is not in
                   the current list of available categories
+                </span>
+              </div>
+            )}
+        </div>
+
+        <div>
+          <label
+            htmlFor="destination"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Destination *
+          </label>
+          <Select
+            name="destination"
+            value={formik.values.destination}
+            onValueChange={(value) => {
+              formik.setFieldValue("destination", value);
+              formik.setFieldTouched("destination", true);
+            }}
+            disabled={isLoadingOptions}
+          >
+            <SelectTrigger
+              id="destination"
+              className={
+                (formik.touched.destination && formik.errors.destination) ||
+                !isValueInOptions(
+                  formik.values.destination,
+                  optionLists.destinationOptions
+                )
+                  ? "border-red-500"
+                  : ""
+              }
+            >
+              <SelectValue
+                placeholder={
+                  isLoadingOptions ? "Loading..." : "Select destination"
+                }
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {optionLists.destinationOptions.length > 0 ? (
+                optionLists.destinationOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="" disabled>
+                  {isLoadingOptions
+                    ? "Loading destinations..."
+                    : "No destinations available"}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+          {formik.touched.destination && formik.errors.destination && (
+            <div className="text-red-500 text-sm mt-1 flex items-start">
+              <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+              <span>{formik.errors.destination}</span>
+            </div>
+          )}
+          {!isValueInOptions(
+            formik.values.destination,
+            optionLists.destinationOptions
+          ) &&
+            !formik.errors.destination && (
+              <div className="text-amber-500 text-sm mt-1 flex items-start">
+                <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+                <span>
+                  Warning: Selected value '{formik.values.destination}' is not
+                  in the current list of available destinations
                 </span>
               </div>
             )}

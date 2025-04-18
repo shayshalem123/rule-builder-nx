@@ -68,12 +68,14 @@ const EditRulePage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <RuleBuilder
-        initialRule={rule}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        isLoading={updateRuleMutation.isPending}
-      />
+      <div className="max-w-5xl mx-auto">
+        <RuleBuilder
+          initialRule={rule}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          isLoading={updateRuleMutation.isPending}
+        />
+      </div>
     </div>
   );
 };

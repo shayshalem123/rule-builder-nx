@@ -22,11 +22,13 @@ const CreateRulePage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <RuleBuilder
-        onSave={handleSave}
-        onCancel={handleCancel}
-        isLoading={createRuleMutation.isPending}
-      />
+      <div className="max-w-5xl mx-auto">
+        <RuleBuilder
+          onSave={handleSave}
+          onCancel={handleCancel}
+          isLoading={createRuleMutation.isPending}
+        />
+      </div>
     </div>
   );
 };

@@ -8,10 +8,7 @@ export interface SchemaProperty {
   properties?: Record<string, SchemaProperty>;
 }
 
-export interface SchemaDefinition {
-  properties: Record<string, SchemaProperty>;
-  required?: string[];
-}
+export type SchemaDefinition = Record<string, any>;
 
 // Interface for creating a new schema (ID is not yet assigned)
 export interface Schema {
@@ -20,7 +17,7 @@ export interface Schema {
   description?: string;
   category: string;
   version: string;
-  definition: SchemaDefinition;
+  definition: Record<string, any>;
 }
 
 // Interface for existing schemas (ID is required)

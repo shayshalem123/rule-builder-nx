@@ -48,23 +48,19 @@ const FieldInput: React.FC<FieldInputProps> = ({
   };
 
   return (
-    <div className="flex-1 min-w-[200px]">
-      <div className="flex justify-between items-center mb-1">
-        <label className="text-xs text-gray-500 block">Field</label>
-        <div className="flex gap-2">
-          {schema && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-800 rounded-full transition-colors gap-1 px-2"
-              onClick={handleViewSchema}
-            >
-              <FileJson className="h-3.5 w-3.5" />
-              <span className="text-xs">Schema</span>
-            </Button>
-          )}
-        </div>
-      </div>
+    <div className="flex-1 min-w-[200px] relative">
+      <label className="text-xs text-gray-500 block mb-1">Field</label>
+      {schema && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute top-[-5px] right-0 h-6 p-0 text-blue-600 hover:bg-blue-50 hover:text-blue-800 rounded-full transition-colors gap-1 px-2"
+          onClick={handleViewSchema}
+        >
+          <FileJson className="h-3.5 w-3.5" />
+          <span className="text-xs">Schema</span>
+        </Button>
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div className="relative">

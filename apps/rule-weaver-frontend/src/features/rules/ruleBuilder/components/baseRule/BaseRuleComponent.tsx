@@ -40,16 +40,18 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
 
   return (
     <div className="p-3 bg-white rounded-md border border-gray-200 shadow-sm animate-fade-in w-full">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div className="flex-grow">
           <BaseRuleForm rule={rule} onChange={onChange} category={category} />
         </div>
-        <RuleActions
-          onConvertToGroup={handleConvertToGroup}
-          onDelete={onDelete}
-          showDelete={showDelete}
-          parentGroupType={parentGroupType}
-        />
+        <div className="pt-6">
+          <RuleActions
+            onConvertToGroup={handleConvertToGroup}
+            onDelete={onDelete}
+            showDelete={showDelete}
+            parentGroupType={parentGroupType}
+          />
+        </div>
       </div>
     </div>
   );

@@ -3,11 +3,14 @@ import { RuleFormValues, useRuleForm } from "../hooks/useRuleForm";
 import { RuleLogicBuilder } from "./RuleLogicBuilder";
 import { RuleFormFields } from "./RuleFormFields";
 import { FormActions } from "./FormActions";
+import { RuleWithMeta } from "@/features/rules/types/rule";
 
 interface RuleBuilderProps {
-  onSave: (values: RuleFormValues) => void;
+  onSave: (
+    values: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">
+  ) => void;
   onCancel: () => void;
-  initialRule?: RuleFormValues;
+  initialRule?: RuleWithMeta;
   isLoading?: boolean;
 }
 

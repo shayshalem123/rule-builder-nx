@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRuleForm } from "../hooks/useRuleForm";
+import { RuleFormValues, useRuleForm } from "../hooks/useRuleForm";
 import { RuleLogicBuilder } from "./RuleLogicBuilder";
 import { RuleFormFields } from "./RuleFormFields";
 import { FormActions } from "./FormActions";
@@ -42,6 +42,10 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     canRedo,
   } = useRuleForm(initialRule, onSave);
 
+  const updateFormik = (values: RuleFormValues) => {
+    formik.setValues(values);
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold mb-4">
@@ -56,7 +60,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {activeTab === "json" ? (
-            <RuleJsonEditor formik={formik} />
+            <RuleJsonEditor formik={formik} updateFormik={updateFormik} />
           ) : (
             <>
               <div className="mb-6">

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { FormikProps } from "formik";
 import { RuleFormValues } from "@/features/rules/ruleBuilder/hooks/useRuleForm";
 import JsonEditor from "@/shared/components/json/JsonEditor";
+import { RuleType } from "../../types/rule";
 
 export interface RuleFormValuesWithJson extends RuleFormValues {
   json?: string;
@@ -9,9 +10,13 @@ export interface RuleFormValuesWithJson extends RuleFormValues {
 
 interface RuleJsonEditorProps {
   formik: FormikProps<RuleFormValuesWithJson>;
+  updateFormik: (values: RuleFormValuesWithJson) => void;
 }
 
-const RuleJsonEditor: React.FC<RuleJsonEditorProps> = ({ formik }) => {
+const RuleJsonEditor: React.FC<RuleJsonEditorProps> = ({
+  formik,
+  updateFormik,
+}) => {
   const jsonObject = useMemo(() => {
     const { name, description, destination, category, rule } = formik.values;
 
@@ -25,12 +30,14 @@ const RuleJsonEditor: React.FC<RuleJsonEditorProps> = ({ formik }) => {
   }, [formik]);
 
   const handleJsonChange = (parsedJson: Record<string, unknown>) => {
-    formik.setFieldValue("name", parsedJson.name);
-    formik.setFieldValue("description", parsedJson.description);
-    formik.setFieldValue("destination", parsedJson.destination);
-    formik.setFieldValue("category", parsedJson.category);
-    formik.setFieldValue("rule", parsedJson.rule);
-    formik.setFieldError("json", undefined);
+    updateFormik({
+      ...formik.values,
+      name: parsedJson.name as string,
+      description: parsedJson.description as string,
+      destination: parsedJson.destination as string,
+      category: parsedJson.category as string,
+      rule: parsedJson.rule as RuleType,
+    });
   };
 
   return <JsonEditor value={jsonObject} onChange={handleJsonChange} />;

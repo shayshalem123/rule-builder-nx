@@ -24,7 +24,9 @@ const validationSchema = Yup.object({
   name: Yup.string().required("Rule name is required"),
   description: Yup.string(),
   destination: Yup.string().required("Destination is required"),
-  category: Yup.string().required("Category is required"),
+  category: Yup.string()
+    .oneOf(defaultCategoryOptions)
+    .required("Category is required"),
   // We could add rule validation here if needed
   rule: Yup.mixed().required("Rule logic is required"),
 });

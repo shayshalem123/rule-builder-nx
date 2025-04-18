@@ -23,6 +23,7 @@ import {
 } from "@/shared/components/inputs/select";
 import { Button } from "@/shared/components/inputs/button";
 import { SchemaJsonEditor } from "./SchemaJsonEditor";
+import JsonEditor from "@/shared/components/json/JsonEditor";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -204,11 +205,15 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
             <FormItem>
               <FormLabel>Schema Definition (JSON)</FormLabel>
               <FormControl>
-                <SchemaJsonEditor
-                  value={field.value}
-                  onChange={field.onChange}
-                  height="300px"
-                />
+                <div className="[&_.absolute.top-2]:right-5">
+                  <JsonEditor
+                    value={field.value ? JSON.parse(field.value) : {}}
+                    onChange={(parsedJson) => {
+                      field.onChange(JSON.stringify(parsedJson, null, 2));
+                    }}
+                    height="300px"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

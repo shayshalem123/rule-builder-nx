@@ -5,7 +5,7 @@ import { RuleFormFields } from "./RuleFormFields";
 import { FormActions } from "./FormActions";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import TabNavigation from "../../shared/components/TabNavigation";
-import JsonRuleEditor from "../../shared/components/JsonRuleEditor";
+import RuleJsonEditor from "../../shared/components/RuleJsonEditor";
 
 interface RuleBuilderProps {
   onSave: (
@@ -56,7 +56,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {activeTab === "json" ? (
-            <JsonRuleEditor formik={formik} />
+            <RuleJsonEditor formik={formik} />
           ) : (
             <>
               <div className="mb-6">

@@ -7,7 +7,7 @@ import {
 } from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleViewer from "./BaseRuleViewer";
 import GroupRuleViewer from "./GroupRuleViewer";
-import JsonRuleEditor from "@/features/rules/shared/components/JsonRuleEditor";
+import JsonEditor from "@/shared/components/json/JsonEditor";
 import TabNavigation from "@/features/rules/shared/components/TabNavigation";
 
 const TABS = [
@@ -58,7 +58,7 @@ const RuleViewer: React.FC<RuleViewerProps> = ({ rule }) => {
       {activeTab === "visual" ? (
         renderRule(rule)
       ) : (
-        <JsonRuleEditor rule={rule} readOnly={true} />
+        <JsonEditor value={rule} readOnly={true} />
       )}
     </div>
   );

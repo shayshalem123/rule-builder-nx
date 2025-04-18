@@ -21,14 +21,28 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   const [jsonText, setJsonText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isFormatted, setIsFormatted] = useState(true);
   const isUserEditing = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Check if current JSON is properly formatted
+  const checkFormatting = (text: string) => {
+    try {
+      const parsed = JSON.parse(text);
+      const formatted = JSON.stringify(parsed, null, 2);
+      return formatted === text;
+    } catch {
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (isUserEditing.current) return;
 
     try {
-      setJsonText(JSON.stringify(value, null, 2));
+      const formattedJson = JSON.stringify(value, null, 2);
+      setJsonText(formattedJson);
+      setIsFormatted(true);
     } catch (err) {
       setJsonText("");
       setError("Could not convert value to JSON");
@@ -37,8 +51,10 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
-
     setJsonText(text);
+
+    // Update formatting state
+    setIsFormatted(checkFormatting(text));
 
     if (!onChange) return;
 
@@ -81,6 +97,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
       const formatted = JSON.stringify(parsed, null, 2);
 
       setJsonText(formatted);
+      setIsFormatted(true);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Invalid JSON format";
@@ -97,13 +114,14 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
           <button
             type="button"
             onClick={handleFormat}
+            disabled={readOnly || isFormatted}
             className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm
             ${
-              readOnly
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-70"
-                : "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200"
+              readOnly || isFormatted
+                ? "bg-gray-100 text-gray-400 opacity-70"
+                : "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 cursor-pointer"
             }`}
-            title="Format JSON"
+            title={isFormatted ? "JSON is already formatted" : "Format JSON"}
           >
             <FileJson className="h-3.5 w-3.5 mr-1" />
             Format
@@ -113,7 +131,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         <button
           type="button"
           onClick={handleCopy}
-          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm
+          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
             ${
               copySuccess
                 ? "bg-green-100 text-green-600"

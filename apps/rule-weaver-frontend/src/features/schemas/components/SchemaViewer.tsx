@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SchemaDefinition, SchemaProperty } from "../types/schema";
 import {
   Card,
@@ -7,12 +7,21 @@ import {
   CardTitle,
 } from "@/shared/components/inputs/card";
 import { Badge } from "@/shared/components/inputs/badge";
+import JsonEditor from "@/shared/components/json/JsonEditor";
+import TabNavigation from "@/features/rules/shared/components/TabNavigation";
+
+const TABS = [
+  { id: "visual", label: "Visual View" },
+  { id: "json", label: "JSON View" },
+];
 
 interface SchemaViewerProps {
   definition: SchemaDefinition;
 }
 
 const SchemaViewer: React.FC<SchemaViewerProps> = ({ definition }) => {
+  const [activeTab, setActiveTab] = useState<string>("visual");
+
   const renderProperties = (
     properties: Record<string, SchemaProperty>,
     parentKey = "",
@@ -104,7 +113,7 @@ const SchemaViewer: React.FC<SchemaViewerProps> = ({ definition }) => {
     });
   };
 
-  return (
+  const renderVisualView = () => (
     <Card className="overflow-hidden">
       <CardHeader className="bg-slate-50 pb-2">
         <CardTitle className="text-md font-semibold">
@@ -122,6 +131,24 @@ const SchemaViewer: React.FC<SchemaViewerProps> = ({ definition }) => {
         </div>
       </CardContent>
     </Card>
+  );
+
+  return (
+    <div className="space-y-4">
+      <TabNavigation
+        tabs={TABS}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+
+      {activeTab === "visual" ? (
+        renderVisualView()
+      ) : (
+        <div className="[&_.absolute.top-2]:right-5">
+          <JsonEditor value={definition} readOnly={true} height="500px" />
+        </div>
+      )}
+    </div>
   );
 };
 

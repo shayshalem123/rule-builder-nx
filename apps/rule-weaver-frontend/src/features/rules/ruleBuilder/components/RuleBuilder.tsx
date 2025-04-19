@@ -59,12 +59,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   };
 
   const hasChanges = formik.dirty;
+  const isEditMode = !!initialRule;
 
   return (
     <div className="space-y-6 w-full max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">
-          {initialRule ? "Edit Rule" : "Create Rule"}
+          {isEditMode ? "Edit Rule" : "Create Rule"}
         </h1>
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
@@ -112,16 +113,18 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             </TabsContent>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={showDiffModal}
-                disabled={!hasChanges || !initialRule}
-                className="flex items-center gap-2"
-              >
-                <GitCompare className="h-4 w-4" />
-                Show Changes
-              </Button>
+              {isEditMode && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={showDiffModal}
+                  disabled={!hasChanges}
+                  className="flex items-center gap-2"
+                >
+                  <GitCompare className="h-4 w-4" />
+                  Show Changes
+                </Button>
+              )}
 
               <div>
                 <FormActions
@@ -136,12 +139,14 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
         </Tabs>
       </div>
 
-      <RuleDiffModal
-        isOpen={isDiffModalOpen}
-        onClose={closeDiffModal}
-        initialRule={initialRule}
-        currentValues={formik.values}
-      />
+      {isEditMode && (
+        <RuleDiffModal
+          isOpen={isDiffModalOpen}
+          onClose={closeDiffModal}
+          initialRule={initialRule}
+          currentValues={formik.values}
+        />
+      )}
     </div>
   );
 };

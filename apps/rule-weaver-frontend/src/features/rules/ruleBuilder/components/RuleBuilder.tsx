@@ -11,6 +11,9 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/shared/components/inputs/tabs";
+import { Button } from "@/shared/components/inputs/button";
+import { GitCompare } from "lucide-react";
+import RuleDiffModal from "./RuleDiffModal";
 
 interface RuleBuilderProps {
   onSave: (
@@ -30,6 +33,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   isLoading = false,
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>("visual");
+  const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
 
   const {
     formik,
@@ -46,11 +50,35 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     formik.setValues(values);
   };
 
+  const showDiffModal = () => {
+    setIsDiffModalOpen(true);
+  };
+
+  const closeDiffModal = () => {
+    setIsDiffModalOpen(false);
+  };
+
+  // Check if form has been modified compared to initial values
+  const hasChanges = formik.dirty;
+
   return (
     <div className="space-y-6 w-full max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">
-        {initialRule ? "Edit Rule" : "Create Rule"}
-      </h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">
+          {initialRule ? "Edit Rule" : "Create Rule"}
+        </h1>
+        {initialRule && hasChanges && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={showDiffModal}
+            className="flex items-center gap-2"
+          >
+            <GitCompare className="h-4 w-4" />
+            Show Changes
+          </Button>
+        )}
+      </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
         <Tabs
           defaultValue="visual"
@@ -104,6 +132,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           </form>
         </Tabs>
       </div>
+
+      <RuleDiffModal
+        isOpen={isDiffModalOpen}
+        onClose={closeDiffModal}
+        initialRule={initialRule}
+        currentValues={formik.values}
+      />
     </div>
   );
 };

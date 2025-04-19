@@ -92,15 +92,16 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         />
       </div>
 
-      <FullscreenEditor
-        isOpen={isFullscreen}
-        onClose={toggleFullscreen}
-        value={value}
-        onChange={onChange}
-        readOnly={readOnly}
-        showToolbar={showToolbar}
-        enableStickyProperties={stickyPropertiesEnabled}
-      />
+      {isFullscreen && (
+        <FullscreenEditor
+          onClose={toggleFullscreen}
+          value={value}
+          onChange={onChange}
+          readOnly={readOnly}
+          showToolbar={showToolbar}
+          enableStickyProperties={stickyPropertiesEnabled}
+        />
+      )}
 
       {!readOnly && <ErrorMessage error={error} />}
     </div>

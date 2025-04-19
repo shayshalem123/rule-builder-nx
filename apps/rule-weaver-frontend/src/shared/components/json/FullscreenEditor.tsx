@@ -6,7 +6,6 @@ import EditorToolbar from "./EditorToolbar";
 import SettingsMenu from "./SettingsMenu";
 
 interface FullscreenEditorProps {
-  isOpen: boolean;
   onClose: () => void;
   value: object;
   onChange?: (parsedJson: Record<string, unknown>) => void;
@@ -19,7 +18,6 @@ interface FullscreenEditorProps {
  * Standalone fullscreen editor component using Monaco editor and portal
  */
 const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
-  isOpen,
   onClose,
   value,
   onChange,
@@ -27,7 +25,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
   showToolbar = true,
   enableStickyProperties = false,
 }) => {
-  // Use our custom hook to handle editor behavior
   const {
     editorRef,
     showSettings,
@@ -46,43 +43,16 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     isFullscreen: true,
   });
 
-  // Handle ESC key to exit fullscreen mode
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+      if (e.key === "Escape") {
         onClose();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Prevent body scroll when fullscreen
-  React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  // Re-layout the editor when fullscreen changes
-  React.useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        if (editorRef.current) {
-          editorRef.current.layout();
-          editorRef.current.focus();
-        }
-      }, 200);
-    }
-  }, [isOpen, editorRef]);
-
-  if (!isOpen) return null;
+  }, [onClose]);
 
   return createPortal(
     <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4 animate-fade-in">

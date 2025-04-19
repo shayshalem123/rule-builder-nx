@@ -6,6 +6,7 @@ import { useMonacoEditor } from "./hooks/useMonacoEditor";
 interface EditorToolbarProps {
   readOnly: boolean;
   isFormatted: boolean;
+  editorRef: React.MutableRefObject<import("monaco-editor").editor.IStandaloneCodeEditor>;
   onFormat: () => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
@@ -18,6 +19,7 @@ interface EditorToolbarProps {
 const EditorToolbar: React.FC<EditorToolbarProps> = ({
   readOnly,
   isFullscreen = false,
+  editorRef,
   onToggleFullscreen,
   onFormat,
   className = "",
@@ -25,7 +27,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const { editorRef, showSettings, toggleSettings } = useMonacoEditor({
+  const { showSettings, toggleSettings } = useMonacoEditor({
     value: {},
     readOnly,
     isFullscreen,

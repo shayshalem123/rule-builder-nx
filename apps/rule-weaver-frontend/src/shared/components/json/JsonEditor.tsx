@@ -64,6 +64,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
             <EditorToolbar
               readOnly={readOnly}
               isFullscreen={false}
+              editorRef={editorRef}
               isFormatted={isFormatted}
               onFormat={formatContent}
               onToggleFullscreen={toggleFullscreen}

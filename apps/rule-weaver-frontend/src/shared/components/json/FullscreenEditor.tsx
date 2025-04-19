@@ -89,6 +89,7 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
               <EditorToolbar
                 readOnly={readOnly}
                 isFullscreen={true}
+                editorRef={editorRef}
                 isFormatted={isFormatted}
                 onFormat={formatContent}
                 className="flex items-center gap-2"

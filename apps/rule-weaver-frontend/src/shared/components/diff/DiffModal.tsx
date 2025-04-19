@@ -49,7 +49,7 @@ const DiffModal: React.FC<DiffModalProps> = ({
     formatOnPaste: true,
     formatOnType: true,
     autoIndent: "advanced" as const,
-    fontSize: 16, // Match fullscreen editor font size
+    fontSize: 16,
     fontFamily:
       "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace", // Match fullscreen editor font family
   };

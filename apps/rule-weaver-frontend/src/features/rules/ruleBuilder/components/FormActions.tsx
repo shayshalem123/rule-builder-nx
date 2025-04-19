@@ -15,7 +15,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
   isDisabled,
 }) => {
   return (
-    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+    <div className="flex justify-end space-x-3">
       <Button
         variant="outline"
         onClick={onCancel}
@@ -33,4 +33,4 @@ export const FormActions: React.FC<FormActionsProps> = ({
       </Button>
     </div>
   );
-}; 
+};

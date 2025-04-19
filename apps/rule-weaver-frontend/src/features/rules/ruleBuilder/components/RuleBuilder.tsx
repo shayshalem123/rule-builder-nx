@@ -58,7 +58,6 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
     setIsDiffModalOpen(false);
   };
 
-  // Check if form has been modified compared to initial values
   const hasChanges = formik.dirty;
 
   return (
@@ -67,17 +66,6 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
         <h1 className="text-2xl font-bold">
           {initialRule ? "Edit Rule" : "Create Rule"}
         </h1>
-        {initialRule && hasChanges && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={showDiffModal}
-            className="flex items-center gap-2"
-          >
-            <GitCompare className="h-4 w-4" />
-            Show Changes
-          </Button>
-        )}
       </div>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
         <Tabs
@@ -123,12 +111,27 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
               <RuleJsonEditor formik={formik} updateFormik={updateFormik} />
             </TabsContent>
 
-            <FormActions
-              onCancel={onCancel}
-              onSubmit={formik.handleSubmit}
-              isLoading={isLoading}
-              isDisabled={!formik.isValid || !formik.dirty}
-            />
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={showDiffModal}
+                disabled={!hasChanges || !initialRule}
+                className="flex items-center gap-2"
+              >
+                <GitCompare className="h-4 w-4" />
+                Show Changes
+              </Button>
+
+              <div>
+                <FormActions
+                  onCancel={onCancel}
+                  onSubmit={formik.handleSubmit}
+                  isLoading={isLoading}
+                  isDisabled={!formik.isValid || !formik.dirty}
+                />
+              </div>
+            </div>
           </form>
         </Tabs>
       </div>

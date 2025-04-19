@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/inputs/alert-dialog";
-import { useToast } from "@/shared/components/inputs/use-toast";
+import { toast } from "sonner";
 import SchemaSearch from "../components/SchemaSearch";
 import { SchemaWithMeta } from "../types/schema";
 
@@ -22,7 +22,6 @@ const SchemasPage: React.FC = () => {
   const { schemas, isLoading, error } = useSchemas();
   const { deleteSchema, isPending } = useDeleteSchema();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [schemaToDelete, setSchemaToDelete] = useState<string | null>(null);
@@ -52,16 +51,9 @@ const SchemasPage: React.FC = () => {
     if (schemaToDelete) {
       try {
         await deleteSchema(schemaToDelete);
-        toast({
-          title: "Schema deleted",
-          description: "The schema has been successfully deleted.",
-        });
+        toast.success("The schema has been successfully deleted.");
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to delete the schema. Please try again.",
-          variant: "destructive",
-        });
+        toast.error("Failed to delete the schema. Please try again.");
       } finally {
         setDeleteDialogOpen(false);
         setSchemaToDelete(null);

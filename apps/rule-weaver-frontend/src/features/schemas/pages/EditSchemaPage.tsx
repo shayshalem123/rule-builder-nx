@@ -3,16 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Schema, CreateSchema } from "../types/schema";
 import { useSchema, useUpdateSchema } from "../hooks/useSchemas";
 import SchemaForm from "../components/SchemaForm";
-import { useToast } from "@/shared/components/inputs/use-toast";
 import { Button } from "@/shared/components/inputs/button";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 const EditSchemaPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { schema, isLoading, error } = useSchema(id || "");
   const { updateSchema, isPending } = useUpdateSchema();
-  const { toast } = useToast();
 
   const handleSubmit = async (data: CreateSchema) => {
     if (!id) return;
@@ -25,17 +24,10 @@ const EditSchemaPage: React.FC = () => {
       };
 
       await updateSchema({ id, schema: completeSchema });
-      toast({
-        title: "Schema updated",
-        description: "The schema has been successfully updated.",
-      });
+      toast.success("The schema has been successfully updated.");
       navigate("/schemas");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update the schema. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to update the schema. Please try again.");
     }
   };
 

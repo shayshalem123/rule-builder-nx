@@ -3,29 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { CreateSchema } from "../types/schema";
 import { useCreateSchema } from "../hooks/useSchemas";
 import SchemaForm from "../components/SchemaForm";
-import { useToast } from "@/shared/components/inputs/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/shared/components/inputs/button";
 import { ArrowLeft } from "lucide-react";
 
 const CreateSchemaPage: React.FC = () => {
   const navigate = useNavigate();
   const { createSchema, isPending } = useCreateSchema();
-  const { toast } = useToast();
 
   const handleSubmit = async (data: CreateSchema) => {
     try {
       await createSchema(data);
-      toast({
-        title: "Schema created",
-        description: "The schema has been successfully created.",
-      });
+      toast.success("The schema has been successfully created.");
       navigate("/schemas");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create the schema. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to create the schema. Please try again.");
     }
   };
 

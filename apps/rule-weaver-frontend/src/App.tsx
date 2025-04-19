@@ -1,5 +1,4 @@
-import { Toaster } from "@/shared/components/inputs/toaster";
-import { Toaster as Sonner } from "@/shared/components/inputs/sonner";
+import { Toaster } from "@/shared/components/inputs/sonner";
 import { TooltipProvider } from "@/shared/components/inputs/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -28,8 +27,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <UserProvider>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
+        <Toaster position="bottom-right" richColors closeButton={false} />
         <BrowserRouter>
           <Routes>
             <Route element={<Layout />}>

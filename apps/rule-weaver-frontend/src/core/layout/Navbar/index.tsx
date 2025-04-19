@@ -1,15 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  Book,
-  Database,
-  FileJson,
-  Code,
-  Terminal,
-  AlertTriangle,
-  Keyboard,
-  Sparkles,
-} from "lucide-react";
+import { Book, Database, FileJson } from "lucide-react";
 import NavLink from "./NavLink";
 import UserMenu from "./UserMenu";
 
@@ -30,9 +21,6 @@ const Navbar: React.FC = () => {
             </NavLink>
             <NavLink to="/schemas" icon={<FileJson className="h-4 w-4" />}>
               Schemas
-            </NavLink>
-            <NavLink to="/react-monaco" icon={<Sparkles className="h-4 w-4" />}>
-              Monaco Editor
             </NavLink>
           </nav>
         </div>

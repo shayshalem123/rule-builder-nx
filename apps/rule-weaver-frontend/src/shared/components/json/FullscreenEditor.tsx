@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Editor } from "@monaco-editor/react";
 import { useMonacoEditor } from "./hooks/useMonacoEditor";
@@ -28,11 +28,9 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
   const {
     editorRef,
     showSettings,
-    stickyPropertiesEnabled,
+    toggleSettings,
     handleEditorDidMount,
     handleEditorChange,
-    toggleSettings,
-    handleStickyPropertiesChange,
     getEditorOptions,
     setupEditorEvents,
   } = useMonacoEditor({
@@ -43,7 +41,8 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     isFullscreen: true,
   });
 
-  React.useEffect(() => {
+  // Handle ESC key to exit fullscreen mode
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
@@ -54,6 +53,24 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  // Prevent body scroll when in fullscreen
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  // Focus and layout the editor when mounted
+  useEffect(() => {
+    setTimeout(() => {
+      if (editorRef.current) {
+        editorRef.current.layout();
+        editorRef.current.focus();
+      }
+    }, 200);
+  }, [editorRef]);
+
   return createPortal(
     <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4 animate-fade-in">
       <div className="bg-white w-full h-full max-w-[95vw] max-h-[95vh] rounded-lg shadow-2xl flex flex-col overflow-hidden border border-gray-200">
@@ -61,9 +78,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
           {showToolbar && (
             <EditorToolbar
               readOnly={readOnly}
-              showSettings={showSettings}
-              onToggleSettings={toggleSettings}
-              editorRef={editorRef}
               isFullscreen={true}
               onToggleFullscreen={onClose}
             />
@@ -71,9 +85,7 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
 
           <SettingsMenu
             isOpen={showSettings}
-            onClose={() => toggleSettings()}
-            defaultStickyProperties={stickyPropertiesEnabled}
-            onStickyPropertiesChange={handleStickyPropertiesChange}
+            onClose={toggleSettings}
             isFullscreen={true}
             onToggleFullscreen={onClose}
           />

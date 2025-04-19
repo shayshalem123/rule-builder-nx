@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Layers, Maximize } from "lucide-react";
 import { toast } from "sonner";
+import { useMonacoEditor } from "./hooks/useMonacoEditor";
 
 interface SettingsMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultStickyProperties?: boolean;
-  onStickyPropertiesChange: (enabled: boolean) => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
 }
@@ -17,19 +16,18 @@ interface SettingsMenuProps {
 const SettingsMenu: React.FC<SettingsMenuProps> = ({
   isOpen,
   onClose,
-  defaultStickyProperties = false,
-  onStickyPropertiesChange,
   isFullscreen = false,
   onToggleFullscreen,
 }) => {
-  const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
-    defaultStickyProperties
-  );
-  const menuRef = useRef<HTMLDivElement>(null);
+  // Get necessary state and functions from the hook
+  const { stickyPropertiesEnabled, handleStickyPropertiesChange } =
+    useMonacoEditor({
+      value: {},
+      readOnly: false,
+      isFullscreen,
+    });
 
-  useEffect(() => {
-    setStickyPropertiesEnabled(defaultStickyProperties);
-  }, [defaultStickyProperties]);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -50,8 +48,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const isEnabled = e.target.checked;
-    setStickyPropertiesEnabled(isEnabled);
-    onStickyPropertiesChange(isEnabled);
+    handleStickyPropertiesChange(isEnabled);
     toast.info(
       isEnabled ? "Sticky properties enabled" : "Sticky properties disabled"
     );

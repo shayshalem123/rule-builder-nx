@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { Copy, FileJson, Settings, Maximize, Minimize, X } from "lucide-react";
 import { toast } from "sonner";
-import type { editor } from "monaco-editor";
+import { useMonacoEditor } from "./hooks/useMonacoEditor";
 
 interface EditorToolbarProps {
   readOnly: boolean;
-  showSettings: boolean;
-  onToggleSettings: () => void;
-  editorRef: React.MutableRefObject<editor.IStandaloneCodeEditor | null>;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
 }
@@ -17,14 +14,18 @@ interface EditorToolbarProps {
  */
 const EditorToolbar: React.FC<EditorToolbarProps> = ({
   readOnly,
-  showSettings,
-  onToggleSettings,
-  editorRef,
   isFullscreen = false,
   onToggleFullscreen,
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isFormatted, setIsFormatted] = useState(true);
+
+  // Get necessary state and functions from the hook
+  const { editorRef, showSettings, toggleSettings } = useMonacoEditor({
+    value: {},
+    readOnly,
+    isFullscreen,
+  });
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -69,7 +70,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
   const handleToggleSettings = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleSettings();
+    toggleSettings();
   };
 
   const handleToggleFullscreen = (e: React.MouseEvent) => {

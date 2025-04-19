@@ -115,7 +115,7 @@ export function useMonacoEditor({
   };
 
   // Editor event handlers setup
-  const setupEditorEvents = (monaco: any) => {
+  const setupEditorEvents = (monaco: typeof import("monaco-editor")) => {
     monaco.editor.onDidCreateEditor((editor: editor.IStandaloneCodeEditor) => {
       editor.onDidBlurEditorText(() => {
         isUserEditing.current = false;

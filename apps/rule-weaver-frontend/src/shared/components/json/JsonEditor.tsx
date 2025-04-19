@@ -3,7 +3,6 @@ import { Editor } from "@monaco-editor/react";
 import { useMonacoEditor } from "./hooks/useMonacoEditor";
 import { useFullscreenEditor } from "./hooks/useFullscreenEditor";
 
-// Import components from separate files
 import ErrorMessage from "./ErrorMessage";
 import SettingsMenu from "./SettingsMenu";
 import EditorToolbar from "./EditorToolbar";
@@ -37,11 +36,9 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     editorRef,
     error,
     showSettings,
-    stickyPropertiesEnabled,
+    toggleSettings,
     handleEditorDidMount,
     handleEditorChange,
-    toggleSettings,
-    handleStickyPropertiesChange,
     getEditorOptions,
     setupEditorEvents,
   } = useMonacoEditor({
@@ -63,9 +60,6 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         {showToolbar && (
           <EditorToolbar
             readOnly={readOnly}
-            showSettings={showSettings}
-            onToggleSettings={toggleSettings}
-            editorRef={editorRef}
             isFullscreen={false}
             onToggleFullscreen={toggleFullscreen}
           />
@@ -73,9 +67,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
 
         <SettingsMenu
           isOpen={showSettings}
-          onClose={() => toggleSettings()}
-          defaultStickyProperties={stickyPropertiesEnabled}
-          onStickyPropertiesChange={handleStickyPropertiesChange}
+          onClose={toggleSettings}
           isFullscreen={false}
           onToggleFullscreen={toggleFullscreen}
         />
@@ -99,7 +91,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
           onChange={onChange}
           readOnly={readOnly}
           showToolbar={showToolbar}
-          enableStickyProperties={stickyPropertiesEnabled}
+          enableStickyProperties={enableStickyProperties}
         />
       )}
 

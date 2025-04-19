@@ -8,6 +8,8 @@ interface EditorToolbarProps {
   readOnly: boolean;
   isFormatted: boolean;
   editorRef: React.MutableRefObject<editor.IStandaloneCodeEditor>;
+  stickyPropertiesEnabled: boolean;
+  handleStickyPropertiesChange: (enabled: boolean) => void;
   onFormat: () => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
@@ -21,6 +23,8 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   readOnly,
   isFullscreen = false,
   editorRef,
+  stickyPropertiesEnabled,
+  handleStickyPropertiesChange,
   onToggleFullscreen,
   onFormat,
   className = "",
@@ -131,6 +135,8 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
       <SettingsMenu
         isOpen={showSettings}
+        stickyPropertiesEnabled={stickyPropertiesEnabled}
+        handleStickyPropertiesChange={handleStickyPropertiesChange}
         onClose={() => setShowSettings(false)}
         isFullscreen={isFullscreen}
         onToggleFullscreen={onToggleFullscreen}

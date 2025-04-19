@@ -31,6 +31,8 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     handleEditorChange,
     getEditorOptions,
     setupEditorEvents,
+    handleStickyPropertiesChange,
+    stickyPropertiesEnabled,
     isFormatted,
     formatContent,
   } = useMonacoEditor({
@@ -86,6 +88,8 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
               <EditorToolbar
                 readOnly={readOnly}
                 isFullscreen={true}
+                stickyPropertiesEnabled={stickyPropertiesEnabled}
+                handleStickyPropertiesChange={handleStickyPropertiesChange}
                 editorRef={editorRef}
                 isFormatted={isFormatted}
                 onFormat={formatContent}

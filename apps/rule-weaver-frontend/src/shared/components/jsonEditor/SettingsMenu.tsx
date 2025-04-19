@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Layers, Maximize } from "lucide-react";
 import { toast } from "sonner";
-import { useMonacoEditor } from "./hooks/useMonacoEditor";
 
 interface SettingsMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  stickyPropertiesEnabled: boolean;
+  handleStickyPropertiesChange: (enabled: boolean) => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
 }
@@ -16,17 +17,11 @@ interface SettingsMenuProps {
 const SettingsMenu: React.FC<SettingsMenuProps> = ({
   isOpen,
   onClose,
+  stickyPropertiesEnabled,
+  handleStickyPropertiesChange,
   isFullscreen = false,
   onToggleFullscreen,
 }) => {
-  // Get necessary state and functions from the hook
-  const { stickyPropertiesEnabled, handleStickyPropertiesChange } =
-    useMonacoEditor({
-      value: {},
-      readOnly: false,
-      isFullscreen,
-    });
-
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

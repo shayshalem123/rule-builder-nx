@@ -48,40 +48,40 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
 
   return (
     <>
-      <Tabs
-        defaultValue="form"
-        value={activeTab}
-        onValueChange={(value) => setActiveTab(value as TabId)}
-        className="w-full"
-      >
-        <TabsList className="mb-6 grid grid-cols-2 w-full">
-          <TabsTrigger value="form" className="w-full">
-            <span className="relative">Form View</span>
-          </TabsTrigger>
-          <TabsTrigger value="json" className="w-full">
-            <span className="relative">JSON Editor</span>
-          </TabsTrigger>
-        </TabsList>
+    <Tabs
+      defaultValue="form"
+      value={activeTab}
+      onValueChange={(value) => setActiveTab(value as TabId)}
+      className="w-full"
+    >
+      <TabsList className="mb-6 grid grid-cols-2 w-full">
+        <TabsTrigger value="form" className="w-full">
+          <span className="relative">Form View</span>
+        </TabsTrigger>
+        <TabsTrigger value="json" className="w-full">
+          <span className="relative">JSON Editor</span>
+        </TabsTrigger>
+      </TabsList>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
-          <TabsContent value="form" className="w-full space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Schema Properties</h2>
-              <SchemaFormFields
-                formik={formik}
-                categoryOptions={categoryOptions}
-              />
-            </div>
+      <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <TabsContent value="form" className="w-full space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Schema Properties</h2>
+            <SchemaFormFields
+              formik={formik}
+              categoryOptions={categoryOptions}
+            />
+          </div>
 
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Schema Definition</h2>
-              <SchemaDefinitionEditor formik={formik} />
-            </div>
-          </TabsContent>
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Schema Definition</h2>
+            <SchemaDefinitionEditor formik={formik} />
+          </div>
+        </TabsContent>
 
-          <TabsContent value="json" className="w-full">
-            <SchemaJsonEditor formik={formik} updateFormik={updateFormik} />
-          </TabsContent>
+        <TabsContent value="json" className="w-full">
+          <SchemaJsonEditor formik={formik} updateFormik={updateFormik} />
+        </TabsContent>
 
           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
             {isEditMode ? (
@@ -91,17 +91,17 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
             )}
 
             <div>
-              <Button type="submit" disabled={isSubmitting || !formik.isValid}>
-                {isSubmitting
-                  ? "Saving..."
-                  : initialData
-                  ? "Update Schema"
-                  : "Create Schema"}
-              </Button>
+          <Button type="submit" disabled={isSubmitting || !formik.isValid}>
+            {isSubmitting
+              ? "Saving..."
+              : initialData
+              ? "Update Schema"
+              : "Create Schema"}
+          </Button>
             </div>
-          </div>
-        </form>
-      </Tabs>
+        </div>
+      </form>
+    </Tabs>
 
       {isEditMode && (
         <SchemaDiffModal

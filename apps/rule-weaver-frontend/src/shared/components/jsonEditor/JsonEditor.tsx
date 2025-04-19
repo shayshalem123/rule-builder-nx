@@ -39,6 +39,8 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     handleEditorChange,
     getEditorOptions,
     setupEditorEvents,
+    stickyPropertiesEnabled,
+    handleStickyPropertiesChange,
     isFormatted,
   } = useMonacoEditor({
     value,
@@ -62,6 +64,8 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
               readOnly={readOnly}
               isFullscreen={false}
               editorRef={editorRef}
+              stickyPropertiesEnabled={stickyPropertiesEnabled}
+              handleStickyPropertiesChange={handleStickyPropertiesChange}
               isFormatted={isFormatted}
               onFormat={formatContent}
               onToggleFullscreen={toggleFullscreen}

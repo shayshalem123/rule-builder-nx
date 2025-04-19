@@ -4,6 +4,7 @@ import { Editor } from "@monaco-editor/react";
 import { useMonacoEditor } from "./hooks/useMonacoEditor";
 import EditorToolbar from "./EditorToolbar";
 import SettingsMenu from "./SettingsMenu";
+import { X } from "lucide-react";
 
 interface FullscreenEditorProps {
   onClose: () => void;
@@ -41,7 +42,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     isFullscreen: true,
   });
 
-  // Handle ESC key to exit fullscreen mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -61,7 +61,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     };
   }, []);
 
-  // Focus and layout the editor when mounted
   useEffect(() => {
     setTimeout(() => {
       if (editorRef.current) {
@@ -76,11 +75,21 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
       <div className="bg-white w-full h-full max-w-[95vw] max-h-[95vh] rounded-lg shadow-2xl flex flex-col overflow-hidden border border-gray-200">
         <div className="flex-1 h-full relative">
           {showToolbar && (
-            <EditorToolbar
-              readOnly={readOnly}
-              isFullscreen={true}
-              onToggleFullscreen={onClose}
-            />
+            <div className="absolute top-0 left-0 right-0 flex justify-between items-center px-3 py-2 z-50 bg-white/90">
+              <button
+                onClick={onClose}
+                className="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md shadow-sm transition-all duration-200 flex items-center justify-center"
+                title="Exit Fullscreen (Esc)"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              <EditorToolbar
+                readOnly={readOnly}
+                isFullscreen={true}
+                className="flex items-center gap-2"
+              />
+            </div>
           )}
 
           <SettingsMenu

@@ -58,11 +58,14 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         style={{ height: height, display: isFullscreen ? "none" : "block" }}
       >
         {showToolbar && (
-          <EditorToolbar
-            readOnly={readOnly}
-            isFullscreen={false}
-            onToggleFullscreen={toggleFullscreen}
-          />
+          <div className="absolute top-2 right-2 z-10">
+            <EditorToolbar
+              readOnly={readOnly}
+              isFullscreen={false}
+              onToggleFullscreen={toggleFullscreen}
+              className="flex items-center gap-2"
+            />
+          </div>
         )}
 
         <SettingsMenu

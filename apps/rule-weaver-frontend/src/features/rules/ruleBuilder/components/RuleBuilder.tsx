@@ -11,9 +11,8 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/shared/components/inputs/tabs";
-import { Button } from "@/shared/components/inputs/button";
-import { GitCompare } from "lucide-react";
 import RuleDiffModal from "./RuleDiffModal";
+import DiffViewButton from "@/shared/components/diff/DiffViewButton";
 
 interface RuleBuilderProps {
   onSave: (
@@ -113,17 +112,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             </TabsContent>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-              {isEditMode && (
-                <Button
-                  type="button"
-                  variant="outline"
+              {isEditMode ? (
+                <DiffViewButton
                   onClick={showDiffModal}
                   disabled={!hasChanges}
-                  className="flex items-center gap-2"
-                >
-                  <GitCompare className="h-4 w-4" />
-                  Show Changes
-                </Button>
+                />
+              ) : (
+                <div></div>
               )}
 
               <div>

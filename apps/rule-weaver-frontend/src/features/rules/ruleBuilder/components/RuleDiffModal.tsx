@@ -1,7 +1,7 @@
 import React from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import { RuleFormValues } from "../hooks/useRuleForm";
-import DiffModal from "@/shared/components/diff/DiffModal";
+import { DiffModal } from "@/shared/components/diff";
 
 interface RuleDiffModalProps {
   isOpen: boolean;

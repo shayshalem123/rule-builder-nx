@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AlertCircle, Copy, FileJson } from "lucide-react";
+import { AlertCircle, Copy, FileJson, Layers, Settings } from "lucide-react";
 import { Editor, OnMount, OnChange } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ export interface JsonEditorProps {
   height?: string;
   className?: string;
   showToolbar?: boolean;
+  enableStickyProperties?: boolean;
 }
 
 /**
@@ -23,13 +24,46 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   height = "60vh",
   className = "",
   showToolbar = true,
+  enableStickyProperties = false,
 }) => {
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [isFormatted, setIsFormatted] = useState(true);
+  const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
+    enableStickyProperties
+  );
+  const [showSettings, setShowSettings] = useState(false);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isUserEditing = useRef(false);
+  const settingsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close settings menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        settingsMenuRef.current &&
+        !settingsMenuRef.current.contains(event.target as Node) &&
+        showSettings
+      ) {
+        setShowSettings(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSettings]);
+
+  // Update the editor's sticky scroll settings when the state changes
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.updateOptions({
+        stickyScroll: {
+          enabled: stickyPropertiesEnabled,
+        },
+      });
+    }
+  }, [stickyPropertiesEnabled]);
 
   const handleEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
@@ -114,6 +148,23 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     }
   };
 
+  const handleToggleStickyProperties = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStickyPropertiesEnabled(e.target.checked);
+
+    if (e.target.checked) {
+      toast.info("Sticky properties enabled");
+    } else {
+      toast.info("Sticky properties disabled");
+    }
+  };
+
+  const toggleSettings = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setShowSettings((prev) => !prev);
+  };
+
   const renderButtons = () => {
     if (!showToolbar) return null;
 
@@ -151,6 +202,47 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
           <Copy className="h-3.5 w-3.5 mr-1" />
           {copySuccess ? "Copied!" : "Copy"}
         </button>
+
+        <button
+          type="button"
+          onClick={toggleSettings}
+          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
+            ${
+              showSettings
+                ? "bg-blue-100 text-blue-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            }`}
+          title="Editor Settings"
+        >
+          <Settings className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    );
+  };
+
+  const renderSettingsMenu = () => {
+    if (!showSettings) return null;
+
+    return (
+      <div
+        ref={settingsMenuRef}
+        className="absolute top-12 right-2 z-20 w-60 bg-white rounded-md shadow-lg border border-gray-200 p-3 text-sm"
+      >
+        <div className="font-medium mb-2 text-gray-700">JSON View Settings</div>
+        <div className="space-y-3">
+          <label className="flex items-center justify-between cursor-pointer">
+            <div className="flex items-center gap-1.5">
+              <Layers className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-700">Sticky Properties</span>
+            </div>
+            <input
+              type="checkbox"
+              checked={stickyPropertiesEnabled}
+              onChange={handleToggleStickyProperties}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </label>
+        </div>
       </div>
     );
   };
@@ -173,6 +265,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
         style={{ height }}
       >
         {renderButtons()}
+        {renderSettingsMenu()}
         <Editor
           height="100%"
           defaultValue={JSON.stringify(value, null, 2)}
@@ -196,10 +289,11 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
             fontFamily:
               "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
             stickyScroll: {
-              enabled: false,
+              enabled: stickyPropertiesEnabled,
             },
           }}
           beforeMount={(monaco) => {
+            // Configure Monaco to handle blur events to match original behavior
             monaco.editor.onDidCreateEditor((editor) => {
               editor.onDidBlurEditorText(() => {
                 isUserEditing.current = false;

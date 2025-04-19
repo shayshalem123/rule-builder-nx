@@ -1,8 +1,6 @@
 import React from "react";
 import { DiffEditor, DiffOnMount } from "@monaco-editor/react";
 import { Dialog, DialogContent } from "@/shared/components/inputs/dialog";
-import { Button } from "@/shared/components/inputs/button";
-import { X } from "lucide-react";
 import type { editor } from "monaco-editor";
 
 interface DiffModalProps {
@@ -38,14 +36,6 @@ const DiffModal: React.FC<DiffModalProps> = ({
       <DialogContent className="max-w-6xl w-full h-[90vh] p-0 flex flex-col">
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xl font-semibold">{title}</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </div>
 
         <div className="p-4 flex-1 min-h-0">

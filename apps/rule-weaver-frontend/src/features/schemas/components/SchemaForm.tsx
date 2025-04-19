@@ -11,6 +11,8 @@ import {
 import { SchemaFormFields } from "./SchemaFormFields";
 import { SchemaJsonEditor } from "./SchemaJsonEditor";
 import { SchemaDefinitionEditor } from "./SchemaDefinitionEditor";
+import { DiffViewButton } from "@/shared/components/diff";
+import SchemaDiffModal from "./SchemaDiffModal";
 
 type TabId = "form" | "json";
 
@@ -26,59 +28,90 @@ const SchemaForm: React.FC<SchemaFormProps> = ({
   isSubmitting = false,
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>("form");
+  const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
   const { formik, categoryOptions } = useSchemaForm(initialData, onSubmit);
 
   const updateFormik = (values: SchemaFormValues) => {
     formik.setValues(values);
   };
 
+  const showDiffModal = () => {
+    setIsDiffModalOpen(true);
+  };
+
+  const closeDiffModal = () => {
+    setIsDiffModalOpen(false);
+  };
+
+  const hasChanges = formik.dirty;
+  const isEditMode = !!initialData;
+
   return (
-    <Tabs
-      defaultValue="form"
-      value={activeTab}
-      onValueChange={(value) => setActiveTab(value as TabId)}
-      className="w-full"
-    >
-      <TabsList className="mb-6 grid grid-cols-2 w-full">
-        <TabsTrigger value="form" className="w-full">
-          <span className="relative">Form View</span>
-        </TabsTrigger>
-        <TabsTrigger value="json" className="w-full">
-          <span className="relative">JSON Editor</span>
-        </TabsTrigger>
-      </TabsList>
+    <>
+      <Tabs
+        defaultValue="form"
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as TabId)}
+        className="w-full"
+      >
+        <TabsList className="mb-6 grid grid-cols-2 w-full">
+          <TabsTrigger value="form" className="w-full">
+            <span className="relative">Form View</span>
+          </TabsTrigger>
+          <TabsTrigger value="json" className="w-full">
+            <span className="relative">JSON Editor</span>
+          </TabsTrigger>
+        </TabsList>
 
-      <form onSubmit={formik.handleSubmit} className="space-y-6">
-        <TabsContent value="form" className="w-full space-y-6">
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Schema Properties</h2>
-            <SchemaFormFields
-              formik={formik}
-              categoryOptions={categoryOptions}
-            />
+        <form onSubmit={formik.handleSubmit} className="space-y-6">
+          <TabsContent value="form" className="w-full space-y-6">
+            <div>
+              <h2 className="text-lg font-semibold mb-4">Schema Properties</h2>
+              <SchemaFormFields
+                formik={formik}
+                categoryOptions={categoryOptions}
+              />
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-4">Schema Definition</h2>
+              <SchemaDefinitionEditor formik={formik} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="json" className="w-full">
+            <SchemaJsonEditor formik={formik} updateFormik={updateFormik} />
+          </TabsContent>
+
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+            {isEditMode ? (
+              <DiffViewButton onClick={showDiffModal} disabled={!hasChanges} />
+            ) : (
+              <div></div>
+            )}
+
+            <div>
+              <Button type="submit" disabled={isSubmitting || !formik.isValid}>
+                {isSubmitting
+                  ? "Saving..."
+                  : initialData
+                  ? "Update Schema"
+                  : "Create Schema"}
+              </Button>
+            </div>
           </div>
+        </form>
+      </Tabs>
 
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Schema Definition</h2>
-            <SchemaDefinitionEditor formik={formik} />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="json" className="w-full">
-          <SchemaJsonEditor formik={formik} updateFormik={updateFormik} />
-        </TabsContent>
-
-        <div className="flex w-full justify-end">
-          <Button type="submit" disabled={isSubmitting || !formik.isValid}>
-            {isSubmitting
-              ? "Saving..."
-              : initialData
-              ? "Update Schema"
-              : "Create Schema"}
-          </Button>
-        </div>
-      </form>
-    </Tabs>
+      {isEditMode && (
+        <SchemaDiffModal
+          isOpen={isDiffModalOpen}
+          onClose={closeDiffModal}
+          initialSchema={initialData}
+          currentValues={formik.values}
+        />
+      )}
+    </>
   );
 };
 

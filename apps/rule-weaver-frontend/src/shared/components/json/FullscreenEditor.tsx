@@ -34,6 +34,8 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
     handleEditorChange,
     getEditorOptions,
     setupEditorEvents,
+    isFormatted,
+    formatContent,
   } = useMonacoEditor({
     value,
     onChange,
@@ -87,6 +89,8 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
               <EditorToolbar
                 readOnly={readOnly}
                 isFullscreen={true}
+                isFormatted={isFormatted}
+                onFormat={formatContent}
                 className="flex items-center gap-2"
               />
             </div>

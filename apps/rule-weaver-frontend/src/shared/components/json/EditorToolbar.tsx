@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Copy, FileJson, Settings, Maximize } from "lucide-react";
 import { toast } from "sonner";
 import { useMonacoEditor } from "./hooks/useMonacoEditor";
 
 interface EditorToolbarProps {
   readOnly: boolean;
+  isFormatted: boolean;
+  onFormat: () => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
   className?: string; // Allow parent to control positioning via className
@@ -17,12 +19,12 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   readOnly,
   isFullscreen = false,
   onToggleFullscreen,
+  onFormat,
   className = "",
+  isFormatted,
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
-  const [isFormatted, setIsFormatted] = useState(true);
 
-  // Get necessary state and functions from the hook
   const { editorRef, showSettings, toggleSettings } = useMonacoEditor({
     value: {},
     readOnly,
@@ -51,23 +53,8 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
   const handleFormat = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!editorRef.current) return;
 
-    try {
-      const text = editorRef.current.getValue();
-      const parsed = JSON.parse(text);
-      const formatted = JSON.stringify(parsed, null, 2);
-
-      editorRef.current.setValue(formatted);
-      editorRef.current.focus();
-
-      setIsFormatted(true);
-      toast.success("JSON formatted successfully");
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Invalid JSON format";
-      toast.error(`Failed to format JSON: ${errorMessage}`);
-    }
+    onFormat();
   };
 
   const handleToggleSettings = (e: React.MouseEvent) => {
@@ -82,7 +69,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
     }
   };
 
-  // Simplified toolbar that just returns the buttons
   return (
     <div className={className}>
       {!readOnly && (

@@ -36,11 +36,13 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     editorRef,
     error,
     showSettings,
+    formatContent,
     toggleSettings,
     handleEditorDidMount,
     handleEditorChange,
     getEditorOptions,
     setupEditorEvents,
+    isFormatted,
   } = useMonacoEditor({
     value,
     onChange,
@@ -62,6 +64,8 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
             <EditorToolbar
               readOnly={readOnly}
               isFullscreen={false}
+              isFormatted={isFormatted}
+              onFormat={formatContent}
               onToggleFullscreen={toggleFullscreen}
               className="flex items-center gap-2"
             />

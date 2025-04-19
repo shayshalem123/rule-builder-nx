@@ -26,6 +26,7 @@ export function useMonacoEditor({
   const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
     enableStickyProperties
   );
+  const [isFormatted, setIsFormatted] = useState(true);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const isUserEditing = useRef(false);
@@ -53,6 +54,7 @@ export function useMonacoEditor({
       }
 
       setError(null);
+      setIsFormatted(true);
     } catch (err) {
       setError("Could not convert value to JSON");
     }
@@ -66,9 +68,25 @@ export function useMonacoEditor({
     setTimeout(() => editor.focus(), 100);
   };
 
+  // Check if content is formatted
+  const checkIsFormatted = (content: string): boolean => {
+    try {
+      const parsed = JSON.parse(content);
+      const formatted = JSON.stringify(parsed, null, 2);
+      return content === formatted;
+    } catch {
+      return false;
+    }
+  };
+
   // Handle editor content change
   const handleEditorChange: OnChange = (content) => {
-    if (!content || !onChange) return;
+    if (!content) return;
+
+    const formattedStatus = checkIsFormatted(content);
+    setIsFormatted(formattedStatus);
+
+    if (!onChange) return;
 
     try {
       const parsed = JSON.parse(content);
@@ -78,6 +96,25 @@ export function useMonacoEditor({
       const errorMessage =
         err instanceof Error ? err.message : "Invalid JSON format";
       setError(errorMessage);
+    }
+  };
+
+  // Format the current editor content
+  const formatContent = () => {
+    if (!editorRef.current) return;
+
+    try {
+      const text = editorRef.current.getValue();
+      const parsed = JSON.parse(text);
+      const formatted = JSON.stringify(parsed, null, 2);
+
+      editorRef.current.setValue(formatted);
+      editorRef.current.focus();
+
+      setIsFormatted(true);
+      return true;
+    } catch {
+      return false;
     }
   };
 
@@ -131,6 +168,8 @@ export function useMonacoEditor({
     error,
     showSettings,
     stickyPropertiesEnabled,
+    isFormatted,
+    formatContent,
     handleEditorDidMount,
     handleEditorChange,
     toggleSettings,

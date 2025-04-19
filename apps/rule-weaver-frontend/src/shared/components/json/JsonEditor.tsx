@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AlertCircle, Copy, FileJson } from "lucide-react";
+import { Editor, OnMount, OnChange } from "@monaco-editor/react";
+import type { editor } from "monaco-editor";
+import { toast } from "sonner";
 
 export interface JsonEditorProps {
   value: object;
@@ -10,6 +13,9 @@ export interface JsonEditorProps {
   showToolbar?: boolean;
 }
 
+/**
+ * Enhanced JSON editor component using Monaco editor
+ */
 const JsonEditor: React.FC<JsonEditorProps> = ({
   value,
   onChange,
@@ -18,50 +24,46 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   className = "",
   showToolbar = true,
 }) => {
-  const [jsonText, setJsonText] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [isFormatted, setIsFormatted] = useState(true);
-  const isUserEditing = useRef(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Check if current JSON is properly formatted
-  const checkFormatting = (text: string) => {
-    try {
-      const parsed = JSON.parse(text);
-      const formatted = JSON.stringify(parsed, null, 2);
-      return formatted === text;
-    } catch {
-      return false;
-    }
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const isUserEditing = useRef(false);
+
+  const handleEditorDidMount: OnMount = (editor) => {
+    editorRef.current = editor;
+
+    setTimeout(() => editor.focus(), 100);
   };
 
   useEffect(() => {
-    if (isUserEditing.current) return;
+    if (isUserEditing.current || !editorRef.current) return;
 
     try {
       const formattedJson = JSON.stringify(value, null, 2);
-      setJsonText(formattedJson);
+
+      if (editorRef.current.getValue() !== formattedJson) {
+        editorRef.current.setValue(formattedJson);
+      }
+
       setIsFormatted(true);
+      setError(null);
     } catch (err) {
-      setJsonText("");
       setError("Could not convert value to JSON");
     }
   }, [value]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
-    setJsonText(text);
-
-    // Update formatting state
-    setIsFormatted(checkFormatting(text));
-
-    if (!onChange) return;
+  const handleEditorChange: OnChange = (content) => {
+    if (!content || !onChange) return;
 
     try {
-      const parsedJson = JSON.parse(text);
+      const parsed = JSON.parse(content);
+
       setError(null);
-      onChange(parsedJson);
+      setIsFormatted(content === JSON.stringify(parsed, null, 2));
+
+      onChange(parsed);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Invalid JSON format";
@@ -69,39 +71,46 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
     }
   };
 
-  const handleBlur = () => {
-    isUserEditing.current = false;
-  };
+  const handleCopy = async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!editorRef.current) return;
 
-  const handleFocus = () => {
-    isUserEditing.current = true;
-  };
-
-  const handleCopy = () => {
-    if (!textareaRef.current) return;
-
-    navigator.clipboard
-      .writeText(jsonText)
-      .then(() => {
-        setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 1000);
-      })
-      .catch((err) => {
-        console.error("Failed to copy text: ", err);
-      });
-  };
-
-  const handleFormat = () => {
     try {
-      const parsed = JSON.parse(jsonText);
+      await navigator.clipboard.writeText(editorRef.current.getValue());
+
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 1000);
+      toast.success("Copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy", err);
+      toast.error(
+        `Failed to copy to clipboard: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`
+      );
+    }
+  };
+
+  const handleFormat = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!editorRef.current) return;
+
+    try {
+      const text = editorRef.current.getValue();
+      const parsed = JSON.parse(text);
       const formatted = JSON.stringify(parsed, null, 2);
 
-      setJsonText(formatted);
+      editorRef.current.setValue(formatted);
+      editorRef.current.focus();
+
       setIsFormatted(true);
+      setError(null);
+      toast.success("JSON formatted successfully");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Invalid JSON format";
       setError(errorMessage);
+      toast.error(`Failed to format JSON: ${errorMessage}`);
     }
   };
 
@@ -159,17 +168,47 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
 
   return (
     <div className="space-y-0">
-      <div className="relative border rounded-md shadow-sm" style={{ height }}>
+      <div
+        className={`relative border rounded-md shadow-sm ${className}`}
+        style={{ height }}
+      >
         {renderButtons()}
-        <textarea
-          ref={textareaRef}
-          className={`w-full h-full p-4 font-mono text-sm bg-gray-50 rounded-md ${className}`}
-          value={jsonText}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-          readOnly={readOnly}
-          style={{ resize: "none" }}
+        <Editor
+          height="100%"
+          defaultValue={JSON.stringify(value, null, 2)}
+          defaultLanguage="json"
+          onChange={handleEditorChange}
+          onMount={handleEditorDidMount}
+          className="bg-gray-50"
+          options={{
+            readOnly,
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            minimap: { enabled: false },
+            lineNumbers: "on",
+            folding: true,
+            tabSize: 2,
+            wordWrap: "on",
+            formatOnPaste: true,
+            formatOnType: true,
+            autoIndent: "advanced",
+            fontSize: 14,
+            fontFamily:
+              "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+            stickyScroll: {
+              enabled: false,
+            },
+          }}
+          beforeMount={(monaco) => {
+            monaco.editor.onDidCreateEditor((editor) => {
+              editor.onDidBlurEditorText(() => {
+                isUserEditing.current = false;
+              });
+              editor.onDidFocusEditorText(() => {
+                isUserEditing.current = true;
+              });
+            });
+          }}
         />
       </div>
 

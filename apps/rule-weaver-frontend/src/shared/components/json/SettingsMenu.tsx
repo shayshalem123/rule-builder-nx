@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Layers } from "lucide-react";
+import { Layers, Maximize } from "lucide-react";
 import { toast } from "sonner";
 
 interface SettingsMenuProps {
@@ -7,6 +7,8 @@ interface SettingsMenuProps {
   onClose: () => void;
   defaultStickyProperties?: boolean;
   onStickyPropertiesChange: (enabled: boolean) => void;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 }
 
 /**
@@ -17,6 +19,8 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
   onClose,
   defaultStickyProperties = false,
   onStickyPropertiesChange,
+  isFullscreen = false,
+  onToggleFullscreen,
 }) => {
   const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
     defaultStickyProperties
@@ -53,6 +57,12 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     );
   };
 
+  const handleToggleFullscreen = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onToggleFullscreen) {
+      onToggleFullscreen();
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -74,6 +84,21 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
             className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
         </label>
+
+        {onToggleFullscreen && (
+          <label className="flex items-center justify-between cursor-pointer">
+            <div className="flex items-center gap-1.5">
+              <Maximize className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-700">Fullscreen Mode</span>
+            </div>
+            <input
+              type="checkbox"
+              checked={isFullscreen}
+              onChange={handleToggleFullscreen}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </label>
+        )}
       </div>
     </div>
   );

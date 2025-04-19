@@ -4,7 +4,6 @@ import { useMonacoEditor } from "./hooks/useMonacoEditor";
 import { useFullscreenEditor } from "./hooks/useFullscreenEditor";
 
 import ErrorMessage from "./ErrorMessage";
-import SettingsMenu from "./SettingsMenu";
 import EditorToolbar from "./EditorToolbar";
 import FullscreenEditor from "./FullscreenEditor";
 
@@ -35,9 +34,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   const {
     editorRef,
     error,
-    showSettings,
     formatContent,
-    toggleSettings,
     handleEditorDidMount,
     handleEditorChange,
     getEditorOptions,
@@ -72,13 +69,6 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
             />
           </div>
         )}
-
-        <SettingsMenu
-          isOpen={showSettings}
-          onClose={toggleSettings}
-          isFullscreen={false}
-          onToggleFullscreen={toggleFullscreen}
-        />
 
         <Editor
           height="100%"

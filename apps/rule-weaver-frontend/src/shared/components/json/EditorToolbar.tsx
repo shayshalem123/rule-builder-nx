@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Copy, FileJson, Settings, Maximize } from "lucide-react";
 import { toast } from "sonner";
-import { useMonacoEditor } from "./hooks/useMonacoEditor";
+import SettingsMenu from "./SettingsMenu";
+import type { editor } from "monaco-editor";
 
 interface EditorToolbarProps {
   readOnly: boolean;
   isFormatted: boolean;
-  editorRef: React.MutableRefObject<import("monaco-editor").editor.IStandaloneCodeEditor>;
+  editorRef: React.MutableRefObject<editor.IStandaloneCodeEditor>;
   onFormat: () => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
-  className?: string; // Allow parent to control positioning via className
+  className?: string;
 }
 
 /**
@@ -26,12 +27,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   isFormatted,
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
-
-  const { showSettings, toggleSettings } = useMonacoEditor({
-    value: {},
-    readOnly,
-    isFullscreen,
-  });
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -61,7 +57,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
   const handleToggleSettings = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleSettings();
+    setShowSettings((prev) => !prev);
   };
 
   const handleToggleFullscreen = (e: React.MouseEvent) => {
@@ -72,65 +68,74 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   };
 
   return (
-    <div className={className}>
-      {!readOnly && (
+    <>
+      <div className={className}>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={handleFormat}
+            disabled={readOnly || isFormatted}
+            className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm
+            ${
+              readOnly || isFormatted
+                ? "bg-gray-100 text-gray-400 opacity-70"
+                : "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 cursor-pointer"
+            }`}
+            title={isFormatted ? "JSON is already formatted" : "Format JSON"}
+          >
+            <FileJson className="h-3.5 w-3.5 mr-1" />
+            Format
+          </button>
+        )}
+
         <button
           type="button"
-          onClick={handleFormat}
-          disabled={readOnly || isFormatted}
-          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm
-          ${
-            readOnly || isFormatted
-              ? "bg-gray-100 text-gray-400 opacity-70"
-              : "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 cursor-pointer"
-          }`}
-          title={isFormatted ? "JSON is already formatted" : "Format JSON"}
+          onClick={handleCopy}
+          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
+            ${
+              copySuccess
+                ? "bg-green-100 text-green-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            }`}
+          title={copySuccess ? "Copied!" : "Copy to clipboard"}
         >
-          <FileJson className="h-3.5 w-3.5 mr-1" />
-          Format
+          <Copy className="h-3.5 w-3.5 mr-1" />
+          {copySuccess ? "Copied!" : "Copy"}
         </button>
-      )}
 
-      <button
-        type="button"
-        onClick={handleCopy}
-        className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
-          ${
-            copySuccess
-              ? "bg-green-100 text-green-600"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
-          }`}
-        title={copySuccess ? "Copied!" : "Copy to clipboard"}
-      >
-        <Copy className="h-3.5 w-3.5 mr-1" />
-        {copySuccess ? "Copied!" : "Copy"}
-      </button>
+        {!isFullscreen && onToggleFullscreen && (
+          <button
+            type="button"
+            onClick={handleToggleFullscreen}
+            className="flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            title="Enter fullscreen"
+          >
+            <Maximize className="h-3.5 w-3.5" />
+          </button>
+        )}
 
-      {!isFullscreen && onToggleFullscreen && (
         <button
           type="button"
-          onClick={handleToggleFullscreen}
-          className="flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
-          title="Enter fullscreen"
+          onClick={handleToggleSettings}
+          className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
+            ${
+              showSettings
+                ? "bg-blue-100 text-blue-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            }`}
+          title="Editor Settings"
         >
-          <Maximize className="h-3.5 w-3.5" />
+          <Settings className="h-3.5 w-3.5" />
         </button>
-      )}
+      </div>
 
-      <button
-        type="button"
-        onClick={handleToggleSettings}
-        className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer
-          ${
-            showSettings
-              ? "bg-blue-100 text-blue-600"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
-          }`}
-        title="Editor Settings"
-      >
-        <Settings className="h-3.5 w-3.5" />
-      </button>
-    </div>
+      <SettingsMenu
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={onToggleFullscreen}
+      />
+    </>
   );
 };
 

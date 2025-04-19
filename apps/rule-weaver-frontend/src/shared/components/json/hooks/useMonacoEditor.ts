@@ -22,7 +22,6 @@ export function useMonacoEditor({
   isFullscreen = false,
 }: UseMonacoEditorOptions) {
   const [error, setError] = useState<string | null>(null);
-  const [showSettings, setShowSettings] = useState(false);
   const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
     enableStickyProperties
   );
@@ -118,11 +117,6 @@ export function useMonacoEditor({
     }
   };
 
-  // Toggle settings panel
-  const toggleSettings = () => {
-    setShowSettings((prev) => !prev);
-  };
-
   // Handle sticky properties change
   const handleStickyPropertiesChange = (enabled: boolean) => {
     setStickyPropertiesEnabled(enabled);
@@ -166,13 +160,11 @@ export function useMonacoEditor({
   return {
     editorRef,
     error,
-    showSettings,
     stickyPropertiesEnabled,
     isFormatted,
     formatContent,
     handleEditorDidMount,
     handleEditorChange,
-    toggleSettings,
     handleStickyPropertiesChange,
     getEditorOptions,
     setupEditorEvents,

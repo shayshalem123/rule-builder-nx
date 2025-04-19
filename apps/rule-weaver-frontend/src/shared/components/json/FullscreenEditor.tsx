@@ -3,7 +3,6 @@ import { createPortal } from "react-dom";
 import { Editor } from "@monaco-editor/react";
 import { useMonacoEditor } from "./hooks/useMonacoEditor";
 import EditorToolbar from "./EditorToolbar";
-import SettingsMenu from "./SettingsMenu";
 import { X } from "lucide-react";
 
 interface FullscreenEditorProps {
@@ -28,8 +27,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
 }) => {
   const {
     editorRef,
-    showSettings,
-    toggleSettings,
     handleEditorDidMount,
     handleEditorChange,
     getEditorOptions,
@@ -96,13 +93,6 @@ const FullscreenEditor: React.FC<FullscreenEditorProps> = ({
               />
             </div>
           )}
-
-          <SettingsMenu
-            isOpen={showSettings}
-            onClose={toggleSettings}
-            isFullscreen={true}
-            onToggleFullscreen={onClose}
-          />
 
           <Editor
             height="100%"

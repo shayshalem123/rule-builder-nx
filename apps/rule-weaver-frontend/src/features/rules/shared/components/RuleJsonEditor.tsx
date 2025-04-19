@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { FormikProps } from "formik";
 import { RuleFormValues } from "@/features/rules/ruleBuilder/hooks/useRuleForm";
-import JsonEditor from "@/shared/components/json/JsonEditor";
+import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 import { RuleType } from "../../types/rule";
 
 export interface RuleFormValuesWithJson extends RuleFormValues {

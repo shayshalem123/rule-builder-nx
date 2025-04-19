@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/shared/components/inputs/card";
 import { Badge } from "@/shared/components/inputs/badge";
-import JsonEditor from "@/shared/components/json/JsonEditor";
+import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 import TabNavigation from "@/features/rules/shared/components/TabNavigation";
 
 const TABS = [

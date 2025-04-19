@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { FormikProps } from "formik";
 import { SchemaFormValues } from "../hooks/useSchemaForm";
-import JsonEditor from "@/shared/components/json/JsonEditor";
+import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 
 interface SchemaJsonEditorProps {
   formik: FormikProps<SchemaFormValues>;

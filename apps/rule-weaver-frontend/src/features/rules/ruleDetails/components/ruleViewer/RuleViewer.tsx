@@ -7,7 +7,7 @@ import {
 } from "@/features/rules/shared/utils/ruleUtils";
 import BaseRuleViewer from "./BaseRuleViewer";
 import GroupRuleViewer from "./GroupRuleViewer";
-import JsonEditor from "@/shared/components/json/JsonEditor";
+import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 import TabNavigation from "@/features/rules/shared/components/TabNavigation";
 
 const TABS = [

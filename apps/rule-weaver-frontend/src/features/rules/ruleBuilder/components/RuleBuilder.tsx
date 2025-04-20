@@ -18,6 +18,7 @@ import {
 import RuleDiffModal from "./RuleDiffModal";
 import DiffViewButton from "@/shared/components/diff/DiffViewButton";
 import RuleTestSimulator from "./RuleTestSimulator";
+import { TestFormData } from "./testSimulator/AddTestForm";
 
 interface RuleBuilderProps {
   onSave: (
@@ -40,11 +41,7 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
 
   const [testCases, setTestCases] = useState<TestCase[]>([]);
-  const [currentTestForm, setCurrentTestForm] = useState<{
-    metadata: Record<string, unknown>;
-    expectedResult: boolean;
-    name: string;
-  }>({
+  const [currentTestForm, setCurrentTestForm] = useState<TestFormData>({
     metadata: DEFAULT_TEST_METADATA,
     expectedResult: true,
     name: "",

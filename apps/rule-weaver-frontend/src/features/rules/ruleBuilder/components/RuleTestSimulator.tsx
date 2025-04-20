@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
-import { Textarea } from "@/shared/components/inputs/textarea";
 import { Switch } from "@/shared/components/inputs/switch";
 import { Label } from "@/shared/components/inputs/label";
 import { AlertTriangleIcon, CheckIcon, XIcon, Loader2 } from "lucide-react";
 import { ruleEvaluationService } from "@/features/rules/services/ruleEvaluationService";
 import { useMutation } from "@tanstack/react-query";
+import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 
 // Define a generic type for JSON data
 type JsonValue =
@@ -22,9 +22,13 @@ interface RuleTestSimulatorProps {
   rule: RuleWithMeta;
 }
 
+// Default sample metadata
+const DEFAULT_METADATA = { metadata: { name: "" } };
+
 const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({ rule }) => {
   // State for custom test data and expected result
-  const [customTestData, setCustomTestData] = useState("");
+  const [customTestData, setCustomTestData] =
+    useState<Record<string, unknown>>(DEFAULT_METADATA);
   const [customTestExpected, setCustomTestExpected] = useState<boolean>(true);
   const [parseError, setParseError] = useState<string | null>(null);
 
@@ -47,15 +51,15 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({ rule }) => {
     setParseError(null);
 
     try {
-      // Parse custom test data
-      const metadata = JSON.parse(customTestData) as JsonData;
+      // JsonEditor already provides parsed JSON objects, so no need to parse
+      const metadata = customTestData as unknown as JsonData;
 
       // Call the mutation function
       evaluateRuleMutation.mutate(metadata);
     } catch (err) {
-      // Handle JSON parse errors separately
-      console.error("Error parsing JSON:", err);
-      setParseError("Invalid JSON data. Please check your input.");
+      // Handle errors
+      console.error("Error running test:", err);
+      setParseError(err instanceof Error ? err.message : "An error occurred");
 
       // Reset mutation state to clear any previous results
       evaluateRuleMutation.reset();
@@ -63,7 +67,7 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({ rule }) => {
   };
 
   // Update custom test data
-  const updateCustomTestData = (data: string) => {
+  const updateCustomTestData = (data: Record<string, unknown>) => {
     setCustomTestData(data);
     // Clear parse error when input changes
     if (parseError) setParseError(null);
@@ -99,20 +103,24 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({ rule }) => {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="metadata">Test Metadata (JSON)</Label>
-            <Textarea
-              id="metadata"
-              placeholder='Enter JSON data, e.g.: {"metadata": {"name": "test"}}'
-              value={customTestData}
-              onChange={(e) => updateCustomTestData(e.target.value)}
-              className="h-40 font-mono"
-            />
-            <p className="text-sm text-gray-500">
-              Enter JSON data to test against this rule via API
+            <Label htmlFor="metadata" className="mb-2 block">
+              Test Metadata (JSON)
+            </Label>
+            <div className="min-h-[300px]">
+              <JsonEditor
+                value={customTestData}
+                onChange={updateCustomTestData}
+                height="300px"
+                showToolbar={true}
+                enableStickyProperties={true}
+              />
+            </div>
+            <p className="text-sm text-gray-500 mt-2">
+              Enter JSON metadata to test against this rule via API
             </p>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mt-4">
             <Switch
               id="expected-result"
               checked={customTestExpected}

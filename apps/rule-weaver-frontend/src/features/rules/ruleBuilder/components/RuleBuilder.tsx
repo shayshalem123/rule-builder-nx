@@ -3,7 +3,11 @@ import { RuleFormValues, useRuleForm } from "../hooks/useRuleForm";
 import { RuleLogicBuilder } from "./RuleLogicBuilder";
 import { RuleFormFields } from "./RuleFormFields";
 import { FormActions } from "./FormActions";
-import { RuleWithMeta } from "@/features/rules/types/rule";
+import {
+  RuleWithMeta,
+  TestCase,
+  DEFAULT_TEST_METADATA,
+} from "@/features/rules/types/rule";
 import RuleJsonEditor from "../../shared/components/RuleJsonEditor";
 import {
   Tabs,
@@ -34,6 +38,17 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>("visual");
   const [isDiffModalOpen, setIsDiffModalOpen] = useState(false);
+
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const [currentTestForm, setCurrentTestForm] = useState<{
+    metadata: Record<string, unknown>;
+    expectedResult: boolean;
+    name: string;
+  }>({
+    metadata: DEFAULT_TEST_METADATA,
+    expectedResult: true,
+    name: "",
+  });
 
   const {
     formik,
@@ -130,7 +145,13 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
             </TabsContent>
 
             <TabsContent value="test" className="w-full">
-              <RuleTestSimulator rule={currentRule} />
+              <RuleTestSimulator
+                rule={currentRule}
+                testCases={testCases}
+                setTestCases={setTestCases}
+                currentTestForm={currentTestForm}
+                setCurrentTestForm={setCurrentTestForm}
+              />
             </TabsContent>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">

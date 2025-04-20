@@ -42,3 +42,20 @@ export type Rule = {
 
 export const destinationOptions = ["A", "B"];
 export const categoryOptions = ["partners-images", "partners-algo"];
+
+// Test case interface for rule testing
+export interface TestCase {
+  id: string;
+  name: string;
+  metadata: Record<string, unknown>;
+  expectedResult: boolean;
+  result?: {
+    passed: boolean;
+    isSuccess: boolean;
+    error?: string;
+  };
+  isRunning: boolean;
+}
+
+// Default metadata for new test cases
+export const DEFAULT_TEST_METADATA = { metadata: { name: "" } };

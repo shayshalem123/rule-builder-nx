@@ -221,16 +221,20 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
           isEditing={!!editingTestId}
           onCancelEdit={cancelEdit}
         />
-
-        <TestCaseList
-          testCases={testCases}
-          onRunTest={runTest}
-          onRemoveTest={removeTestCase}
-          onEditTest={editTestCase}
-          onRunAllTests={runAllTests}
-          onUpdateTest={updateTestCase}
-        />
       </div>
+
+      {testCases.length > 0 && (
+        <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
+          <TestCaseList
+            testCases={testCases}
+            onRunTest={runTest}
+            onRemoveTest={removeTestCase}
+            onEditTest={editTestCase}
+            onRunAllTests={runAllTests}
+            onUpdateTest={updateTestCase}
+          />
+        </div>
+      )}
     </div>
   );
 };

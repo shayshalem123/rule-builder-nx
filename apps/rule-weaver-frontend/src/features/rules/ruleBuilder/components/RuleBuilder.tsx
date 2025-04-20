@@ -13,6 +13,7 @@ import {
 } from "@/shared/components/inputs/tabs";
 import RuleDiffModal from "./RuleDiffModal";
 import DiffViewButton from "@/shared/components/diff/DiffViewButton";
+import RuleTestSimulator from "./RuleTestSimulator";
 
 interface RuleBuilderProps {
   onSave: (
@@ -23,7 +24,7 @@ interface RuleBuilderProps {
   isLoading?: boolean;
 }
 
-type TabId = "visual" | "json";
+type TabId = "visual" | "json" | "test";
 
 const RuleBuilder: React.FC<RuleBuilderProps> = ({
   onSave,
@@ -60,6 +61,20 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
   const hasChanges = formik.dirty;
   const isEditMode = !!initialRule;
 
+  // Create a rule object that includes the current form values
+  const currentRule: RuleWithMeta = {
+    id: initialRule?.id || "",
+    name: formik.values.name,
+    description: formik.values.description,
+    destination: formik.values.destination,
+    category: formik.values.category,
+    rule: formik.values.rule,
+    createdAt: initialRule?.createdAt,
+    updatedAt: initialRule?.updatedAt,
+    createdBy: initialRule?.createdBy,
+    updatedBy: initialRule?.updatedBy,
+  };
+
   return (
     <div className="space-y-6 w-full max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-4">
@@ -74,12 +89,15 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
           onValueChange={(value) => setActiveTab(value as TabId)}
           className="w-full"
         >
-          <TabsList className="mb-6 grid grid-cols-2 w-full">
+          <TabsList className="mb-6 grid grid-cols-3 w-full">
             <TabsTrigger value="visual" className="w-full">
               <span className="relative">Visual Builder</span>
             </TabsTrigger>
             <TabsTrigger value="json" className="w-full">
               <span className="relative">JSON Editor</span>
+            </TabsTrigger>
+            <TabsTrigger value="test" className="w-full">
+              <span className="relative">Test Simulator</span>
             </TabsTrigger>
           </TabsList>
 
@@ -109,6 +127,10 @@ const RuleBuilder: React.FC<RuleBuilderProps> = ({
 
             <TabsContent value="json" className="w-full">
               <RuleJsonEditor formik={formik} updateFormik={updateFormik} />
+            </TabsContent>
+
+            <TabsContent value="test" className="w-full">
+              <RuleTestSimulator rule={currentRule} />
             </TabsContent>
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">

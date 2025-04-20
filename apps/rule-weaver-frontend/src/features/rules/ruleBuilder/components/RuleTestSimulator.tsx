@@ -1,0 +1,110 @@
+import React from "react";
+import { RuleWithMeta } from "@/features/rules/types/rule";
+import { useRuleTest } from "../hooks/useRuleTest";
+import { Button } from "@/shared/components/inputs/button";
+import { Textarea } from "@/shared/components/inputs/textarea";
+import { Switch } from "@/shared/components/inputs/switch";
+import { Label } from "@/shared/components/inputs/label";
+import { AlertTriangleIcon, CheckIcon, XIcon, Loader2 } from "lucide-react";
+
+interface RuleTestSimulatorProps {
+  rule: RuleWithMeta;
+}
+
+const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({ rule }) => {
+  const {
+    customTestData,
+    customTestResult,
+    customTestExpected,
+    isLoading,
+    error,
+    runCustomTest,
+    updateCustomTestData,
+    updateCustomTestExpected,
+  } = useRuleTest({ rule });
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold mb-4">Rule Test Simulator</h2>
+        <div className="space-y-4">
+          {error && (
+            <div className="bg-red-50 text-red-700 p-3 rounded-md mb-4 flex items-center">
+              <AlertTriangleIcon className="h-5 w-5 mr-2" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label htmlFor="metadata">Test Metadata (JSON)</Label>
+            <Textarea
+              id="metadata"
+              placeholder='Enter JSON data, e.g.: {"metadata": {"name": "test"}}'
+              value={customTestData}
+              onChange={(e) => updateCustomTestData(e.target.value)}
+              className="h-40 font-mono"
+            />
+            <p className="text-sm text-gray-500">
+              Enter JSON data to test against this rule via API
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="expected-result"
+              checked={customTestExpected}
+              onCheckedChange={updateCustomTestExpected}
+            />
+            <Label htmlFor="expected-result">
+              Rule should {customTestExpected ? "pass" : "fail"} for this data
+            </Label>
+          </div>
+
+          {customTestResult !== null && (
+            <div
+              className={`mt-4 p-4 rounded-md ${
+                customTestResult
+                  ? "bg-green-50 text-green-700"
+                  : "bg-red-50 text-red-700"
+              }`}
+            >
+              <div className="flex items-center">
+                {customTestResult ? (
+                  <CheckIcon className="h-5 w-5 mr-2" />
+                ) : (
+                  <XIcon className="h-5 w-5 mr-2" />
+                )}
+                <span className="font-semibold">
+                  API: Rule {customTestResult ? "passed" : "failed"} for the
+                  given data
+                </span>
+              </div>
+              <div className="mt-2 text-sm">
+                {customTestResult === customTestExpected ? (
+                  <span className="text-green-700">
+                    ✓ This matches your expected result
+                  </span>
+                ) : (
+                  <span className="text-red-700">
+                    ✗ This does not match your expected result
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-end">
+            <Button onClick={runCustomTest} disabled={isLoading} type="button">
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              Run API Test
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RuleTestSimulator;

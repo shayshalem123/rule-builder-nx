@@ -36,15 +36,17 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
   onCancelEdit,
 }) => {
   return (
-    <div className="space-y-8 mb-8 border-b pb-8">
+    <div className="mb-8 space-y-6">
+      <h3 className="text-lg font-medium">
+        {isEditing ? "Edit Test Case" : "Add New Test Case"}
+      </h3>
+
       {parseError && (
-        <div className="bg-red-50 text-red-700 p-3 rounded-md mb-4 flex items-center">
+        <div className="bg-red-50 text-red-700 p-3 rounded-md flex items-center">
           <AlertTriangleIcon className="h-5 w-5 mr-2" />
           <span>{parseError}</span>
         </div>
       )}
-
-      <h3 className="text-lg font-medium text-center">Add New Test Case</h3>
 
       <div className="space-y-2">
         <Label htmlFor="test-name" className="mb-2 block">
@@ -64,10 +66,10 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         <Label htmlFor="metadata" className="mb-2 block">
           Test Metadata (JSON)
         </Label>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-gray-500">
           Enter JSON metadata to test against this rule via API
         </p>
-        <div className="min-h-[300px]">
+        <div className="min-h-[300px] bg-white border border-gray-100 rounded-md overflow-hidden">
           <JsonEditor
             value={currentTestForm.metadata}
             onChange={onUpdateMetadata}
@@ -81,10 +83,10 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
       <PassFailToggle
         value={currentTestForm.expectedResult}
         onChange={onUpdateExpected}
-        className="my-6"
+        className="my-4"
       />
 
-      <div className="flex justify-end space-x-2 mt-8">
+      <div className="flex justify-end space-x-2">
         {isEditing && onCancelEdit && (
           <Button
             onClick={onCancelEdit}

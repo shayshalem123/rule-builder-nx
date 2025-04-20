@@ -14,18 +14,18 @@ const PassFailToggle: React.FC<PassFailToggleProps> = ({
 }) => {
   return (
     <div className={`flex justify-center ${className}`}>
-      <div className="inline-flex p-1 rounded-lg bg-gray-100 shadow-inner">
+      <div className="inline-flex p-0.5 rounded-md bg-gray-100 shadow-inner">
         <button
           type="button"
           onClick={() => onChange(true)}
-          className={`py-2.5 px-5 rounded-md flex items-center transition-colors ${
+          className={`py-1.5 px-4 rounded text-sm flex items-center transition-colors ${
             value
               ? "bg-green-100 text-green-700 font-medium shadow-sm"
               : "text-gray-600 hover:text-gray-800"
           }`}
         >
           <ThumbsUp
-            className={`h-4 w-4 mr-2 ${
+            className={`h-3.5 w-3.5 mr-1.5 ${
               value ? "text-green-600" : "text-gray-500"
             }`}
           />
@@ -34,14 +34,14 @@ const PassFailToggle: React.FC<PassFailToggleProps> = ({
         <button
           type="button"
           onClick={() => onChange(false)}
-          className={`py-2.5 px-5 rounded-md flex items-center transition-colors ${
+          className={`py-1.5 px-4 rounded text-sm flex items-center transition-colors ${
             !value
               ? "bg-red-100 text-red-700 font-medium shadow-sm"
               : "text-gray-600 hover:text-gray-800"
           }`}
         >
           <ThumbsDown
-            className={`h-4 w-4 mr-2 ${
+            className={`h-3.5 w-3.5 mr-1.5 ${
               !value ? "text-red-600" : "text-gray-500"
             }`}
           />

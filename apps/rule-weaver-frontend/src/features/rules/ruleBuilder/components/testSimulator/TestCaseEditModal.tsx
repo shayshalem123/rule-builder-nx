@@ -3,8 +3,6 @@ import { TestCase } from "@/features/rules/types/rule";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogFooter,
 } from "@/shared/components/inputs/dialog";
 import { Button } from "@/shared/components/inputs/button";
@@ -64,13 +62,9 @@ const TestCaseEditModal: React.FC<TestCaseEditModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Edit Test Case</DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-8 py-4">
+        <div className="bg-gray-50 rounded-lg border border-gray-200 shadow-sm p-6 space-y-6 my-2">
           {error && (
-            <div className="bg-red-50 text-red-700 p-3 rounded-md mb-4 flex items-center">
+            <div className="bg-red-50 text-red-700 p-3 rounded-md flex items-center">
               <AlertTriangleIcon className="h-5 w-5 mr-2" />
               <span>{error}</span>
             </div>
@@ -97,7 +91,10 @@ const TestCaseEditModal: React.FC<TestCaseEditModalProps> = ({
             <Label htmlFor="edit-metadata" className="mb-2 block">
               Test Metadata (JSON)
             </Label>
-            <div className="min-h-[300px]">
+            <p className="text-sm text-gray-500">
+              Enter JSON metadata to test against this rule via API
+            </p>
+            <div className="min-h-[300px] bg-white border border-gray-100 rounded-md overflow-hidden">
               <JsonEditor
                 value={metadata}
                 onChange={(data) => {
@@ -114,11 +111,11 @@ const TestCaseEditModal: React.FC<TestCaseEditModalProps> = ({
           <PassFailToggle
             value={expectedResult}
             onChange={setExpectedResult}
-            className="my-6"
+            className="my-4"
           />
         </div>
 
-        <DialogFooter className="flex justify-end space-x-2 mt-6">
+        <DialogFooter className="flex justify-end space-x-2 mt-4">
           <Button onClick={onClose} type="button" variant="outline">
             Cancel
           </Button>

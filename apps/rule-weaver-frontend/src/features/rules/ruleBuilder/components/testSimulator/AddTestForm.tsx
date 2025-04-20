@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/shared/components/inputs/button";
 import { Switch } from "@/shared/components/inputs/switch";
 import { Label } from "@/shared/components/inputs/label";
-import { AlertTriangleIcon, PlusIcon } from "lucide-react";
+import { AlertTriangleIcon, PlusIcon, CheckIcon, XIcon } from "lucide-react";
 import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
 
 // Type for the current test form
@@ -20,6 +20,8 @@ export interface AddTestFormProps {
   onUpdateExpected: (expected: boolean) => void;
   onAddTest: () => void;
   parseError: string | null;
+  isEditing?: boolean;
+  onCancelEdit?: () => void;
 }
 
 // Component for the form to add a new test
@@ -30,9 +32,11 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
   onUpdateExpected,
   onAddTest,
   parseError,
+  isEditing = false,
+  onCancelEdit,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-8 border-b pb-8">
       {parseError && (
         <div className="bg-red-50 text-red-700 p-3 rounded-md mb-4 flex items-center">
           <AlertTriangleIcon className="h-5 w-5 mr-2" />
@@ -40,7 +44,9 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         </div>
       )}
 
-      <h3 className="text-md font-medium">Add New Test Case</h3>
+      <h3 className="text-md font-medium">
+        {isEditing ? "Edit Test Case" : "Add New Test Case"}
+      </h3>
 
       <div className="space-y-2">
         <Label htmlFor="test-name" className="mb-2 block">
@@ -86,10 +92,30 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         </Label>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end space-x-2">
+        {isEditing && onCancelEdit && (
+          <Button
+            onClick={onCancelEdit}
+            type="button"
+            variant="outline"
+            className="flex items-center"
+          >
+            <XIcon className="mr-2 h-4 w-4" />
+            Cancel
+          </Button>
+        )}
         <Button onClick={onAddTest} type="button" className="flex items-center">
-          <PlusIcon className="mr-2 h-4 w-4" />
-          Add Test Case
+          {isEditing ? (
+            <>
+              <CheckIcon className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          ) : (
+            <>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Add Test Case
+            </>
+          )}
         </Button>
       </div>
     </div>

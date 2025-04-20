@@ -21,8 +21,9 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
   currentTestForm,
   setCurrentTestForm,
 }) => {
-  // Local state for parse errors
+  // Local state for parse errors and edit mode
   const [parseError, setParseError] = useState<string | null>(null);
+  const [editingTestId, setEditingTestId] = useState<string | null>(null);
 
   // Use React Query's useMutation hook for rule evaluation
   const evaluateRuleMutation = useMutation({
@@ -64,16 +65,36 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
     }
 
     try {
-      const newTest: TestCase = {
-        id: Date.now().toString(),
-        name: currentTestForm.name,
-        metadata: currentTestForm.metadata,
-        expectedResult: currentTestForm.expectedResult,
-        isRunning: false,
-      };
+      if (editingTestId) {
+        // Update existing test
+        setTestCases((prev) =>
+          prev.map((test) =>
+            test.id === editingTestId
+              ? {
+                  ...test,
+                  name: currentTestForm.name,
+                  metadata: currentTestForm.metadata,
+                  expectedResult: currentTestForm.expectedResult,
+                  result: undefined, // Clear previous result
+                }
+              : test
+          )
+        );
+        setEditingTestId(null);
+      } else {
+        // Add new test
+        const newTest: TestCase = {
+          id: Date.now().toString(),
+          name: currentTestForm.name,
+          metadata: currentTestForm.metadata,
+          expectedResult: currentTestForm.expectedResult,
+          isRunning: false,
+        };
 
-      setTestCases((prev) => [...prev, newTest]);
+        setTestCases((prev) => [...prev, newTest]);
+      }
 
+      // Reset form
       setCurrentTestForm({
         metadata: { metadata: { name: "" } },
         expectedResult: true,
@@ -81,13 +102,39 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
       });
       setParseError(null);
     } catch (err) {
-      console.error("Error adding test:", err);
+      console.error("Error adding/updating test:", err);
       setParseError(err instanceof Error ? err.message : "An error occurred");
     }
   };
 
   const removeTestCase = (id: string) => {
     setTestCases((prev) => prev.filter((test) => test.id !== id));
+
+    // If we were editing this test, cancel edit mode
+    if (editingTestId === id) {
+      cancelEdit();
+    }
+  };
+
+  const editTestCase = (id: string) => {
+    const testToEdit = testCases.find((test) => test.id === id);
+    if (!testToEdit) return;
+
+    setEditingTestId(id);
+    setCurrentTestForm({
+      name: testToEdit.name,
+      metadata: testToEdit.metadata,
+      expectedResult: testToEdit.expectedResult,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingTestId(null);
+    setCurrentTestForm({
+      metadata: { metadata: { name: "" } },
+      expectedResult: true,
+      name: "",
+    });
   };
 
   const runTest = (testId: string) => {
@@ -153,13 +200,6 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h2 className="text-lg font-semibold mb-4">Rule Test Simulator</h2>
 
-        <TestCaseList
-          testCases={testCases}
-          onRunTest={runTest}
-          onRemoveTest={removeTestCase}
-          onRunAllTests={runAllTests}
-        />
-
         <AddTestForm
           currentTestForm={currentTestForm}
           onUpdateName={updateTestName}
@@ -167,6 +207,16 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
           onUpdateExpected={updateCurrentTestExpected}
           onAddTest={addTestCase}
           parseError={parseError}
+          isEditing={!!editingTestId}
+          onCancelEdit={cancelEdit}
+        />
+
+        <TestCaseList
+          testCases={testCases}
+          onRunTest={runTest}
+          onRemoveTest={removeTestCase}
+          onEditTest={editTestCase}
+          onRunAllTests={runAllTests}
         />
       </div>
     </div>

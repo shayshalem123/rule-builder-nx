@@ -211,8 +211,6 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold mb-4">Rule Test Simulator</h2>
-
         <AddTestForm
           currentTestForm={currentTestForm}
           onUpdateName={updateTestName}

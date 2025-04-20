@@ -8,10 +8,10 @@ import {
   DialogFooter,
 } from "@/shared/components/inputs/dialog";
 import { Button } from "@/shared/components/inputs/button";
-import { Switch } from "@/shared/components/inputs/switch";
 import { Label } from "@/shared/components/inputs/label";
-import { AlertTriangleIcon, CheckIcon, XIcon } from "lucide-react";
+import { AlertTriangleIcon } from "lucide-react";
 import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
+import PassFailToggle from "./PassFailToggle";
 
 interface TestCaseEditModalProps {
   isOpen: boolean;
@@ -68,7 +68,7 @@ const TestCaseEditModal: React.FC<TestCaseEditModalProps> = ({
           <DialogTitle>Edit Test Case</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-8 py-4">
           {error && (
             <div className="bg-red-50 text-red-700 p-3 rounded-md mb-4 flex items-center">
               <AlertTriangleIcon className="h-5 w-5 mr-2" />
@@ -111,19 +111,14 @@ const TestCaseEditModal: React.FC<TestCaseEditModalProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 mt-4">
-            <Switch
-              id="edit-expected-result"
-              checked={expectedResult}
-              onCheckedChange={setExpectedResult}
-            />
-            <Label htmlFor="edit-expected-result">
-              Rule should {expectedResult ? "pass" : "fail"} for this data
-            </Label>
-          </div>
+          <PassFailToggle
+            value={expectedResult}
+            onChange={setExpectedResult}
+            className="my-6"
+          />
         </div>
 
-        <DialogFooter className="flex justify-end space-x-2">
+        <DialogFooter className="flex justify-end space-x-2 mt-6">
           <Button onClick={onClose} type="button" variant="outline">
             Cancel
           </Button>

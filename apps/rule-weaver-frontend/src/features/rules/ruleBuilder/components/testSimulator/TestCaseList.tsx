@@ -11,6 +11,7 @@ export interface TestCaseListProps {
   onRemoveTest: (id: string) => void;
   onEditTest: (id: string) => void;
   onRunAllTests: () => void;
+  onUpdateTest: (id: string, updatedData: Partial<TestCase>) => void;
 }
 
 // Component for displaying the list of test cases
@@ -20,6 +21,7 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
   onRemoveTest,
   onEditTest,
   onRunAllTests,
+  onUpdateTest,
 }) => {
   if (testCases.length === 0) return null;
 
@@ -64,6 +66,7 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
                 onRun={onRunTest}
                 onRemove={onRemoveTest}
                 onEdit={onEditTest}
+                onUpdate={onUpdateTest}
               />
             ))}
           </tbody>

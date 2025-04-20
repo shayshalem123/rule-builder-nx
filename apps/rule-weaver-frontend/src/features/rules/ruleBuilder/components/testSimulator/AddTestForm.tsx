@@ -112,8 +112,8 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
             </>
           ) : (
             <>
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Add Test Case
+          <PlusIcon className="mr-2 h-4 w-4" />
+          Add Test Case
             </>
           )}
         </Button>

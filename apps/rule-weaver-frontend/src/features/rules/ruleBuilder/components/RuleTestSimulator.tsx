@@ -117,15 +117,28 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
   };
 
   const editTestCase = (id: string) => {
+    // This function is now just a passthrough for updateTestCase
+    // as we're handling the editing in the modal now
     const testToEdit = testCases.find((test) => test.id === id);
     if (!testToEdit) return;
 
-    setEditingTestId(id);
-    setCurrentTestForm({
-      name: testToEdit.name,
-      metadata: testToEdit.metadata,
-      expectedResult: testToEdit.expectedResult,
-    });
+    // We're keeping this function simple since our TestCaseRow component
+    // already has the test data and will directly call updateTestCase
+    // after collecting the updated values from the modal
+  };
+
+  const updateTestCase = (id: string, updatedData: Partial<TestCase>) => {
+    setTestCases((prev) =>
+      prev.map((test) =>
+        test.id === id
+          ? {
+              ...test,
+              ...updatedData,
+              result: undefined, // Clear previous result when test is changed
+            }
+          : test
+      )
+    );
   };
 
   const cancelEdit = () => {
@@ -217,6 +230,7 @@ const RuleTestSimulator: React.FC<RuleTestSimulatorProps> = ({
           onRemoveTest={removeTestCase}
           onEditTest={editTestCase}
           onRunAllTests={runAllTests}
+          onUpdateTest={updateTestCase}
         />
       </div>
     </div>

@@ -80,7 +80,7 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         />
       </div>
 
-      <div className="space-y-3 pt-2">
+      <div className="space-y-3">
         <Label htmlFor="metadata" className="text-sm font-medium text-gray-700">
           Test Metadata (JSON)
         </Label>
@@ -99,9 +99,6 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
       </div>
 
       <div className="pt-2 space-y-3">
-        <Label className="text-sm font-medium text-gray-700 block">
-          Expected Result
-        </Label>
         <PassFailToggle
           value={currentTestForm.expectedResult}
           onChange={onUpdateExpected}

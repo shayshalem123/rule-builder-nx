@@ -3,10 +3,9 @@ import { Button } from "@/shared/components/inputs/button";
 import { Label } from "@/shared/components/inputs/label";
 import {
   AlertTriangleIcon,
-  PlusIcon,
   CheckIcon,
   XIcon,
-  FileJson,
+  Beaker,
   ClipboardEdit,
 } from "lucide-react";
 import JsonEditor from "@/shared/components/jsonEditor/JsonEditor";
@@ -43,13 +42,13 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
   onCancelEdit,
 }) => {
   return (
-    <div className="mb-8 space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center border-b border-gray-200 pb-4 mb-6">
         <div className="bg-indigo-100 p-2 rounded-md mr-3">
           {isEditing ? (
             <ClipboardEdit className="h-5 w-5 text-indigo-600" />
           ) : (
-            <FileJson className="h-5 w-5 text-indigo-600" />
+            <Beaker className="h-5 w-5 text-indigo-600" />
           )}
         </div>
         <h3 className="text-lg font-semibold text-gray-800">
@@ -99,24 +98,24 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         </div>
       </div>
 
-      <div className="pt-2">
-        <Label className="text-sm font-medium text-gray-700 block mb-3">
+      <div className="pt-2 space-y-3">
+        <Label className="text-sm font-medium text-gray-700 block">
           Expected Result
         </Label>
         <PassFailToggle
           value={currentTestForm.expectedResult}
           onChange={onUpdateExpected}
-          className="my-2"
+          className="mb-2"
         />
       </div>
 
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
+      <div className="flex justify-end items-center pt-6 pb-2 border-t border-gray-200 mt-6">
         {isEditing && onCancelEdit && (
           <Button
             onClick={onCancelEdit}
             type="button"
             variant="outline"
-            className="flex items-center"
+            className="flex items-center mr-3"
           >
             <XIcon className="mr-2 h-4 w-4" />
             Cancel
@@ -125,19 +124,9 @@ const AddTestForm: React.FC<AddTestFormProps> = ({
         <Button
           onClick={onAddTest}
           type="button"
-          className="flex items-center bg-indigo-600 hover:bg-indigo-700"
+          className="py-2 px-4 rounded-md shadow-sm transition-colors"
         >
-          {isEditing ? (
-            <>
-              <CheckIcon className="mr-2 h-4 w-4" />
-              Save Changes
-            </>
-          ) : (
-            <>
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Add Test Case
-            </>
-          )}
+          {isEditing ? "Save Changes" : "Add Test Case"}
         </Button>
       </div>
     </div>

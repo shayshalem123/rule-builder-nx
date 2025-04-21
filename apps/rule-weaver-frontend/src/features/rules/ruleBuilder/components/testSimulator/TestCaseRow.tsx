@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TestCase } from "@/features/rules/types/rule";
 import { Button } from "@/shared/components/inputs/button";
+import { TableRow, TableCell } from "@/shared/components/inputs/table";
 import {
   CheckIcon,
   XIcon,
@@ -99,24 +100,24 @@ const TestCaseRow: React.FC<TestCaseRowProps> = ({
 
   return (
     <>
-      <tr
+      <TableRow
         className="hover:bg-gray-50 transition-colors cursor-pointer"
         onClick={handleRowClick}
       >
-        <td className="px-6 pr-0 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/3 max-w-xs">
+        <TableCell className="px-6 pr-0 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/3 max-w-xs">
           <div
             className="truncate overflow-hidden max-w-full"
             title={test.name}
           >
             {test.name}
           </div>
-        </td>
-        <td className="pl-0 pr-6 py-4 whitespace-nowrap text-sm w-1/5">
+        </TableCell>
+        <TableCell className="pl-0 pr-6 py-4 whitespace-nowrap text-sm w-1/5">
           <div className="ml-2 flex justify-center items-center">
             {renderStatusBadge()}
           </div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-auto min-w-[220px]">
+        </TableCell>
+        <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-auto min-w-[220px]">
           <div className="flex justify-end space-x-2">
             <Button
               onClick={(e) => {
@@ -172,8 +173,8 @@ const TestCaseRow: React.FC<TestCaseRowProps> = ({
               Delete
             </Button>
           </div>
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
       {/* Test Case View Modal */}
       <TestCaseViewModal

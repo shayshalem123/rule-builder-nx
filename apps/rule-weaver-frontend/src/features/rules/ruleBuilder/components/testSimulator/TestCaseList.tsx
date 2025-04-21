@@ -49,11 +49,11 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr className="relative">
-              <th className="px-6 pr-2 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider w-2/5">
+              <th className="px-6 pr-0 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider w-1/3">
                 Name
               </th>
-              <th className="pl-0 pr-6 py-3 text-xs font-medium text-gray-600 uppercase tracking-wider w-1/5">
-                <span className="-ml-10">Result</span>
+              <th className="pl-0 pr-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-1/5">
+                <span className="ml-2">Result</span>
               </th>
               <th className="px-6 py-3 w-auto"></th>
             </tr>

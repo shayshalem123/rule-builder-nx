@@ -103,13 +103,11 @@ const TestCaseRow: React.FC<TestCaseRowProps> = ({
         className="hover:bg-gray-50 transition-colors cursor-pointer"
         onClick={handleRowClick}
       >
-        <td className="px-6 pr-2 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-2/10">
+        <td className="px-6 pr-0 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/3">
           {test.name}
         </td>
         <td className="pl-0 pr-6 py-4 whitespace-nowrap text-sm w-1/5">
-          <div className="-ml-10 flex justify-center">
-            {renderStatusBadge()}
-          </div>
+          <div className="ml-2 flex items-center">{renderStatusBadge()}</div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-auto">
           <div className="flex justify-end space-x-2">

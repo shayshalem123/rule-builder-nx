@@ -3,7 +3,6 @@ import { Button } from "@/shared/components/inputs/button";
 import { Label } from "@/shared/components/inputs/label";
 import {
   AlertTriangleIcon,
-  CheckIcon,
   XIcon,
   Beaker,
   ClipboardEdit,

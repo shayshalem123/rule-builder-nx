@@ -46,16 +46,16 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
       </div>
 
       <div className="border rounded-lg overflow-hidden shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 table-fixed">
           <thead className="bg-gray-100">
             <tr className="relative">
-              <th className="px-6 pr-0 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider w-1/3">
+              <th className="px-6 pr-0 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider w-1/3 max-w-xs">
                 Name
               </th>
               <th className="pl-0 pr-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider w-1/5">
                 <span className="ml-2">Result</span>
               </th>
-              <th className="px-6 py-3 w-auto"></th>
+              <th className="px-6 py-3 w-auto min-w-[220px]"></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">

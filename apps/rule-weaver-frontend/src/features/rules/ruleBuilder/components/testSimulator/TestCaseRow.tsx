@@ -66,7 +66,7 @@ const TestCaseRow: React.FC<TestCaseRowProps> = ({
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-500 border border-gray-200">
           <PlayIcon className="h-3.5 w-3.5 mr-1.5 text-gray-400" />
-          Not Run
+          Run
         </span>
       );
     }
@@ -103,13 +103,20 @@ const TestCaseRow: React.FC<TestCaseRowProps> = ({
         className="hover:bg-gray-50 transition-colors cursor-pointer"
         onClick={handleRowClick}
       >
-        <td className="px-6 pr-0 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/3">
-          {test.name}
+        <td className="px-6 pr-0 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/3 max-w-xs">
+          <div
+            className="truncate overflow-hidden max-w-full"
+            title={test.name}
+          >
+            {test.name}
+          </div>
         </td>
         <td className="pl-0 pr-6 py-4 whitespace-nowrap text-sm w-1/5">
-          <div className="ml-2 flex items-center">{renderStatusBadge()}</div>
+          <div className="ml-2 flex justify-center items-center">
+            {renderStatusBadge()}
+          </div>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-auto">
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-auto min-w-[220px]">
           <div className="flex justify-end space-x-2">
             <Button
               onClick={(e) => {

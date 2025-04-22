@@ -18,7 +18,7 @@ Changes made via Lovable will be committed automatically to this repo.
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The project uses pnpm as the package manager - [install pnpm](https://pnpm.io/installation)
 
 Follow these steps:
 
@@ -30,10 +30,10 @@ git clone <YOUR_GIT_URL>
 cd <YOUR_PROJECT_NAME>
 
 # Step 3: Install the necessary dependencies.
-npm i
+pnpm install
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+pnpm run dev
 ```
 
 **Edit a file directly in GitHub**
@@ -59,6 +59,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- pnpm (package manager with isolated node_modules)
 
 ## How can I deploy this project?
 
@@ -71,3 +72,32 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Package Management with pnpm
+
+This project uses pnpm with isolated node modules. The key features of this setup:
+
+- Dependencies are stored in the `.pnpm` folder inside `node_modules`
+- Improved disk space usage through content-addressable storage
+- Faster installation times
+- Strict dependency management
+
+Common pnpm commands:
+
+```sh
+# Install dependencies
+pnpm install
+
+# Add a new dependency
+pnpm add <package-name>
+
+# Add a development dependency
+pnpm add -D <package-name>
+
+# Run scripts
+pnpm run dev
+pnpm run build
+
+# Clean node_modules
+pnpm run clean
+```

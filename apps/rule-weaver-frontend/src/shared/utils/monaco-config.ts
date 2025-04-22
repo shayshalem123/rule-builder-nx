@@ -16,45 +16,27 @@ export const configureMonacoEnvironment = () => {
   if (!window.MonacoEnvironment) {
     window.MonacoEnvironment = {
       // Define getWorker function to resolve correctly from the public path
-      getWorker: function (moduleId, label) {
-        // Load appropriate worker based on editor language
-        if (label === "json") {
-          return new Worker(
-            new URL(
-              "monaco-editor/esm/vs/language/json/json.worker",
-              import.meta.url
-            )
-          );
-        }
-        if (label === "css") {
-          return new Worker(
-            new URL(
-              "monaco-editor/esm/vs/language/css/css.worker",
-              import.meta.url
-            )
-          );
-        }
-        if (label === "html") {
-          return new Worker(
-            new URL(
-              "monaco-editor/esm/vs/language/html/html.worker",
-              import.meta.url
-            )
-          );
-        }
-        if (label === "typescript" || label === "javascript") {
-          return new Worker(
-            new URL(
-              "monaco-editor/esm/vs/language/typescript/ts.worker",
-              import.meta.url
-            )
-          );
-        }
+      getWorker: function (_moduleId, label) {
+        // For strict pnpm isolation mode, we need to use dynamic imports
 
-        // Default editor worker for other operations
-        return new Worker(
-          new URL("monaco-editor/esm/vs/editor/editor.worker", import.meta.url)
-        );
+        // Use base URL for dynamic imports
+        const baseUrl = window.location.origin;
+
+        // Map of worker endpoints configured in Vite
+        const workerMap: Record<string, string> = {
+          json: `${baseUrl}/monaco-editor/json.worker.js`,
+          css: `${baseUrl}/monaco-editor/css.worker.js`,
+          html: `${baseUrl}/monaco-editor/html.worker.js`,
+          typescript: `${baseUrl}/monaco-editor/typescript.worker.js`,
+          javascript: `${baseUrl}/monaco-editor/typescript.worker.js`,
+          // Default worker
+          _default: `${baseUrl}/monaco-editor/editor.worker.js`,
+        };
+
+        // Get the worker URL from our map
+        return new Worker(workerMap[label] || workerMap._default, {
+          type: "module",
+        });
       },
     };
   }

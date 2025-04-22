@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./platform-consistency.css";
 
 // Monaco Editor global setup - fixes "toUrl is not a function" error
 // This needs to be configured before Monaco is loaded anywhere in the app

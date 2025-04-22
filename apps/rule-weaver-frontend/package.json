@@ -8,7 +8,9 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rm -rf node_modules .pnpm-store",
+    "approve-builds": "pnpm approve-builds"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

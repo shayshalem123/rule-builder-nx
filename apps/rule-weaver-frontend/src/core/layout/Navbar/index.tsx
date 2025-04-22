@@ -6,7 +6,7 @@ import UserMenu from "./UserMenu";
 
 const Navbar: React.FC = () => {
   return (
-    <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur shadow-consistent hardware-accelerated">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center">
           <div className="mr-4 flex">

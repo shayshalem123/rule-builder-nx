@@ -1,0 +1,42 @@
+/* 
+  Platform consistency styles
+  Improves rendering consistency between Mac and Windows
+*/
+
+/* Improved font smoothing for Windows */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Set a consistent min-width to prevent UI elements from shrinking too much on different displays */
+body {
+  min-width: 320px;
+}
+
+/* Force hardware acceleration to improve rendering performance */
+.hardware-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Apply consistent box shadows across browsers */
+.shadow-consistent {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Prevent font size adjustments in Windows browsers */
+* {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Fix for blurry text and elements in Windows browsers with fractional scaling */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  * {
+    /* Prevents subpixel rendering issues on Windows */
+    letter-spacing: -0.01em;
+  }
+} 

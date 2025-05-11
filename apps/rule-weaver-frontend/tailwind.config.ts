@@ -1,13 +1,16 @@
 import type { Config } from 'tailwindcss';
 import animatePlugin from 'tailwindcss-animate';
+import path from 'path';
+import { createGlobPatternsForDependencies } from '@nx/react/tailwind';
 
 export default {
   darkMode: ['class'],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    path.join(
+      __dirname,
+      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+    ),
+    ...createGlobPatternsForDependencies(__dirname),
   ],
   prefix: '',
   theme: {
@@ -146,11 +149,18 @@ export default {
         'fade-in': 'fade-in 0.2s ease-out',
         'fade-out': 'fade-out 0.2s ease-out',
       },
+      borderColor: {
+        border: 'rgb(var(--border))',
+      },
     },
   },
   plugins: [
     animatePlugin,
-    function ({ addUtilities }) {
+    function ({
+      addUtilities,
+    }: {
+      addUtilities: (utilities: Record<string, TailwindUtility>) => void;
+    }) {
       addUtilities({
         '.scrollbar-hide': {
           /* Firefox */

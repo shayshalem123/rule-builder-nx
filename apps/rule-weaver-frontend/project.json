@@ -18,7 +18,8 @@
             "input": "apps/rule-weaver-frontend/src/assets/vs",
             "output": "/vs"
           }
-        ]
+        ],
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {

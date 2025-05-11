@@ -129,10 +129,7 @@ const JsonToolsPage: React.FC<JsonToolsPageProps> = ({
 
         {/* Plain JSON Mode */}
         <TabsContent value="plain-json" className="space-y-6">
-          <PlainJsonMode
-            plainJson={plainJson}
-            onPlainJsonChange={handlePlainJsonChange}
-          />
+          <PlainJsonMode />
         </TabsContent>
       </Tabs>
 

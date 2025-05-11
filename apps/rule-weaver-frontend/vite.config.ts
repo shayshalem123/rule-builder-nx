@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
-
+import tailwindcss from 'tailwindcss';
+import tailwindConfig from './tailwind.config';
 // Type for Monaco plugin since its typing is inconsistent
 type MonacoPlugin = {
   (options: Record<string, unknown>): any;
@@ -17,9 +20,15 @@ export const config = defineConfig(({ mode }) => {
   const monacoPlugin = monaco.default || monaco;
 
   return {
+    root: __dirname,
+    cacheDir: '../../node_modules/.vite/apps/rule-weaver-frontend',
+
     server: {
       host: '::',
       port: 8080,
+      fs: {
+        allow: [process.cwd()],
+      },
     },
     publicDir: path.resolve(__dirname, 'src/assets'),
     plugins: [
@@ -85,6 +94,11 @@ export const config = defineConfig(({ mode }) => {
       // Make sure Vite doesn't exclude these
       exclude: [],
     },
+    css: {
+      postcss: {
+        plugins: [tailwindcss(tailwindConfig)],
+      },
+    },
     build: {
       // Better source maps for debugging
       sourcemap: mode === 'development',
@@ -92,6 +106,7 @@ export const config = defineConfig(({ mode }) => {
       commonjsOptions: {
         transformMixedEsModules: true,
       },
+      outDir: '../../dist/apps/rule-weaver-frontend',
       // Separate worker chunks
       rollupOptions: {
         output: {

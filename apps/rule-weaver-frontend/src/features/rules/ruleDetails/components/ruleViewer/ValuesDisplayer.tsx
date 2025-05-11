@@ -42,7 +42,7 @@ const ValuesDisplayer: React.FC<ValuesDisplayerProps> = ({ values }) => {
         {/* Show count badge for remaining items */}
         {hasMoreValues && (
           <Badge
-            variant="secondary"
+            variant="default"
             className="bg-purple-100 text-purple-800 hover:bg-purple-200 cursor-pointer"
             onClick={() => setShowModal(true)}
           >

@@ -1,6 +1,6 @@
 import React from "react";
 import { RuleWithMeta } from "@/features/rules/types/rule";
-import { RuleFormValues } from "../hooks/useRuleForm";
+import { RuleFormValues } from "@/features/rules/ruleForm/hooks/useRuleForm";
 import { DiffModal } from "@/shared/components/diff";
 import { createRuleObjectFromValues } from "@/features/rules/shared/utils/ruleUtils";
 

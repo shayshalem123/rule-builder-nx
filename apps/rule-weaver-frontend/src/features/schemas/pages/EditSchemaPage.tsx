@@ -45,7 +45,7 @@ const EditSchemaPage: React.FC = () => {
           </Button>
           <h1 className="text-2xl font-bold">Edit Schema</h1>
         </div>
-        <div className="h-48 rounded-lg bg-gray-100 animate-pulse"></div>
+        <div className="h-48 rounded-lg bg-accent animate-pulse"></div>
       </div>
     );
   }
@@ -87,7 +87,7 @@ const EditSchemaPage: React.FC = () => {
         <h1 className="text-2xl font-bold">Edit Schema</h1>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-background-secondary p-6 rounded-lg shadow-sm">
         <SchemaForm
           initialData={schema}
           onSubmit={handleSubmit}

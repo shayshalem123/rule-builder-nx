@@ -35,7 +35,7 @@ const CreateSchemaPage: React.FC = () => {
         <h1 className="text-2xl font-bold">Create Schema</h1>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-background-secondary p-6 rounded-lg shadow-sm">
         <SchemaForm onSubmit={handleSubmit} isSubmitting={isPending} />
       </div>
     </div>

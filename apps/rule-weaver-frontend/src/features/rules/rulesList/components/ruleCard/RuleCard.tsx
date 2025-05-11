@@ -51,6 +51,7 @@ const RuleCard: React.FC<RuleCardProps> = ({
           onView={onView}
         />
       }
+      onClick={onView}
     />
   );
 };

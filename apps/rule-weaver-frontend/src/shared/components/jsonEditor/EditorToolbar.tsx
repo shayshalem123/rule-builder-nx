@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Copy, FileJson, Settings, Maximize } from "lucide-react";
+import { Copy, FileJson, Settings, Maximize, Download } from "lucide-react";
 import { toast } from "sonner";
 import SettingsMenu from "./SettingsMenu";
 import type { editor } from "monaco-editor";
+import { useFileDownload } from "@/shared/hooks/useFileDownload";
 
 interface EditorToolbarProps {
   readOnly: boolean;
@@ -11,6 +12,7 @@ interface EditorToolbarProps {
   stickyPropertiesEnabled: boolean;
   handleStickyPropertiesChange: (enabled: boolean) => void;
   onFormat: () => void;
+  fileName?: string;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
   className?: string;
@@ -27,11 +29,13 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
   handleStickyPropertiesChange,
   onToggleFullscreen,
   onFormat,
+  fileName,
   className = "",
   isFormatted,
 }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const { downloadFile } = useFileDownload();
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -59,6 +63,15 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
     onFormat();
   };
 
+  const handleSaveToFile = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!editorRef.current) return;
+
+    const jsonContent = editorRef.current.getValue();
+
+    await downloadFile(jsonContent, `${fileName ?? "sex"}.json`);
+  };
+
   const handleToggleSettings = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowSettings((prev) => !prev);
@@ -82,7 +95,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
             className={`flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm
             ${
               readOnly || isFormatted
-                ? "bg-gray-100 text-gray-400 opacity-70"
+                ? "bg-accent text-text-muted opacity-70"
                 : "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 cursor-pointer"
             }`}
             title={isFormatted ? "JSON is already formatted" : "Format JSON"}
@@ -99,7 +112,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
             ${
               copySuccess
                 ? "bg-green-100 text-green-600"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+                : "bg-accent text-text-secondary hover:bg-border-primary active:bg-accent/90"
             }`}
           title={copySuccess ? "Copied!" : "Copy to clipboard"}
         >
@@ -107,11 +120,19 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           {copySuccess ? "Copied!" : "Copy"}
         </button>
 
+        <button
+          type="button"
+          onClick={handleSaveToFile}
+          className="flex items-center justify-center p-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer bg-accent text-text-secondary hover:bg-green-200 active:bg-green-300"
+        >
+          <Download className="h-3.5 w-3.5" />
+        </button>
+
         {!isFullscreen && onToggleFullscreen && (
           <button
             type="button"
             onClick={handleToggleFullscreen}
-            className="flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+            className="flex items-center justify-center px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 shadow-sm cursor-pointer bg-accent text-text-secondary hover:bg-border-primary active:bg-accent/90"
             title="Enter fullscreen"
           >
             <Maximize className="h-3.5 w-3.5" />
@@ -125,7 +146,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
             ${
               showSettings
                 ? "bg-blue-100 text-blue-600"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300"
+                : "bg-accent text-text-secondary hover:bg-border-primary active:bg-accent/90"
             }`}
           title="Editor Settings"
         >
@@ -138,8 +159,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
         stickyPropertiesEnabled={stickyPropertiesEnabled}
         handleStickyPropertiesChange={handleStickyPropertiesChange}
         onClose={() => setShowSettings(false)}
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={onToggleFullscreen}
       />
     </>
   );

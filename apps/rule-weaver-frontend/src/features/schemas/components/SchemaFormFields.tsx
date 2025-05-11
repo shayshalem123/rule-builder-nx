@@ -27,7 +27,7 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-text-secondary mb-1"
           >
             Name *
           </label>
@@ -39,11 +39,13 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
             onBlur={formik.handleBlur}
             placeholder="Schema name"
             className={
-              formik.touched.name && formik.errors.name ? "border-red-500" : ""
+              formik.touched.name && formik.errors.name
+                ? "border-destructive"
+                : ""
             }
           />
           {formik.touched.name && formik.errors.name && (
-            <div className="text-red-500 text-sm mt-1 flex items-start">
+            <div className="text-destructive text-sm mt-1 flex items-start">
               <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
               <span>{formik.errors.name}</span>
             </div>
@@ -53,7 +55,7 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
         <div>
           <label
             htmlFor="version"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-text-secondary mb-1"
           >
             Version *
           </label>
@@ -66,12 +68,12 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
             placeholder="1.0.0"
             className={
               formik.touched.version && formik.errors.version
-                ? "border-red-500"
+                ? "border-destructive"
                 : ""
             }
           />
           {formik.touched.version && formik.errors.version && (
-            <div className="text-red-500 text-sm mt-1 flex items-start">
+            <div className="text-destructive text-sm mt-1 flex items-start">
               <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
               <span>{formik.errors.version}</span>
             </div>
@@ -81,32 +83,8 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
 
       <div>
         <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Description
-        </label>
-        <Textarea
-          id="description"
-          name="description"
-          value={formik.values.description}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Describe the purpose of this schema"
-          className="min-h-[80px]"
-        />
-        {formik.touched.description && formik.errors.description && (
-          <div className="text-red-500 text-sm mt-1 flex items-start">
-            <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
-            <span>{formik.errors.description}</span>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <label
           htmlFor="category"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-text-secondary mb-1"
         >
           Category *
         </label>
@@ -122,7 +100,7 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
             id="category"
             className={
               formik.touched.category && formik.errors.category
-                ? "border-red-500"
+                ? "border-destructive"
                 : ""
             }
           >
@@ -137,9 +115,33 @@ export const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
           </SelectContent>
         </Select>
         {formik.touched.category && formik.errors.category && (
-          <div className="text-red-500 text-sm mt-1 flex items-start">
+          <div className="text-destructive text-sm mt-1 flex items-start">
             <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
             <span>{formik.errors.category}</span>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-text-secondary mb-1"
+        >
+          Description
+        </label>
+        <Textarea
+          id="description"
+          name="description"
+          value={formik.values.description}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          placeholder="Describe the purpose of this schema"
+          className="min-h-[80px]"
+        />
+        {formik.touched.description && formik.errors.description && (
+          <div className="text-destructive text-sm mt-1 flex items-start">
+            <AlertCircle className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+            <span>{formik.errors.description}</span>
           </div>
         )}
       </div>

@@ -1,3 +1,5 @@
+import { JsonSchema } from "../hooks/useExtraPropertiesSchemas";
+
 export type Operator = "EQUALS" | "NOT_EQUALS" | "IN";
 
 export interface BaseRule {
@@ -37,11 +39,17 @@ export type Rule = {
   description?: string;
   destination: string;
   category: string;
+  type: string;
   rule: RuleType;
+  extraProperties?: Record<string, unknown>;
 };
 
-export const destinationOptions = ["A", "B"];
-export const categoryOptions = ["partners-images", "partners-algo"];
+export const destinationOptions = ["A", "B", "C", "D", "E"];
+export const categoryOptions = [
+  "partners-images",
+  "partners-algo",
+  "data-processing",
+];
 
 // Test case interface for rule testing
 export interface TestCase {
@@ -59,3 +67,35 @@ export interface TestCase {
 
 // Default metadata for new test cases
 export const DEFAULT_TEST_METADATA = { metadata: { name: "" } };
+
+// Category metadata info type
+export interface CategoryMetaInfo {
+  category: string;
+  extraProperties: Record<string, unknown>;
+}
+
+// Destination info type
+export interface DestinationInfo {
+  destination: string;
+  categories: Array<{
+    category: string;
+    extraProperties: Record<string, unknown>;
+  }>;
+}
+
+export type DestinationCategoryInfo = {
+  destination: string;
+  category: string;
+  typeOptions: {
+    fieldName: string;
+    options: string[];
+  };
+  extraProperties: JsonSchema;
+};
+
+export type CategoryInfo = {
+  schemaId: string;
+  destinations: Record<string, DestinationCategoryInfo>;
+};
+
+export type CategoriesInfoMap = Record<string, CategoryInfo>;

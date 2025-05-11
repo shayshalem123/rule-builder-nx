@@ -71,7 +71,7 @@ const SchemasPage: React.FC = () => {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="h-64 rounded-lg bg-gray-100 animate-pulse"
+              className="h-64 rounded-lg bg-accent animate-pulse"
             ></div>
           ))}
         </div>
@@ -94,7 +94,7 @@ const SchemasPage: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Schemas</h1>
         <Link to="/schemas/create">
-          <Button>
+          <Button className="bg-button-primary hover:bg-button-primary-hover text-button-primary-foreground font-medium shadow-sm transition-all duration-200 px-4 py-2 rounded-md">
             <PlusCircle className="mr-2 h-4 w-4" />
             Create Schema
           </Button>
@@ -102,15 +102,15 @@ const SchemasPage: React.FC = () => {
       </div>
 
       {schemas.length === 0 ? (
-        <div className="text-center py-10 bg-gray-50 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-600 mb-2">
+        <div className="text-center py-10 bg-background-primary rounded-lg">
+          <h3 className="text-lg font-medium text-text-primary mb-2">
             No Schemas Found
           </h3>
-          <p className="text-gray-500 mb-4">
+          <p className="text-text-primary mb-4">
             Get started by creating your first schema.
           </p>
           <Link to="/schemas/create">
-            <Button>
+            <Button className="bg-button-primary hover:bg-button-primary-hover text-button-primary-foreground font-medium shadow-sm transition-all duration-200 px-4 py-2 rounded-md">
               <PlusCircle className="mr-2 h-4 w-4" />
               Create Schema
             </Button>
@@ -126,11 +126,11 @@ const SchemasPage: React.FC = () => {
           </div>
 
           {filteredSchemas.length === 0 ? (
-            <div className="text-center py-10 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-600 mb-2">
+            <div className="text-center py-10 bg-background-primary rounded-lg">
+              <h3 className="text-lg font-medium text-text-primary mb-2">
                 No Schemas Match Your Search
               </h3>
-              <p className="text-gray-500">
+              <p className="text-text-primary">
                 Try adjusting your search query or clear the search.
               </p>
             </div>

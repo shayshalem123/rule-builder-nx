@@ -16,20 +16,39 @@ const EntityCardActions: React.FC<EntityCardActionsProps> = ({
   return (
     <div className="flex justify-end gap-2 w-full">
       {onView && (
-        <Button variant="ghost" size="sm" onClick={onView} className="h-8">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onView();
+          }}
+          className="h-8"
+        >
           <Eye className="h-4 w-4 mr-1" />
           View
         </Button>
       )}
-      <Button variant="ghost" size="sm" onClick={onEdit} className="h-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
+        className="h-8"
+      >
         <Edit className="h-4 w-4 mr-1" />
         Edit
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        onClick={onDelete}
-        className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+        className="h-8 text-button-destructive hover:text-button-destructive-hover hover:bg-button-destructive-hover-bg"
       >
         <Trash2 className="h-4 w-4 mr-1" />
         Delete

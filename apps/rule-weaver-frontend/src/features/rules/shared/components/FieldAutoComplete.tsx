@@ -14,8 +14,8 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/shared/components/inputs/button";
 import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
-import useSchemaFields from "@/features/schemas/hooks/useSchemaFields";
 import { cn } from "@/shared/utils/cn";
+import useSchemaFields from "@/shared/hooks/useSchemaFields";
 
 interface FieldAutoCompleteProps {
   category: string;

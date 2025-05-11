@@ -30,7 +30,7 @@ const EntityUserInfo: React.FC<EntityUserInfoProps> = ({
   const formattedTime = getUpdatedTime();
 
   return (
-    <div className="text-xs text-gray-500 space-y-1">
+    <div className="text-xs text-text-primary space-y-1">
       {createdBy && (
         <div className="flex items-center gap-1">
           <User className="h-3 w-3" />

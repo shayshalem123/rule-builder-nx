@@ -14,6 +14,7 @@ export interface EntityCardProps {
   labels?: ReactNode;
   userInfo?: ReactNode;
   actions?: ReactNode;
+  onClick?: () => void;
 }
 
 const EntityCard: React.FC<EntityCardProps> = ({
@@ -23,12 +24,18 @@ const EntityCard: React.FC<EntityCardProps> = ({
   labels,
   userInfo,
   actions,
+  onClick,
 }) => {
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md flex flex-col h-full">
+    <Card
+      className={`overflow-hidden transition-all hover:shadow-md flex flex-col h-full ${
+        onClick ? "cursor-pointer" : ""
+      }`}
+      onClick={onClick}
+    >
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-semibold text-gray-800 line-clamp-1">
+          <CardTitle className="text-lg font-semibold text-text-secondary line-clamp-1">
             {title}
           </CardTitle>
           {badge}
@@ -37,7 +44,7 @@ const EntityCard: React.FC<EntityCardProps> = ({
 
       <CardContent className="pb-2 flex-grow">
         {description && (
-          <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+          <p className="text-sm text-text-primary mb-2 line-clamp-2">
             {description}
           </p>
         )}

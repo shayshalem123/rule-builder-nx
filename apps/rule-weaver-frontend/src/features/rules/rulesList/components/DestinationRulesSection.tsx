@@ -36,18 +36,24 @@ const DestinationRulesSection: React.FC<DestinationRulesSectionProps> = ({
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Destination {destination}</h2>
-      <RuleList
-        rules={rules}
-        isLoading={isLoading}
-        error={error}
-        onCreateRule={onCreateRule}
-        onEditRule={handleEditRule}
-        onViewRule={handleViewRule}
-        onDelete={handleRuleDelete}
-        showHeader={false}
-      />
+    <div className="bg-background-primary rounded-lg border border-border-primary shadow-sm dark:shadow-md dark:shadow-white/5 mb-8 overflow-hidden">
+      <div className="bg-button-primary px-6 py-4">
+        <h2 className="text-xl font-semibold text-button-primary-foreground">
+          Destination: <span className="font-bold">{destination}</span>
+        </h2>
+      </div>
+      <div className="p-6">
+        <RuleList
+          rules={rules}
+          isLoading={isLoading}
+          error={error}
+          onCreateRule={onCreateRule}
+          onEditRule={handleEditRule}
+          onViewRule={handleViewRule}
+          onDelete={handleRuleDelete}
+          showHeader={false}
+        />
+      </div>
     </div>
   );
 };

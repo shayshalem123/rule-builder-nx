@@ -26,8 +26,7 @@ export const filterRulesByQuery = (
     const searchableValues = [
       rule.name,
       rule.description || "",
-      rule.category,
-      rule.destination,
+      // Category and destination are now filtered with dropdown selects
     ].map((value) => value.toLowerCase());
 
     return searchableValues.some((value) => value.includes(lowerQuery));

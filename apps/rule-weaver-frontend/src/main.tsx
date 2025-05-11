@@ -19,4 +19,15 @@ loader.config({
   "vs/nls": { availableLanguages: { "*": "en" } },
 });
 
+// Initialize theme before rendering
+const initializeTheme = () => {
+  const storedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const theme = storedTheme || (prefersDark ? "dark" : "light");
+  document.documentElement.classList.add(theme);
+};
+
+initializeTheme();
+
 createRoot(document.getElementById("root")!).render(<App />);

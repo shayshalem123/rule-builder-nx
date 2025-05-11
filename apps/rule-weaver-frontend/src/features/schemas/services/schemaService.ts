@@ -25,12 +25,10 @@ const mockSchemas: SchemaWithMeta[] = [
         metadata: {
           type: "object",
           description: "Image metadata",
-          required: true,
           properties: {
             name: {
               type: "string",
               description: "Image name",
-              required: true,
             },
             size: {
               type: "number",
@@ -56,6 +54,7 @@ const mockSchemas: SchemaWithMeta[] = [
               },
             },
           },
+          required: ["name"],
         },
       },
       required: ["metadata"],
@@ -76,17 +75,14 @@ const mockSchemas: SchemaWithMeta[] = [
         metadata: {
           type: "object",
           description: "Algorithm metadata",
-          required: true,
           properties: {
             name: {
               type: "string",
               description: "Algorithm name",
-              required: true,
             },
             namespace: {
               type: "string",
               description: "Kubernetes namespace",
-              required: true,
             },
             labels: {
               type: "object",
@@ -100,6 +96,7 @@ const mockSchemas: SchemaWithMeta[] = [
               },
             },
           },
+          required: ["name", "namespace"],
         },
         spec: {
           type: "object",
@@ -145,6 +142,384 @@ const mockSchemas: SchemaWithMeta[] = [
         },
       },
       required: ["metadata"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "3",
+    name: "Data Processing Schema",
+    description: "JSON Schema for data processing rules",
+    category: "data-processing",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        dataProcessing: {
+          type: "object",
+          description: "Data processing metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Data processing name",
+            },
+            namespace: {
+              type: "string",
+              description: "Kubernetes namespace",
+            },
+            labels: {
+              type: "object",
+              description: "Metadata labels",
+              properties: {
+                tier: {
+                  type: "string",
+                  description: "Tier level",
+                  enum: ["frontend", "backend", "database"],
+                },
+              },
+            },
+          },
+          required: ["name", "namespace"],
+        },
+        spec: {
+          type: "object",
+          description: "Algorithm specification",
+          properties: {
+            replicas: {
+              type: "number",
+              description: "Number of replicas",
+              default: 1,
+            },
+            container: {
+              type: "object",
+              description: "Container configuration",
+              properties: {
+                image: {
+                  type: "string",
+                  description: "Container image",
+                  format: "uri",
+                },
+                resources: {
+                  type: "object",
+                  description: "Resource requirements",
+                  properties: {
+                    limits: {
+                      type: "object",
+                      description: "Resource limits",
+                      properties: {
+                        cpu: {
+                          type: "string",
+                          description: "CPU limit",
+                        },
+                        memory: {
+                          type: "string",
+                          description: "Memory limit",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      required: ["dataProcessing"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  // Adding missing schemas for the rest of the categories
+  {
+    id: "4",
+    name: "Partners Content Schema",
+    description: "JSON Schema for partners content rules",
+    category: "partners-content",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        content: {
+          type: "object",
+          description: "Content metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Content name",
+            },
+            contentType: {
+              type: "string",
+              description: "Content type",
+              enum: ["article", "video", "document"],
+            },
+            status: {
+              type: "string",
+              description: "Content status",
+              enum: ["draft", "published", "archived"],
+            },
+          },
+          required: ["name", "contentType"],
+        },
+      },
+      required: ["content"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "5",
+    name: "User Content Schema",
+    description: "JSON Schema for user content rules",
+    category: "user-content",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        userContent: {
+          type: "object",
+          description: "User content metadata",
+          properties: {
+            userId: {
+              type: "string",
+              description: "User ID",
+            },
+            contentId: {
+              type: "string",
+              description: "Content ID",
+            },
+            contentFormat: {
+              type: "string",
+              description: "Content format",
+              enum: ["text", "image", "video", "audio"],
+            },
+          },
+          required: ["userId", "contentId"],
+        },
+      },
+      required: ["userContent"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "6",
+    name: "Development Resources Schema",
+    description: "JSON Schema for development resources rules",
+    category: "dev-resources",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        devResource: {
+          type: "object",
+          description: "Development resource metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Resource name",
+            },
+            type: {
+              type: "string",
+              description: "Resource type",
+              enum: ["api", "library", "tool", "documentation"],
+            },
+            access: {
+              type: "string",
+              description: "Access level",
+              enum: ["public", "private", "team"],
+            },
+          },
+          required: ["name", "type"],
+        },
+      },
+      required: ["devResource"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "7",
+    name: "Archive Schema",
+    description: "JSON Schema for archive rules",
+    category: "archive",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        archive: {
+          type: "object",
+          description: "Archive metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Archive name",
+            },
+            storageProvider: {
+              type: "string",
+              description: "Storage provider",
+              enum: ["s3", "gcs", "azure"],
+            },
+            retentionPeriod: {
+              type: "string",
+              description: "Retention period",
+              enum: ["30days", "90days", "1year", "7years"],
+            },
+          },
+          required: ["name", "storageProvider"],
+        },
+      },
+      required: ["archive"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "8",
+    name: "Compliance Schema",
+    description: "JSON Schema for compliance rules",
+    category: "compliance",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        compliance: {
+          type: "object",
+          description: "Compliance metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Compliance name",
+            },
+            regulation: {
+              type: "string",
+              description: "Regulation type",
+              enum: ["GDPR", "HIPAA", "PCI", "SOX"],
+            },
+            classification: {
+              type: "string",
+              description: "Data classification",
+              enum: ["public", "internal", "confidential", "restricted"],
+            },
+          },
+          required: ["name", "regulation"],
+        },
+      },
+      required: ["compliance"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "9",
+    name: "Real-time Schema",
+    description: "JSON Schema for real-time rules",
+    category: "real-time",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        realtime: {
+          type: "object",
+          description: "Real-time data metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Stream name",
+            },
+            dataFormat: {
+              type: "string",
+              description: "Data format",
+              enum: ["json", "avro", "protobuf"],
+            },
+            latency: {
+              type: "string",
+              description: "Latency requirement",
+              enum: ["low", "medium", "high"],
+            },
+          },
+          required: ["name", "dataFormat"],
+        },
+      },
+      required: ["realtime"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "10",
+    name: "ML Data Schema",
+    description: "JSON Schema for machine learning data rules",
+    category: "ml-data",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        mlData: {
+          type: "object",
+          description: "ML data metadata",
+          properties: {
+            name: {
+              type: "string",
+              description: "Dataset name",
+            },
+            dataFormat: {
+              type: "string",
+              description: "Data format",
+              enum: ["csv", "parquet", "tfrecord"],
+            },
+            version: {
+              type: "string",
+              description: "Dataset version",
+            },
+          },
+          required: ["name", "dataFormat"],
+        },
+      },
+      required: ["mlData"],
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: defaultUser,
+    updatedBy: defaultUser,
+  },
+  {
+    id: "11",
+    name: "API Responses Schema",
+    description: "JSON Schema for API responses rules",
+    category: "api-responses",
+    version: "1.0.0",
+    definition: {
+      properties: {
+        apiResponse: {
+          type: "object",
+          description: "API response metadata",
+          properties: {
+            endpoint: {
+              type: "string",
+              description: "API endpoint",
+            },
+            responseFormat: {
+              type: "string",
+              description: "Response format",
+              enum: ["json", "xml", "csv"],
+            },
+            statusCode: {
+              type: "number",
+              description: "HTTP status code",
+            },
+          },
+          required: ["endpoint", "responseFormat"],
+        },
+      },
+      required: ["apiResponse"],
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

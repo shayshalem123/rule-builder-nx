@@ -3,118 +3,13 @@ import {
   Rule,
   destinationOptions,
   categoryOptions,
+  CategoriesInfoMap,
 } from "@/features/rules/types/rule";
 import { User } from "@/features/users/types/user";
-
-// Default user for mock data
-const defaultUser = {
-  id: "1",
-  name: "Jane Doe",
-};
-
-// Initial mock data
-const mockRules: RuleWithMeta[] = [
-  {
-    id: "1",
-    name: "Simple Rule",
-    description: "Basic metadata name equals hello rule",
-    destination: "A",
-    category: "partners-images",
-    rule: {
-      field: "metadata.name",
-      operator: "EQUALS",
-      value: "hello",
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    createdBy: defaultUser,
-    updatedBy: defaultUser,
-  },
-  {
-    id: "2",
-    name: "AND Rule Example",
-    description: "Example of an AND rule with nested conditions",
-    destination: "B",
-    category: "partners-algo",
-    rule: {
-      AND: [
-        {
-          field: "metadata.name",
-          operator: "EQUALS",
-          value: "test",
-        },
-        {
-          field: "metadata.namespace",
-          operator: "EQUALS",
-          value: "default",
-        },
-      ],
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    createdBy: defaultUser,
-    updatedBy: defaultUser,
-  },
-  {
-    id: "3",
-    name: "OR Rule Example",
-    description: "Example of an OR rule with nested conditions",
-    destination: "A",
-    category: "partners-algo",
-    rule: {
-      OR: [
-        {
-          field: "metadata.name",
-          operator: "EQUALS",
-          value: "app",
-        },
-        {
-          field: "metadata.name",
-          operator: "EQUALS",
-          value: "service",
-        },
-      ],
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    createdBy: defaultUser,
-    updatedBy: defaultUser,
-  },
-  {
-    id: "4",
-    name: "Complex Nested Rule",
-    description: "A complex rule with multiple nested levels",
-    destination: "B",
-    category: "partners-images",
-    rule: {
-      AND: [
-        {
-          field: "metadata.namespace",
-          operator: "EQUALS",
-          value: "production",
-        },
-        {
-          OR: [
-            {
-              field: "spec.replicas",
-              operator: "NOT_EQUALS",
-              value: "2",
-            },
-            {
-              field: "metadata.labels.tier",
-              operator: "EQUALS",
-              value: "frontend",
-            },
-          ],
-        },
-      ],
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    createdBy: defaultUser,
-    updatedBy: defaultUser,
-  },
-];
+import { mockRules } from "./__mocks__/mockRules";
+import { mockExtraPropertiesSchemas } from "./__mocks__/mockExtraProperties";
+import { mockCategoriesInfo } from "./__mocks__/mockCategoriesInfo";
+import { JsonSchema } from "../hooks/useExtraPropertiesSchemas";
 
 // Helper function to simulate API delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -196,5 +91,19 @@ export const ruleService = {
   getCategories: async (): Promise<string[]> => {
     await delay(300);
     return [...categoryOptions];
+  },
+
+  // Get extra properties schemas for all category-destination combinations
+  getExtraPropertiesSchemas: async (): Promise<
+    Record<string, Record<string, object>>
+  > => {
+    await delay(700);
+    return { ...mockExtraPropertiesSchemas };
+  },
+
+  // Get categories info with destinations and extra properties
+  getCategoriesInfo: async (): Promise<CategoriesInfoMap> => {
+    await delay(700);
+    return { ...mockCategoriesInfo };
   },
 };

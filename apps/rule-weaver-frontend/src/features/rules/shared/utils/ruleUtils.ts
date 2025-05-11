@@ -7,6 +7,7 @@ import {
   Rule,
   RuleWithMeta,
 } from "@/features/rules/types/rule";
+import { RuleFormValues } from "@/features/rules/ruleForm/hooks/useRuleForm";
 
 // Check if a rule is a base rule (with field, operator, value)
 export const isBaseRule = (rule: RuleType): rule is BaseRule => {
@@ -83,4 +84,26 @@ export const getGroupedRulesByDestination = (
     acc[destination].push(rule);
     return acc;
   }, {});
+};
+
+/**
+ * Creates a rule object by combining initialRule with current form values
+ * Conditionally includes extraProperties only if they exist
+ */
+export const createRuleObjectFromValues = (
+  currentValues: RuleFormValues,
+  initialRule?: RuleWithMeta
+): Record<string, unknown> => {
+  return {
+    ...initialRule,
+    name: currentValues.name,
+    description: currentValues.description,
+    destination: currentValues.destination,
+    category: currentValues.category,
+    type: currentValues.type,
+    rule: currentValues.rule,
+    ...(currentValues.extraProperties
+      ? { extraProperties: currentValues.extraProperties }
+      : {}),
+  };
 };

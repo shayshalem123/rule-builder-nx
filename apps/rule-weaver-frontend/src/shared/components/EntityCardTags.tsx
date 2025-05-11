@@ -44,7 +44,7 @@ const EntityCardTags: React.FC<EntityCardTagsProps> = ({ tags }) => {
       case "red":
         return "bg-red-50 text-red-700 border-red-200";
       case "gray":
-        return "bg-gray-50 text-gray-700 border-gray-200";
+        return "bg-background-primary text-text-secondary border-border-primary";
       case "yellow":
         return "bg-yellow-50 text-yellow-700 border-yellow-200";
       case "indigo":
@@ -54,7 +54,7 @@ const EntityCardTags: React.FC<EntityCardTagsProps> = ({ tags }) => {
       case "teal":
         return "bg-teal-50 text-teal-700 border-teal-200";
       default:
-        return "bg-gray-50 text-gray-700 border-gray-200";
+        return "bg-background-primary text-text-secondary border-border-primary";
     }
   };
 

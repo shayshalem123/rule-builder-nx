@@ -24,6 +24,20 @@ interface EvaluationResponse {
   ruleName?: string;
 }
 
+interface DocumentImpactResponse {
+  affectedDocuments: number;
+  totalDocuments: number;
+  percentageImpact: number;
+  sampleDocuments?: Array<{
+    id: string;
+    name: string;
+    matched: boolean;
+  }>;
+}
+
+// Keep a cache of simulated results for consistent responses
+const documentImpactCache = new Map<string, DocumentImpactResponse>();
+
 // Mock rule evaluation service
 export const ruleEvaluationService = {
   // Evaluate a rule against provided metadata
@@ -111,6 +125,90 @@ export const ruleEvaluationService = {
     } catch (error) {
       console.error("Error batch evaluating rules:", error);
       throw new Error("Failed to batch evaluate rules");
+    }
+  },
+
+  // Evaluate document impact for a rule
+  evaluateDocumentImpact: async (
+    rule: RuleWithMeta,
+    dateRange: string = "all"
+  ): Promise<DocumentImpactResponse> => {
+    // Simulate API delay (between 800-1200ms for realism)
+    const delayTime = 800 + Math.floor(Math.random() * 400);
+    await delay(delayTime);
+
+    try {
+      // Check if we have a cached result for this rule
+      const cacheKey = `${rule.id || JSON.stringify(rule.rule)}_${dateRange}`;
+
+      if (documentImpactCache.has(cacheKey)) {
+        return documentImpactCache.get(cacheKey)!;
+      }
+
+      // In a real implementation, this would send the rule to a backend API
+      // that would evaluate it against all documents in the system
+
+      // For mock purposes, generate impact statistics based on rule complexity
+      // to make it somewhat deterministic
+      let ruleComplexity = 0;
+
+      // Add complexity based on rule structure
+      if (rule.rule) {
+        const ruleString = JSON.stringify(rule.rule);
+        // More complex rules generally have more conditions
+        ruleComplexity = ruleString.length / 100;
+      }
+
+      // Adjust total documents based on date range
+      let totalDocuments = 5000 + Math.floor(Math.random() * 5000);
+
+      // Reduce document count for smaller time ranges
+      switch (dateRange) {
+        case "day":
+          totalDocuments = Math.floor(totalDocuments * 0.1); // 10% of total
+          break;
+        case "week":
+          totalDocuments = Math.floor(totalDocuments * 0.3); // 30% of total
+          break;
+        case "month":
+          totalDocuments = Math.floor(totalDocuments * 0.7); // 70% of total
+          break;
+        default:
+          // Use full count for "all"
+          break;
+      }
+
+      // More complex rules tend to match fewer documents
+      let affectedRatio = 0.5;
+      if (ruleComplexity > 1) {
+        affectedRatio = 1 / (ruleComplexity * 2);
+      }
+
+      const affectedDocuments = Math.floor(totalDocuments * affectedRatio);
+      const percentageImpact = (affectedDocuments / totalDocuments) * 100;
+
+      // Generate sample documents that would be affected
+      const sampleSize = Math.min(5, affectedDocuments);
+      const sampleDocuments = Array.from({ length: sampleSize }, (_, i) => ({
+        id: `doc-${i + 1}`,
+        name: `${rule.category || "Document"} Sample ${i + 1}`,
+        matched: true,
+      }));
+
+      const response = {
+        affectedDocuments,
+        totalDocuments,
+        percentageImpact,
+        sampleDocuments,
+      };
+
+      // Cache the result for this rule
+      documentImpactCache.set(cacheKey, response);
+
+      return response;
+    } catch (error) {
+      console.error("Error evaluating document impact:", error);
+      throw new Error("Failed to evaluate document impact");
     }
   },
 };

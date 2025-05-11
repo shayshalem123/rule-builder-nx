@@ -12,7 +12,7 @@ interface RuleSearchProps {
 const RuleSearch: React.FC<RuleSearchProps> = ({
   onSearch,
   initialQuery = "",
-  placeholder = "Search rules...",
+  placeholder = "Search rules by name or description...",
   className = "",
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
@@ -38,7 +38,7 @@ const RuleSearch: React.FC<RuleSearchProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-text-primary" />
       <Input
         type="text"
         placeholder={placeholder}

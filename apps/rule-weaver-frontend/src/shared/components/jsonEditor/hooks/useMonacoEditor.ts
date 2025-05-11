@@ -1,14 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import type { editor } from "monaco-editor";
-import type { OnMount, OnChange } from "@monaco-editor/react";
-import { toast } from "sonner";
+import type { OnMount, OnChange, Monaco } from "@monaco-editor/react";
 
 interface UseMonacoEditorOptions {
   value: object;
+  setRawContent: (content: string) => void;
   onChange?: (parsedJson: Record<string, unknown>) => void;
   readOnly?: boolean;
   enableStickyProperties?: boolean;
   isFullscreen?: boolean;
+  jsonSchema?: Record<string, unknown>;
+  editorPath?: string;
 }
 
 /**
@@ -16,10 +18,13 @@ interface UseMonacoEditorOptions {
  */
 export function useMonacoEditor({
   value,
+  setRawContent,
   onChange,
   readOnly = false,
   enableStickyProperties = false,
   isFullscreen = false,
+  jsonSchema,
+  editorPath,
 }: UseMonacoEditorOptions) {
   const [error, setError] = useState<string | null>(null);
   const [stickyPropertiesEnabled, setStickyPropertiesEnabled] = useState(
@@ -28,7 +33,12 @@ export function useMonacoEditor({
   const [isFormatted, setIsFormatted] = useState(true);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const monacoRef = useRef<Monaco | null>(null);
   const isUserEditing = useRef(false);
+  const editorPathRef = useRef<string>(
+    editorPath ||
+      `file:///model-${Math.random().toString(36).substring(2, 10)}.json`
+  );
 
   // Update editor options when sticky properties setting changes
   useEffect(() => {
@@ -59,9 +69,51 @@ export function useMonacoEditor({
     }
   }, [value]);
 
+  // Configure JSON schema validation if schema is provided
+  useEffect(() => {
+    if (jsonSchema && monacoRef.current && editorRef.current) {
+      configureJsonValidation(
+        monacoRef.current,
+        jsonSchema,
+        editorPathRef.current
+      );
+    }
+  }, [jsonSchema]);
+
+  // Configure JSON validation with the provided schema
+  const configureJsonValidation = (
+    monaco: Monaco,
+    schema: Record<string, unknown>,
+    modelPath: string
+  ) => {
+    // Get the JSON language
+    const jsonLanguage = monaco.languages.json;
+
+    // Configure JSON language with the schema
+    if (jsonLanguage && jsonLanguage.jsonDefaults) {
+      jsonLanguage.jsonDefaults.setDiagnosticsOptions({
+        validate: true,
+        schemaValidation: "error", // Show validation issues as errors
+        schemas: [
+          {
+            uri: "http://myserver/schema.json", // ID of the schema
+            fileMatch: [modelPath], // Match our model path
+            schema: schema, // The actual schema object
+          },
+        ],
+      });
+    }
+  };
+
   // Handle editor mount
-  const handleEditorDidMount: OnMount = (editor) => {
+  const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
+    monacoRef.current = monaco;
+
+    // Configure JSON schema validation if a schema is provided
+    if (jsonSchema && monaco) {
+      configureJsonValidation(monaco, jsonSchema, editorPathRef.current);
+    }
 
     // Focus the editor
     setTimeout(() => editor.focus(), 100);
@@ -82,6 +134,7 @@ export function useMonacoEditor({
   const handleEditorChange: OnChange = (content) => {
     if (!content) return;
 
+    setRawContent(content);
     const formattedStatus = checkIsFormatted(content);
     setIsFormatted(formattedStatus);
 
@@ -142,6 +195,11 @@ export function useMonacoEditor({
       stickyScroll: {
         enabled: stickyPropertiesEnabled,
       },
+      bracketPairColorization: { enabled: true },
+      guides: {
+        bracketPairs: true,
+        indentation: true,
+      },
     };
   };
 
@@ -153,6 +211,9 @@ export function useMonacoEditor({
       });
       editor.onDidFocusEditorText(() => {
         isUserEditing.current = true;
+      });
+      editor.onDidPaste(() => {
+        setTimeout(() => formatContent(), 0);
       });
     });
   };
@@ -168,5 +229,6 @@ export function useMonacoEditor({
     handleStickyPropertiesChange,
     getEditorOptions,
     setupEditorEvents,
+    editorPath: editorPathRef.current,
   };
 }

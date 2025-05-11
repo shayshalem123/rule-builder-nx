@@ -18,8 +18,8 @@ const NavLink: React.FC<NavLinkProps> = ({ to, children, icon }) => {
       className={cn(
         "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors",
         isActive
-          ? "bg-primary text-primary-foreground"
-          : "text-gray-700 hover:bg-primary/10 hover:text-primary"
+          ? "bg-background-dark text-background-dark-foreground"
+          : "text-text-secondary hover:bg-background-dark/10 hover:text-primary"
       )}
     >
       {icon}

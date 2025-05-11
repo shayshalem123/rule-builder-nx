@@ -6,6 +6,7 @@ export interface SchemaProperty {
   default?: string | number | boolean | null;
   required?: boolean | string[];
   properties?: Record<string, SchemaProperty>;
+  items?: SchemaProperty; // For array types
 }
 
 export type SchemaDefinition = Record<string, any>;
@@ -37,4 +38,16 @@ export interface SchemaWithMeta extends Schema {
 }
 
 // Categories matching the existing rule categories
-export const categoryOptions = ["partners-images", "partners-algo"];
+export const categoryOptions = [
+  "partners-images",
+  "partners-algo",
+  "data-processing",
+  "partners-content",
+  "user-content",
+  "dev-resources",
+  "archive",
+  "compliance",
+  "real-time",
+  "ml-data",
+  "api-responses",
+];

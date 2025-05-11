@@ -7,7 +7,6 @@ interface RuleGridProps {
   onEdit: (rule: RuleWithMeta) => void;
   onDelete: (rule: RuleWithMeta) => void;
   onView?: (rule: RuleWithMeta) => void;
-  columns?: 1 | 2 | 3 | 4;
 }
 
 const RuleGrid: React.FC<RuleGridProps> = ({
@@ -15,27 +14,21 @@ const RuleGrid: React.FC<RuleGridProps> = ({
   onEdit,
   onDelete,
   onView,
-  columns = 3,
 }) => {
-  const gridCols =
-    columns === 1
-      ? "grid-cols-1"
-      : columns === 2
-      ? "grid-cols-1 md:grid-cols-2"
-      : columns === 3
-      ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-      : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
-
   return (
-    <div className={`grid ${gridCols} gap-6`}>
+    <div className="flex flex-wrap gap-6 w-full">
       {rules.map((rule) => (
-        <RuleCard
+        <div
           key={rule.id}
-          rule={rule}
-          onEdit={() => onEdit(rule)}
-          onDelete={() => onDelete(rule)}
-          onView={onView ? () => onView(rule) : undefined}
-        />
+          className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)]"
+        >
+          <RuleCard
+            rule={rule}
+            onEdit={() => onEdit(rule)}
+            onDelete={() => onDelete(rule)}
+            onView={onView ? () => onView(rule) : undefined}
+          />
+        </div>
       ))}
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Layers, Maximize } from "lucide-react";
+import { Layers } from "lucide-react";
 import { toast } from "sonner";
 
 interface SettingsMenuProps {
@@ -7,8 +7,6 @@ interface SettingsMenuProps {
   onClose: () => void;
   stickyPropertiesEnabled: boolean;
   handleStickyPropertiesChange: (enabled: boolean) => void;
-  isFullscreen?: boolean;
-  onToggleFullscreen?: () => void;
 }
 
 /**
@@ -19,8 +17,6 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
   onClose,
   stickyPropertiesEnabled,
   handleStickyPropertiesChange,
-  isFullscreen = false,
-  onToggleFullscreen,
 }) => {
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,48 +45,29 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     );
   };
 
-  const handleToggleFullscreen = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onToggleFullscreen) {
-      onToggleFullscreen();
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
     <div
       ref={menuRef}
-      className="absolute top-12 right-2 z-20 w-60 bg-white rounded-md shadow-lg border border-gray-200 p-3 text-sm"
+      className="absolute top-12 right-2 z-20 w-60 bg-background-secondary rounded-md shadow-lg border border-border-primary p-3 text-sm"
     >
-      <div className="font-medium mb-2 text-gray-700">JSON View Settings</div>
+      <div className="font-medium mb-2 text-text-secondary">
+        JSON View Settings
+      </div>
       <div className="space-y-3">
         <label className="flex items-center justify-between cursor-pointer">
           <div className="flex items-center gap-1.5">
-            <Layers className="h-4 w-4 text-gray-500" />
-            <span className="text-gray-700">Sticky Properties</span>
+            <Layers className="h-4 w-4 text-text-primary" />
+            <span className="text-text-secondary">Sticky Properties</span>
           </div>
           <input
             type="checkbox"
             checked={stickyPropertiesEnabled}
             onChange={handleToggleStickyProperties}
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="h-4 w-4 rounded border-border-primary text-info focus:ring-info"
           />
         </label>
-
-        {onToggleFullscreen && (
-          <label className="flex items-center justify-between cursor-pointer">
-            <div className="flex items-center gap-1.5">
-              <Maximize className="h-4 w-4 text-gray-500" />
-              <span className="text-gray-700">Fullscreen Mode</span>
-            </div>
-            <input
-              type="checkbox"
-              checked={isFullscreen}
-              onChange={handleToggleFullscreen}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-          </label>
-        )}
       </div>
     </div>
   );

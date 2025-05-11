@@ -12,7 +12,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
   if (!error) return null;
 
   return (
-    <div className="text-red-500 mt-2 flex items-start">
+    <div className="text-destructive mt-2 flex items-start">
       <AlertCircle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
       <span>{error}</span>
     </div>

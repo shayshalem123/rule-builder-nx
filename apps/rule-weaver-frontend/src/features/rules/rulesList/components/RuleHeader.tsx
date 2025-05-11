@@ -10,7 +10,7 @@ interface RuleHeaderProps {
 const RuleHeader: React.FC<RuleHeaderProps> = ({ title, onCreateRule }) => {
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
+      <h1 className="text-2xl font-bold text-text-secondary">{title}</h1>
       <Button onClick={onCreateRule} className="flex items-center">
         <Plus className="h-4 w-4 mr-1" />
         Create Rule

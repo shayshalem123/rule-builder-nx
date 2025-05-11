@@ -49,7 +49,7 @@ const RuleList: React.FC<RuleListProps> = ({
   };
 
   if (isLoading) {
-    return <LoadingState count={6} type="card" columns={3} />;
+    return <LoadingState count={6} type="card" />;
   }
 
   if (error) {
@@ -63,7 +63,7 @@ const RuleList: React.FC<RuleListProps> = ({
   }
 
   return (
-    <div>
+    <div className="w-full">
       {showHeader && (
         <RuleHeader title={headerTitle} onCreateRule={onCreateRule} />
       )}

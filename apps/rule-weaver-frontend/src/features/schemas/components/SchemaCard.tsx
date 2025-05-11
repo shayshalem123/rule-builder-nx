@@ -62,6 +62,7 @@ const SchemaCard: React.FC<SchemaCardProps> = ({
           onView={onView}
         />
       }
+      onClick={onView}
     />
   );
 };

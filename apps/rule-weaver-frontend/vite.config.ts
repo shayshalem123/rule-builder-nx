@@ -21,6 +21,7 @@ export const config = defineConfig(({ mode }) => {
       host: '::',
       port: 8080,
     },
+    publicDir: path.resolve(__dirname, 'src/assets'),
     plugins: [
       react(),
       mode === 'development',

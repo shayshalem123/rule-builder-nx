@@ -1,11 +1,11 @@
-import React from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useSchema } from "../hooks/useSchemas";
-import { Button } from "@/shared/components/inputs/button";
-import { ArrowLeft, Book, Calendar, Tag, User, Edit } from "lucide-react";
-import { Badge } from "@/shared/components/inputs/badge";
-import SchemaViewer from "../components/SchemaViewer";
-import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
+import React from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useSchema } from '../hooks/useSchemas';
+import { Button } from '@/shared/components/inputs/button';
+import { ArrowLeft, Book, Calendar, Tag, User, Edit } from 'lucide-react';
+import { Badge } from '@/shared/components/inputs/badge';
+import SchemaViewer from '../components/SchemaViewer';
+import { useSchemaFields } from '@/shared/hooks/useSchemaFields';
 
 const SchemaDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +14,7 @@ const SchemaDetailsPage: React.FC = () => {
   const { fieldCount } = useSchemaFields(schema);
 
   const [searchParams] = useSearchParams();
-  const returnTo = searchParams.get("returnTo");
+  const returnTo = searchParams.get('returnTo');
 
   const handleReturnToRule = () => {
     if (returnTo) {
@@ -38,7 +38,7 @@ const SchemaDetailsPage: React.FC = () => {
           ) : (
             <Button
               variant="ghost"
-              onClick={() => navigate("/schemas")}
+              onClick={() => navigate('/schemas')}
               className="mb-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -68,7 +68,7 @@ const SchemaDetailsPage: React.FC = () => {
           ) : (
             <Button
               variant="ghost"
-              onClick={() => navigate("/schemas")}
+              onClick={() => navigate('/schemas')}
               className="mb-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -80,7 +80,7 @@ const SchemaDetailsPage: React.FC = () => {
         <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
           {error instanceof Error
             ? error.message
-            : "Schema not found or error loading schema."}
+            : 'Schema not found or error loading schema.'}
         </div>
       </div>
     );
@@ -97,7 +97,7 @@ const SchemaDetailsPage: React.FC = () => {
         ) : (
           <Button
             variant="ghost"
-            onClick={() => navigate("/schemas")}
+            onClick={() => navigate('/schemas')}
             className="mb-2"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -116,121 +116,112 @@ const SchemaDetailsPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <div className="bg-background-secondary p-6 rounded-lg shadow-sm">
-            <h2 className="text-lg font-semibold mb-4">Schema Information</h2>
+      <div className="space-y-6">
+        {/* Schema Information - Horizontal Layout */}
+        <div className="bg-background-secondary p-6 rounded-lg shadow-sm">
+          <h2 className="text-lg font-semibold mb-4">Schema Information</h2>
 
-            <div className="space-y-4">
-              {schema.description && (
-                <div>
-                  <h3 className="text-sm font-medium text-text-primary">
-                    Description
-                  </h3>
-                  <p className="mt-1 text-sm text-text-secondary">
-                    {schema.description}
-                  </p>
-                </div>
-              )}
-
-              <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {schema.description && (
+              <div className="col-span-full">
                 <h3 className="text-sm font-medium text-text-primary">
-                  Version
+                  Description
                 </h3>
-                <div className="mt-1">
-                  <Badge
-                    variant="outline"
-                    className="bg-info/10 text-info border-info/30"
-                  >
-                    v{schema.version}
-                  </Badge>
-                </div>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {schema.description}
+                </p>
               </div>
+            )}
 
-              <div>
-                <h3 className="text-sm font-medium text-text-primary">
-                  Category
-                </h3>
-                <div className="mt-1 flex items-center gap-1">
-                  <Tag className="h-4 w-4 text-success" />
-                  <span className="text-sm text-text-secondary">
-                    {schema.category}
-                  </span>
-                </div>
+            <div>
+              <h3 className="text-sm font-medium text-text-primary">Version</h3>
+              <div className="mt-1">
+                <Badge
+                  variant="outline"
+                  className="bg-info/10 text-info border-info/30"
+                >
+                  v{schema.version}
+                </Badge>
               </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-text-primary">
-                  Fields
-                </h3>
-                <div className="mt-1 flex items-center gap-1">
-                  <Book className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-text-secondary">
-                    {fieldCount} value fields defined
-                  </span>
-                </div>
-              </div>
-
-              {schema.createdBy && (
-                <div>
-                  <h3 className="text-sm font-medium text-text-primary">
-                    Created By
-                  </h3>
-                  <div className="mt-1 flex items-center gap-1">
-                    <User className="h-4 w-4 text-text-primary" />
-                    <span className="text-sm text-text-secondary">
-                      {schema.createdBy.name}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {schema.createdAt && (
-                <div>
-                  <h3 className="text-sm font-medium text-text-primary">
-                    Created At
-                  </h3>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-text-primary" />
-                    <span className="text-sm text-text-secondary">
-                      {new Date(schema.createdAt).toLocaleDateString(
-                        undefined,
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {schema.updatedAt && (
-                <div>
-                  <h3 className="text-sm font-medium text-text-primary">
-                    Last Updated
-                  </h3>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-text-primary" />
-                    <span className="text-sm text-text-secondary">
-                      {new Date(schema.updatedAt).toLocaleDateString(
-                        undefined,
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
-                      )}
-                    </span>
-                  </div>
-                </div>
-              )}
             </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-text-primary">
+                Category
+              </h3>
+              <div className="mt-1 flex items-center gap-1">
+                <Tag className="h-4 w-4 text-success" />
+                <span className="text-sm text-text-secondary">
+                  {schema.category}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium text-text-primary">Fields</h3>
+              <div className="mt-1 flex items-center gap-1">
+                <Book className="h-4 w-4 text-purple-600" />
+                <span className="text-sm text-text-secondary">
+                  {fieldCount} value fields defined
+                </span>
+              </div>
+            </div>
+
+            {schema.createdBy && (
+              <div>
+                <h3 className="text-sm font-medium text-text-primary">
+                  Created By
+                </h3>
+                <div className="mt-1 flex items-center gap-1">
+                  <User className="h-4 w-4 text-text-primary" />
+                  <span className="text-sm text-text-secondary">
+                    {schema.createdBy.name}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {schema.createdAt && (
+              <div>
+                <h3 className="text-sm font-medium text-text-primary">
+                  Created At
+                </h3>
+                <div className="mt-1 flex items-center gap-1">
+                  <Calendar className="h-4 w-4 text-text-primary" />
+                  <span className="text-sm text-text-secondary">
+                    {new Date(schema.createdAt).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {schema.updatedAt && (
+              <div>
+                <h3 className="text-sm font-medium text-text-primary">
+                  Last Updated
+                </h3>
+                <div className="mt-1 flex items-center gap-1">
+                  <Calendar className="h-4 w-4 text-text-primary" />
+                  <span className="text-sm text-text-secondary">
+                    {new Date(schema.updatedAt).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="lg:col-span-2">
+        {/* Schema Definition - Full Width Below */}
+        <div className="bg-background-secondary p-6 rounded-lg shadow-sm">
+          <h2 className="text-lg font-semibold mb-4">Schema Definition</h2>
           <SchemaViewer definition={schema.definition} />
         </div>
       </div>

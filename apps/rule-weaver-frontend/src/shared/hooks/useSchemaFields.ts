@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
   SchemaDefinition,
   SchemaProperty,
   Schema,
   SchemaWithMeta,
-} from "../../features/schemas/types/schema";
+} from '../../features/schemas/types/schema';
 
 export interface SchemaFieldInfo {
   fieldCount: number;
@@ -16,6 +16,7 @@ export interface SchemaFieldInfo {
 export interface FieldInfo {
   path: string;
   type: string;
+  description?: string;
 }
 
 /**
@@ -26,14 +27,14 @@ export interface FieldInfo {
  */
 export const getSchemaFieldPaths = (
   properties: Record<string, SchemaProperty> = {},
-  parentPath = ""
+  parentPath = ''
 ): string[] => {
   const fieldPaths: string[] = [];
 
   for (const [key, property] of Object.entries(properties)) {
     const currentPath = parentPath ? `${parentPath}.${key}` : key;
 
-    if (property.type === "object" && property.properties) {
+    if (property.type === 'object' && property.properties) {
       // For objects, process their nested properties and add to results
       const nestedPaths = getSchemaFieldPaths(property.properties, currentPath);
       fieldPaths.push(...nestedPaths);
@@ -54,14 +55,14 @@ export const getSchemaFieldPaths = (
  */
 export const getSchemaFieldsWithTypes = (
   properties: Record<string, SchemaProperty> = {},
-  parentPath = ""
+  parentPath = ''
 ): FieldInfo[] => {
   const fields: FieldInfo[] = [];
 
   for (const [key, property] of Object.entries(properties)) {
     const currentPath = parentPath ? `${parentPath}.${key}` : key;
 
-    if (property.type === "object" && property.properties) {
+    if (property.type === 'object' && property.properties) {
       // For objects, process their nested properties and add to results
       const nestedFields = getSchemaFieldsWithTypes(
         property.properties,
@@ -73,6 +74,7 @@ export const getSchemaFieldsWithTypes = (
       fields.push({
         path: currentPath,
         type: property.type,
+        description: property.description,
       });
     }
   }
@@ -88,14 +90,14 @@ export const getSchemaFieldsWithTypes = (
  */
 export const getSchemaFieldMap = (
   properties: Record<string, SchemaProperty> = {},
-  parentPath = ""
+  parentPath = ''
 ): Record<string, string> => {
   const fieldMap: Record<string, string> = {};
 
   for (const [key, property] of Object.entries(properties)) {
     const currentPath = parentPath ? `${parentPath}.${key}` : key;
 
-    if (property.type === "object" && property.properties) {
+    if (property.type === 'object' && property.properties) {
       // For objects, process their nested properties and add to results
       const nestedMap = getSchemaFieldMap(property.properties, currentPath);
       Object.assign(fieldMap, nestedMap);
@@ -121,7 +123,7 @@ export const extractFieldPathsFromSchema = (
   if (!schema) return [];
 
   // Extract definition if a full schema object was provided
-  const definition = "definition" in schema ? schema.definition : schema;
+  const definition = 'definition' in schema ? schema.definition : schema;
 
   // If the schema has properties, extract field paths
   if (definition && definition.properties) {
@@ -143,7 +145,7 @@ export const extractFieldInfoFromSchema = (
   if (!schema) return [];
 
   // Extract definition if a full schema object was provided
-  const definition = "definition" in schema ? schema.definition : schema;
+  const definition = 'definition' in schema ? schema.definition : schema;
 
   // If the schema has properties, extract field paths with types
   if (definition && definition.properties) {
@@ -165,7 +167,7 @@ export const extractFieldMapFromSchema = (
   if (!schema) return {};
 
   // Extract definition if a full schema object was provided
-  const definition = "definition" in schema ? schema.definition : schema;
+  const definition = 'definition' in schema ? schema.definition : schema;
 
   // If the schema has properties, extract field map
   if (definition && definition.properties) {
@@ -188,7 +190,7 @@ export const useSchemaFields = (
   }, [schemaInput]);
 
   const fieldInfos = useMemo(() => {
-    return extractFieldInfoFromSchema(schemaInput);;
+    return extractFieldInfoFromSchema(schemaInput);
   }, [schemaInput]);
 
   const fieldPaths = useMemo(() => {

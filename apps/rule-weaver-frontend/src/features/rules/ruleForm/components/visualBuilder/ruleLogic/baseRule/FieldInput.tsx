@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Input } from "@/shared/components/inputs/input";
-import { cn } from "@/shared/utils/cn";
-import { noBlackBorderFocus } from "@/shared/utils/styles";
-import { ChevronDown, FileJson } from "lucide-react";
-import { useSchemaByCategory } from "@/features/schemas/hooks/useSchemas";
-import { useSchemaFields } from "@/shared/hooks/useSchemaFields";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Input } from '@/shared/components/inputs/input';
+import { cn } from '@/shared/utils/cn';
+import { noBlackBorderFocus } from '@/shared/utils/styles';
+import { ChevronDown, FileJson, Info } from 'lucide-react';
+import { useSchemaByCategory } from '@/features/schemas/hooks/useSchemas';
+import { useSchemaFields } from '@/shared/hooks/useSchemaFields';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Command,
   CommandEmpty,
@@ -13,14 +13,19 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/shared/components/inputs/command";
+} from '@/shared/components/inputs/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/shared/components/inputs/popover";
-import { Button } from "@/shared/components/inputs/button";
-import { usePrevious } from "react-use";
+} from '@/shared/components/inputs/popover';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/shared/components/inputs/tooltip';
+import { Button } from '@/shared/components/inputs/button';
+import { usePrevious } from 'react-use';
 
 interface FieldInputProps {
   value: string;
@@ -33,7 +38,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
   value,
   onChange,
   onErrorChange,
-  category = "partners-images",
+  category = 'partners-images',
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -41,7 +46,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { schema } = useSchemaByCategory(category);
-  const { fieldPaths } = useSchemaFields(schema);
+  const { fieldPaths, fieldInfos } = useSchemaFields(schema);
 
   const isValidField = useCallback(
     (val: string): boolean =>
@@ -55,6 +60,21 @@ const FieldInput: React.FC<FieldInputProps> = ({
   );
 
   const prevHasError = usePrevious(hasError);
+
+  // Get current field info for selected value
+  const selectedFieldInfo = useMemo(
+    () => fieldInfos.find((field) => field.path === value),
+    [fieldInfos, value]
+  );
+
+  // Filter field infos based on input value
+  const filteredFieldInfos = useMemo(
+    () =>
+      fieldInfos.filter((field) =>
+        field.path.toLowerCase().includes(inputValue.toLowerCase())
+      ),
+    [fieldInfos, inputValue]
+  );
 
   useEffect(() => {
     setInputValue(value);
@@ -93,12 +113,22 @@ const FieldInput: React.FC<FieldInputProps> = ({
               }}
               onClick={() => setOpen(true)}
               placeholder="Enter field path (e.g. metadata.name)"
-              className={cn("w-full pr-10", noBlackBorderFocus())}
+              className={cn('w-full pr-10', noBlackBorderFocus())}
             />
+            {selectedFieldInfo?.description && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>{selectedFieldInfo.description}</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50 pointer-events-none" />
           </div>
         </PopoverTrigger>
-        <PopoverContent className="p-0 w-[300px]" align="start" side="bottom">
+        <PopoverContent className="p-0 w-[400px]" align="start" side="bottom">
           <Command>
             <CommandInput
               placeholder="Search field path..."
@@ -111,23 +141,30 @@ const FieldInput: React.FC<FieldInputProps> = ({
             <CommandList>
               <CommandEmpty>No fields found</CommandEmpty>
               <CommandGroup heading="Field Paths">
-                {fieldPaths
-                  .filter((path) =>
-                    path.toLowerCase().includes(inputValue.toLowerCase())
-                  )
-                  .map((path) => (
-                    <CommandItem
-                      key={path}
-                      value={path}
-                      onSelect={(selectedValue) => {
-                        onChange(selectedValue);
-                        setInputValue(selectedValue);
-                        setOpen(false);
-                      }}
-                    >
-                      {path}
-                    </CommandItem>
-                  ))}
+                {filteredFieldInfos.map((field) => (
+                  <CommandItem
+                    key={field.path}
+                    value={field.path}
+                    onSelect={(selectedValue) => {
+                      onChange(selectedValue);
+                      setInputValue(selectedValue);
+                      setOpen(false);
+                    }}
+                    className="flex items-center justify-between p-3"
+                  >
+                    <span className="font-medium text-sm">{field.path}</span>
+                    {field.description && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p>{field.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                  </CommandItem>
+                ))}
               </CommandGroup>
             </CommandList>
           </Command>
@@ -137,7 +174,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
       {hasError && (
         <div
           className="absolute left-0 top-full text-xs text-red-500"
-          style={{ marginTop: "2px", marginLeft: "2px" }}
+          style={{ marginTop: '2px', marginLeft: '2px' }}
         >
           Invalid field path
         </div>

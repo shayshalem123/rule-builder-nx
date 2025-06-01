@@ -61,13 +61,11 @@ const FieldInput: React.FC<FieldInputProps> = ({
 
   const prevHasError = usePrevious(hasError);
 
-  // Get current field info for selected value
   const selectedFieldInfo = useMemo(
     () => fieldInfos.find((field) => field.path === value),
     [fieldInfos, value]
   );
 
-  // Filter field infos based on input value
   const filteredFieldInfos = useMemo(
     () =>
       fieldInfos.filter((field) =>

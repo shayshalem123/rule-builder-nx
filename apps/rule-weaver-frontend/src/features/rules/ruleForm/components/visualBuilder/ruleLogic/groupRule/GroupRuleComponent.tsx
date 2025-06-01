@@ -121,7 +121,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       ]
     );
 
-    // Function to handle deletion of a specific rule item
     const handleRuleItemDelete = useCallback(
       (index: number) => {
         if (rules.length <= 1) return onDeleteGroup?.();
@@ -131,7 +130,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       [rules.length, onDeleteGroup, handleRuleDelete]
     );
 
-    // Function to handle deletion of the entire group
     const handleGroupDelete = useCallback(() => {
       onDeleteGroup?.();
     }, [onDeleteGroup]);
@@ -140,10 +138,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       setIsCollapsed(!isCollapsed);
     }, [isCollapsed]);
 
-    // Handle validation change from child components
     const handleValidationChange = useCallback(
       (index: number, hasError: boolean, childErrorCount: number) => {
-        // Update validation state and notify parent
         const validationResult = handleChildValidationChange(
           index,
           hasError,
@@ -160,12 +156,9 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
 
     const renderRuleComponent = useCallback(
       (nestedRule: RuleType, index: number) => {
-        const ruleKey = getRuleId(nestedRule);
-
         if (isBaseRule(nestedRule)) {
           return (
             <BaseRuleComponent
-              key={ruleKey}
               rule={nestedRule}
               onChange={(updatedRule: BaseRule) =>
                 handleRuleChange(index, updatedRule)
@@ -181,7 +174,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
         } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
           return (
             <GroupRuleComponent
-              key={ruleKey}
               rule={nestedRule}
               onChange={(updatedRule) => handleRuleChange(index, updatedRule)}
               onDeleteGroup={() => handleRuleItemDelete(index)}

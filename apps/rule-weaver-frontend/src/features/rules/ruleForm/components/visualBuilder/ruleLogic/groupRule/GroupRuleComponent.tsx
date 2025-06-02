@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useEffect, useMemo } from 'react';
 import {
   AndRule,
   OrRule,
@@ -47,9 +47,12 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     category = 'partners-images',
   }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const isAnd = isAndRule(rule);
-    const rules = isAnd ? rule.AND : rule.OR;
-    const groupType = isAnd ? 'AND' : 'OR';
+    const isAnd = useMemo(() => isAndRule(rule), [rule]);
+    const rules = useMemo(
+      () => (isAnd ? (rule as AndRule).AND : (rule as OrRule).OR),
+      [isAnd, rule]
+    );
+    const groupType = useMemo(() => (isAnd ? 'AND' : 'OR'), [isAnd]);
 
     const {
       errorCount,
@@ -151,6 +154,32 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       [handleChildValidationChange, onValidationChange]
     );
 
+    // Memoized callback maps to prevent unnecessary re-renders
+    const ruleChangeHandlers = useMemo(() => {
+      return rules.map(
+        (_, index) => (updatedRule: RuleType) =>
+          handleRuleChange(index, updatedRule)
+      );
+    }, [rules, handleRuleChange]);
+
+    const ruleDeleteHandlers = useMemo(() => {
+      return rules.map((_, index) => () => handleRuleItemDelete(index));
+    }, [rules, handleRuleItemDelete]);
+
+    const validationChangeHandlers = useMemo(() => {
+      return rules.map(
+        (_, index) => (hasErrors: boolean, childErrorCount: number) =>
+          handleValidationChange(index, hasErrors, childErrorCount)
+      );
+    }, [rules.length, handleValidationChange]);
+
+    const baseRuleValidationHandlers = useMemo(() => {
+      return rules.map(
+        (_, index) => (isValid: boolean) =>
+          handleValidationChange(index, !isValid, isValid ? 0 : 1)
+      );
+    }, [rules.length, handleValidationChange]);
+
     return (
       <div
         className={`rounded-lg border ${groupColor} animate-fade-in w-full relative shadow-md`}
@@ -193,13 +222,9 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
                     <BaseRuleComponent
                       key={index}
                       rule={nestedRule}
-                      onChange={(updatedRule: BaseRule) =>
-                        handleRuleChange(index, updatedRule)
-                      }
-                      onDelete={() => handleRuleItemDelete(index)}
-                      onValidationChange={(isValid) =>
-                        handleValidationChange(index, !isValid, isValid ? 0 : 1)
-                      }
+                      onChange={ruleChangeHandlers[index]}
+                      onDelete={ruleDeleteHandlers[index]}
+                      onValidationChange={baseRuleValidationHandlers[index]}
                       parentGroupType={groupType as 'AND' | 'OR'}
                       category={category}
                     />
@@ -209,17 +234,9 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
                     <GroupRuleComponent
                       key={index}
                       rule={nestedRule}
-                      onChange={(updatedRule) =>
-                        handleRuleChange(index, updatedRule)
-                      }
-                      onDeleteGroup={() => handleRuleItemDelete(index)}
-                      onValidationChange={(hasErrors, childErrorCount) =>
-                        handleValidationChange(
-                          index,
-                          hasErrors,
-                          childErrorCount
-                        )
-                      }
+                      onChange={ruleChangeHandlers[index]}
+                      onDeleteGroup={ruleDeleteHandlers[index]}
+                      onValidationChange={validationChangeHandlers[index]}
                       category={category}
                     />
                   );

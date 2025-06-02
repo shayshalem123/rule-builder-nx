@@ -45,8 +45,7 @@ export const useGroupRuleOperations = ({
 
   const handleAddRule = useCallback(
     (type: Rules) => {
-      const newRules = [...rules];
-      newRules.push(ruleMap[type]());
+      const newRules = [...rules, ruleMap[type]()];
       onChange(isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules });
     },
     [isAnd, onChange, rule, rules]

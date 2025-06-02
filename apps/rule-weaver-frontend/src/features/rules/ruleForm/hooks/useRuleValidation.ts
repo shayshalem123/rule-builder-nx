@@ -23,8 +23,8 @@ interface UseRuleValidationOptions {
 export function useRuleValidation(options: UseRuleValidationOptions) {
   const { rule } = options;
 
-  const isAnd = isAndRule(rule);
-  const rules = isAnd ? rule.AND : rule.OR;
+  const isAnd = useMemo(() => isAndRule(rule), [rule]);
+  const rules = useMemo(() => isAnd ? (rule as AndRule).AND : (rule as OrRule).OR, [isAnd, rule]);
 
   const [validationState, setValidationState] = useState<ValidationState>({});
 

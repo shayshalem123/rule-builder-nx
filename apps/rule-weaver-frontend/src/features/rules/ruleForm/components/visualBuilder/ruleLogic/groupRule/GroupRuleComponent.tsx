@@ -1,17 +1,16 @@
-import React, { useState, useCallback, memo, useEffect } from "react";
+import React, { useState, useCallback, memo, useEffect } from 'react';
 import {
   AndRule,
   OrRule,
   RuleType,
   BaseRule,
   Rules,
-} from "@/features/rules/types/rule";
-import GroupRuleHeader from "./GroupRuleHeader";
-import GroupRuleContent from "./GroupRuleContent";
-import GroupRuleActions from "./GroupRuleActions";
-import { getGroupStyles } from "./groupStyles";
-import { Button } from "@/shared/components/inputs/button";
-import { Plus } from "lucide-react";
+} from '@/features/rules/types/rule';
+import GroupRuleHeader from './GroupRuleHeader';
+import GroupRuleActions from './GroupRuleActions';
+import { getGroupStyles } from './groupStyles';
+import { Button } from '@/shared/components/inputs/button';
+import { Plus } from 'lucide-react';
 import {
   createEmptyBaseRule,
   createEmptyAndRule,
@@ -19,11 +18,11 @@ import {
   isBaseRule,
   isAndRule,
   isOrRule,
-} from "@/features/rules/shared/utils/ruleUtils";
-import { useRuleValidation } from "../../../../hooks/useRuleValidation";
-import BaseRuleComponent from "../baseRule/BaseRuleComponent";
-import { usePrevious } from "react-use";
-import { useRuleIdMap } from "@/features/rules/shared/hooks/useRuleIdMap";
+} from '@/features/rules/shared/utils/ruleUtils';
+import { useRuleValidation } from '../../../../hooks/useRuleValidation';
+import BaseRuleComponent from '../baseRule/BaseRuleComponent';
+import { usePrevious } from 'react-use';
+import { useRuleIdMap } from '@/features/rules/shared/hooks/useRuleIdMap';
 
 interface GroupRuleComponentProps {
   rule: AndRule | OrRule;
@@ -45,12 +44,12 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     onChange,
     onDeleteGroup,
     onValidationChange,
-    category = "partners-images",
+    category = 'partners-images',
   }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const isAnd = isAndRule(rule);
     const rules = isAnd ? rule.AND : rule.OR;
-    const groupType = isAnd ? "AND" : "OR";
+    const groupType = isAnd ? 'AND' : 'OR';
 
     const {
       errorCount,
@@ -62,8 +61,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     });
 
     const prevCategory = usePrevious(category);
-
-    const { getRuleId } = useRuleIdMap();
 
     useEffect(() => {
       if (prevCategory !== category) {
@@ -154,59 +151,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       [handleChildValidationChange, onValidationChange]
     );
 
-    const renderRuleComponent = useCallback(
-      (nestedRule: RuleType, index: number) => {
-        if (isBaseRule(nestedRule)) {
-          return (
-            <BaseRuleComponent
-              rule={nestedRule}
-              onChange={(updatedRule: BaseRule) =>
-                handleRuleChange(index, updatedRule)
-              }
-              onDelete={() => handleRuleItemDelete(index)}
-              onValidationChange={(isValid) =>
-                handleValidationChange(index, !isValid, isValid ? 0 : 1)
-              }
-              parentGroupType={groupType as "AND" | "OR"}
-              category={category}
-            />
-          );
-        } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
-          return (
-            <GroupRuleComponent
-              rule={nestedRule}
-              onChange={(updatedRule) => handleRuleChange(index, updatedRule)}
-              onDeleteGroup={() => handleRuleItemDelete(index)}
-              onValidationChange={(hasErrors, childErrorCount) =>
-                handleValidationChange(index, hasErrors, childErrorCount)
-              }
-              category={category}
-            />
-          );
-        }
-        return null;
-      },
-      [
-        category,
-        groupType,
-        handleRuleChange,
-        handleRuleItemDelete,
-        handleValidationChange,
-        getRuleId,
-      ]
-    );
-
-    const actionsComponent = (
-      <GroupRuleActions
-        isCollapsed={isCollapsed}
-        isAnd={isAnd}
-        groupType={groupType}
-        onAddRule={(type) => handleAddRule(type, ruleMap[type])}
-        ruleMap={ruleMap}
-        onDelete={handleGroupDelete}
-      />
-    );
-
     return (
       <div
         className={`rounded-lg border ${groupColor} animate-fade-in w-full relative shadow-md`}
@@ -220,15 +164,77 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
           toggleCollapse={toggleCollapse}
           handleAddRule={(type) => handleAddRule(type, ruleMap[type])}
           onDelete={handleGroupDelete}
-          actionsComponent={actionsComponent}
+          actionsComponent={
+            <GroupRuleActions
+              isCollapsed={isCollapsed}
+              isAnd={isAnd}
+              groupType={groupType}
+              onAddRule={(type) => handleAddRule(type, ruleMap[type])}
+              ruleMap={ruleMap}
+              onDelete={handleGroupDelete}
+            />
+          }
         />
 
-        <GroupRuleContent
-          isCollapsed={isCollapsed}
-          rules={rules}
-          groupType={groupType}
-          renderRuleComponent={renderRuleComponent}
-        />
+        <div
+          id={`group-content-${groupType}`}
+          className={`transition-all duration-300 ${
+            isCollapsed
+              ? 'max-h-0 opacity-0 overflow-hidden pointer-events-none absolute invisible'
+              : 'max-h-[5000px] opacity-100 pb-3 relative visible flex-col max-h-full'
+          }`}
+          aria-hidden={isCollapsed}
+        >
+          <div className="space-y-3 px-4">
+            {rules && rules.length > 0 ? (
+              rules.map((nestedRule, index) => {
+                if (isBaseRule(nestedRule)) {
+                  return (
+                    <BaseRuleComponent
+                      key={index}
+                      rule={nestedRule}
+                      onChange={(updatedRule: BaseRule) =>
+                        handleRuleChange(index, updatedRule)
+                      }
+                      onDelete={() => handleRuleItemDelete(index)}
+                      onValidationChange={(isValid) =>
+                        handleValidationChange(index, !isValid, isValid ? 0 : 1)
+                      }
+                      parentGroupType={groupType as 'AND' | 'OR'}
+                      category={category}
+                    />
+                  );
+                } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
+                  return (
+                    <GroupRuleComponent
+                      key={index}
+                      rule={nestedRule}
+                      onChange={(updatedRule) =>
+                        handleRuleChange(index, updatedRule)
+                      }
+                      onDeleteGroup={() => handleRuleItemDelete(index)}
+                      onValidationChange={(hasErrors, childErrorCount) =>
+                        handleValidationChange(
+                          index,
+                          hasErrors,
+                          childErrorCount
+                        )
+                      }
+                      category={category}
+                    />
+                  );
+                }
+
+                return null;
+              })
+            ) : (
+              <div className="text-sm text-text-primary italic p-3">
+                No conditions added yet. Click the "Add" button above to add a
+                condition.
+              </div>
+            )}
+          </div>
+        </div>
 
         {!isCollapsed && (
           <div className="px-4 pb-4 flex space-x-2">
@@ -236,7 +242,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
               variant="outline"
               size="sm"
               className="flex items-center"
-              onClick={() => handleAddRule("BASE", ruleMap.BASE)}
+              onClick={() => handleAddRule('BASE', ruleMap.BASE)}
             >
               <Plus className="h-4 w-4 mr-1" />
               Add Condition
@@ -248,4 +254,5 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
   }
 );
 
+GroupRuleComponent.displayName = 'GroupRuleComponent';
 export default GroupRuleComponent;

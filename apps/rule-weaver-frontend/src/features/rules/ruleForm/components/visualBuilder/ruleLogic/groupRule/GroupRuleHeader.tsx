@@ -1,15 +1,14 @@
 import React from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { Rules } from '@/features/rules/types/rule';
+import { AndRule, OrRule, Rules } from '@/features/rules/types/rule';
 import { getGroupStyles } from './groupStyles';
 import { RULE_DESCRIPTIONS } from '@/features/rules/shared/constants/ruleDescriptions';
 import GroupRuleActions from './GroupRuleActions';
+import { useGroupRuleState } from './hooks/useGroupRuleState';
 
 interface GroupRuleHeaderProps {
+  rule: AndRule | OrRule;
   isCollapsed: boolean;
-  isAnd: boolean;
-  groupType: 'AND' | 'OR';
-  rulesCount: number;
   errorCount?: number;
   toggleCollapse: () => void;
   handleAddRule: (type: Rules) => void;
@@ -17,15 +16,16 @@ interface GroupRuleHeaderProps {
 }
 
 const GroupRuleHeader: React.FC<GroupRuleHeaderProps> = ({
+  rule,
   isCollapsed,
-  isAnd,
-  groupType,
-  rulesCount,
   errorCount = 0,
   toggleCollapse,
   handleAddRule,
   onDelete,
 }) => {
+  const { isAnd, rules, groupType } = useGroupRuleState(rule);
+  const rulesCount = rules.length;
+
   const { groupTextColor, groupHighlightColor } = getGroupStyles(isAnd);
   const ruleTypeDescription = isAnd
     ? RULE_DESCRIPTIONS.AND.FULL

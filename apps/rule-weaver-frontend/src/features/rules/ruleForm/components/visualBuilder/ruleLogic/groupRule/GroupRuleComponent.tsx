@@ -51,8 +51,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       handleGroupDelete,
     } = useGroupRuleOperations({
       rule,
-      rules,
-      isAnd,
       onChange,
       onDeleteGroup,
       handleRuleValidationAfterDelete,
@@ -94,10 +92,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
         className={`rounded-lg border ${groupColor} animate-fade-in w-full relative shadow-md`}
       >
         <GroupRuleHeader
+          rule={rule}
           isCollapsed={isCollapsed}
-          isAnd={isAnd}
-          groupType={groupType}
-          rulesCount={rules.length}
           errorCount={errorCount}
           toggleCollapse={toggleCollapse}
           handleAddRule={handleAddRule}

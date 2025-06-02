@@ -5,6 +5,7 @@ import {
   createEmptyAndRule,
   createEmptyOrRule,
 } from '@/features/rules/shared/utils/ruleUtils';
+import { useGroupRuleState } from './useGroupRuleState';
 
 const ruleMap: Record<Rules, () => RuleType> = {
   BASE: createEmptyBaseRule,
@@ -14,8 +15,6 @@ const ruleMap: Record<Rules, () => RuleType> = {
 
 interface UseGroupRuleOperationsProps {
   rule: AndRule | OrRule;
-  rules: RuleType[];
-  isAnd: boolean;
   onChange: (updatedRule: AndRule | OrRule) => void;
   handleRuleValidationAfterDelete: (index: number) => {
     hasErrors: boolean;
@@ -27,13 +26,13 @@ interface UseGroupRuleOperationsProps {
 
 export const useGroupRuleOperations = ({
   rule,
-  rules,
-  isAnd,
   onChange,
   onDeleteGroup,
   handleRuleValidationAfterDelete,
   onValidationChange,
 }: UseGroupRuleOperationsProps) => {
+  const { isAnd, rules } = useGroupRuleState(rule);
+
   const handleRuleChange = useCallback(
     (index: number, updatedRule: RuleType) => {
       const newRules = [...rules];

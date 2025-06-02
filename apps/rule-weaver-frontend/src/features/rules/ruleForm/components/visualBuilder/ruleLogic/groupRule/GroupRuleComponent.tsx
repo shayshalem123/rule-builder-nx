@@ -1,20 +1,10 @@
-import React, { useState, useCallback, memo, useEffect, useMemo } from 'react';
-import {
-  AndRule,
-  OrRule,
-  RuleType,
-  BaseRule,
-  Rules,
-} from '@/features/rules/types/rule';
+import React, { useState, useCallback, memo, useEffect } from 'react';
+import { AndRule, OrRule, RuleType, Rules } from '@/features/rules/types/rule';
 import GroupRuleHeader from './GroupRuleHeader';
-import GroupRuleActions from './GroupRuleActions';
 import { getGroupStyles } from './groupStyles';
 import { Button } from '@/shared/components/inputs/button';
 import { Plus } from 'lucide-react';
 import {
-  createEmptyBaseRule,
-  createEmptyAndRule,
-  createEmptyOrRule,
   isBaseRule,
   isAndRule,
   isOrRule,
@@ -22,7 +12,8 @@ import {
 import { useRuleValidation } from '../../../../hooks/useRuleValidation';
 import BaseRuleComponent from '../baseRule/BaseRuleComponent';
 import { usePrevious } from 'react-use';
-import { useRuleIdMap } from '@/features/rules/shared/hooks/useRuleIdMap';
+import { useGroupRuleState } from './hooks/useGroupRuleState';
+import { useGroupRuleOperations } from './hooks/useGroupRuleOperations';
 
 interface GroupRuleComponentProps {
   rule: AndRule | OrRule;
@@ -31,12 +22,6 @@ interface GroupRuleComponentProps {
   onDeleteGroup?: () => void;
   onValidationChange?: (hasErrors: boolean, errorCount: number) => void;
 }
-
-const ruleMap: Record<Rules, () => RuleType> = {
-  BASE: createEmptyBaseRule,
-  AND: createEmptyAndRule,
-  OR: createEmptyOrRule,
-};
 
 const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
   ({
@@ -47,12 +32,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     category = 'partners-images',
   }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const isAnd = useMemo(() => isAndRule(rule), [rule]);
-    const rules = useMemo(
-      () => (isAnd ? (rule as AndRule).AND : (rule as OrRule).OR),
-      [isAnd, rule]
-    );
-    const groupType = useMemo(() => (isAnd ? 'AND' : 'OR'), [isAnd]);
+
+    const { isAnd, rules, groupType } = useGroupRuleState(rule);
 
     const {
       errorCount,
@@ -61,6 +42,21 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
       handleRuleValidationAfterDelete,
     } = useRuleValidation({
       rule,
+    });
+
+    const {
+      handleRuleChange,
+      handleAddRule,
+      handleRuleItemDelete,
+      handleGroupDelete,
+    } = useGroupRuleOperations({
+      rule,
+      rules,
+      isAnd,
+      onChange,
+      onDeleteGroup,
+      handleRuleValidationAfterDelete,
+      onValidationChange,
     });
 
     const prevCategory = usePrevious(category);
@@ -72,67 +68,6 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     }, [category, hasErrors, errorCount, onValidationChange, prevCategory]);
 
     const { groupColor } = getGroupStyles(isAnd);
-
-    const handleRuleChange = useCallback(
-      (index: number, updatedRule: RuleType) => {
-        const newRules = [...rules];
-        newRules[index] = updatedRule;
-        onChange(
-          isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-        );
-      },
-      [isAnd, onChange, rule, rules]
-    );
-
-    const handleAddRule = useCallback(
-      (type: Rules, creator: () => RuleType) => {
-        const newRules = [...rules];
-        newRules.push(creator());
-        onChange(
-          isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-        );
-      },
-      [isAnd, onChange, rule, rules]
-    );
-
-    const handleRuleDelete = useCallback(
-      (index: number) => {
-        const newRules = [...rules];
-        newRules.splice(index, 1);
-
-        const validationResult = handleRuleValidationAfterDelete(index);
-
-        onValidationChange?.(
-          validationResult.hasErrors,
-          validationResult.errorCount
-        );
-
-        onChange(
-          isAnd ? { ...rule, AND: newRules } : { ...rule, OR: newRules }
-        );
-      },
-      [
-        isAnd,
-        onChange,
-        rule,
-        rules,
-        handleRuleValidationAfterDelete,
-        onValidationChange,
-      ]
-    );
-
-    const handleRuleItemDelete = useCallback(
-      (index: number) => {
-        if (rules.length <= 1) return onDeleteGroup?.();
-
-        handleRuleDelete(index);
-      },
-      [rules.length, onDeleteGroup, handleRuleDelete]
-    );
-
-    const handleGroupDelete = useCallback(() => {
-      onDeleteGroup?.();
-    }, [onDeleteGroup]);
 
     const toggleCollapse = useCallback(() => {
       setIsCollapsed(!isCollapsed);
@@ -165,18 +100,8 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
           rulesCount={rules.length}
           errorCount={errorCount}
           toggleCollapse={toggleCollapse}
-          handleAddRule={(type) => handleAddRule(type, ruleMap[type])}
+          handleAddRule={handleAddRule}
           onDelete={handleGroupDelete}
-          actionsComponent={
-            <GroupRuleActions
-              isCollapsed={isCollapsed}
-              isAnd={isAnd}
-              groupType={groupType}
-              onAddRule={(type) => handleAddRule(type, ruleMap[type])}
-              ruleMap={ruleMap}
-              onDelete={handleGroupDelete}
-            />
-          }
         />
 
         <div
@@ -189,53 +114,42 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
           aria-hidden={isCollapsed}
         >
           <div className="space-y-3 px-4">
-            {rules && rules.length > 0 ? (
-              rules.map((nestedRule, index) => {
-                if (isBaseRule(nestedRule)) {
-                  return (
-                    <BaseRuleComponent
-                      key={index}
-                      rule={nestedRule}
-                      onChange={(updatedRule) =>
-                        handleRuleChange(index, updatedRule)
-                      }
-                      onDelete={() => handleRuleItemDelete(index)}
-                      onValidationChange={(isValid) =>
-                        handleValidationChange(index, !isValid, isValid ? 0 : 1)
-                      }
-                      parentGroupType={groupType as 'AND' | 'OR'}
-                      category={category}
-                    />
-                  );
-                } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
-                  return (
-                    <GroupRuleComponent
-                      key={index}
-                      rule={nestedRule}
-                      onChange={(updatedRule) =>
-                        handleRuleChange(index, updatedRule)
-                      }
-                      onDeleteGroup={() => handleRuleItemDelete(index)}
-                      onValidationChange={(hasErrors, childErrorCount) =>
-                        handleValidationChange(
-                          index,
-                          hasErrors,
-                          childErrorCount
-                        )
-                      }
-                      category={category}
-                    />
-                  );
-                }
+            {(rules ?? []).map((nestedRule, index) => {
+              if (isBaseRule(nestedRule)) {
+                return (
+                  <BaseRuleComponent
+                    key={index}
+                    rule={nestedRule}
+                    onChange={(updatedRule) =>
+                      handleRuleChange(index, updatedRule)
+                    }
+                    onDelete={() => handleRuleItemDelete(index)}
+                    onValidationChange={(isValid) =>
+                      handleValidationChange(index, !isValid, isValid ? 0 : 1)
+                    }
+                    parentGroupType={groupType}
+                    category={category}
+                  />
+                );
+              } else if (isAndRule(nestedRule) || isOrRule(nestedRule)) {
+                return (
+                  <GroupRuleComponent
+                    key={index}
+                    rule={nestedRule}
+                    onChange={(updatedRule) =>
+                      handleRuleChange(index, updatedRule)
+                    }
+                    onDeleteGroup={() => handleRuleItemDelete(index)}
+                    onValidationChange={(hasErrors, childErrorCount) =>
+                      handleValidationChange(index, hasErrors, childErrorCount)
+                    }
+                    category={category}
+                  />
+                );
+              }
 
-                return null;
-              })
-            ) : (
-              <div className="text-sm text-text-primary italic p-3">
-                No conditions added yet. Click the "Add" button above to add a
-                condition.
-              </div>
-            )}
+              return null;
+            })}
           </div>
         </div>
 
@@ -245,7 +159,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
               variant="outline"
               size="sm"
               className="flex items-center"
-              onClick={() => handleAddRule('BASE', ruleMap.BASE)}
+              onClick={() => handleAddRule('BASE')}
             >
               <Plus className="h-4 w-4 mr-1" />
               Add Condition

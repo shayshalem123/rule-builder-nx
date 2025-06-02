@@ -1,20 +1,19 @@
-import React from "react";
-import { Plus, Trash2 } from "lucide-react";
-import { Button } from "@/shared/components/inputs/button";
-import { Rules, RuleType } from "@/features/rules/types/rule";
+import React from 'react';
+import { Plus, Trash2 } from 'lucide-react';
+import { Button } from '@/shared/components/inputs/button';
+import { Rules } from '@/features/rules/types/rule';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/components/inputs/dropdown-menu";
+} from '@/shared/components/inputs/dropdown-menu';
 
 interface GroupRuleActionsProps {
   isCollapsed: boolean;
   isAnd: boolean;
-  groupType: "AND" | "OR";
-  onAddRule: (type: Rules, creator: () => RuleType) => void;
-  ruleMap: Record<Rules, () => RuleType>;
+  groupType: 'AND' | 'OR';
+  onAddRule: (type: Rules) => void;
   onDelete?: () => void;
 }
 
@@ -23,7 +22,6 @@ const GroupRuleActions: React.FC<GroupRuleActionsProps> = ({
   isAnd,
   groupType,
   onAddRule,
-  ruleMap,
   onDelete,
 }) => {
   return (
@@ -42,15 +40,15 @@ const GroupRuleActions: React.FC<GroupRuleActionsProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onAddRule("BASE", ruleMap.BASE)}>
+            <DropdownMenuItem onClick={() => onAddRule('BASE')}>
               Condition
             </DropdownMenuItem>
             {!isAnd ? (
-              <DropdownMenuItem onClick={() => onAddRule("AND", ruleMap.AND)}>
+              <DropdownMenuItem onClick={() => onAddRule('AND')}>
                 AND Group
               </DropdownMenuItem>
             ) : (
-              <DropdownMenuItem onClick={() => onAddRule("OR", ruleMap.OR)}>
+              <DropdownMenuItem onClick={() => onAddRule('OR')}>
                 OR Group
               </DropdownMenuItem>
             )}

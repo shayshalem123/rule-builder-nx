@@ -17,13 +17,11 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const ruleService = {
   // Get all rules
   getRules: async (): Promise<RuleWithMeta[]> => {
-    await delay(500); // Simulate network delay
     return [...mockRules];
   },
 
   // Get rule by ID
   getRule: async (id: string): Promise<RuleWithMeta | undefined> => {
-    await delay(300);
     return mockRules.find((rule) => rule.id === id);
   },
 
@@ -32,7 +30,6 @@ export const ruleService = {
     rule: Omit<Rule, 'id'>,
     user: User
   ): Promise<RuleWithMeta> => {
-    await delay(500);
     const newRule: RuleWithMeta = {
       ...rule,
       id: Date.now().toString(),
@@ -52,7 +49,6 @@ export const ruleService = {
     rule: Omit<Rule, 'id'>,
     user: User
   ): Promise<RuleWithMeta> => {
-    await delay(500);
     const index = mockRules.findIndex((r) => r.id === id);
     if (index === -1) {
       throw new Error(`Rule with id ${id} not found`);
@@ -73,7 +69,6 @@ export const ruleService = {
 
   // Delete rule
   deleteRule: async (id: string): Promise<void> => {
-    await delay(300);
     const index = mockRules.findIndex((rule) => rule.id === id);
     if (index === -1) {
       throw new Error(`Rule with id ${id} not found`);
@@ -83,13 +78,11 @@ export const ruleService = {
 
   // Get available destination options
   getDestinations: async (): Promise<string[]> => {
-    await delay(300);
     return [...destinationOptions];
   },
 
   // Get available category options
   getCategories: async (): Promise<string[]> => {
-    await delay(300);
     return [...categoryOptions];
   },
 
@@ -97,13 +90,11 @@ export const ruleService = {
   getExtraPropertiesSchemas: async (): Promise<
     Record<string, Record<string, object>>
   > => {
-    await delay(700);
     return { ...mockExtraPropertiesSchemas };
   },
 
   // Get categories info with destinations and extra properties
   getCategoriesInfo: async (): Promise<CategoriesInfoMap> => {
-    await delay(700);
     return { ...mockCategoriesInfo };
   },
 };

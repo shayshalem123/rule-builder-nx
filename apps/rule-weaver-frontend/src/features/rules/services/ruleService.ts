@@ -4,12 +4,11 @@ import {
   destinationOptions,
   categoryOptions,
   CategoriesInfoMap,
-} from "@/features/rules/types/rule";
-import { User } from "@/features/users/types/user";
-import { mockRules } from "./__mocks__/mockRules";
-import { mockExtraPropertiesSchemas } from "./__mocks__/mockExtraProperties";
-import { mockCategoriesInfo } from "./__mocks__/mockCategoriesInfo";
-import { JsonSchema } from "../hooks/useExtraPropertiesSchemas";
+} from '@/features/rules/types/rule';
+import { User } from '@/features/users/types/user';
+import { mockRules } from './__mocks__/mockRules';
+import { mockExtraPropertiesSchemas } from './__mocks__/mockExtraProperties';
+import { mockCategoriesInfo } from './__mocks__/mockCategoriesInfo';
 
 // Helper function to simulate API delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -30,7 +29,7 @@ export const ruleService = {
 
   // Create new rule
   createRule: async (
-    rule: Omit<Rule, "id">,
+    rule: Omit<Rule, 'id'>,
     user: User
   ): Promise<RuleWithMeta> => {
     await delay(500);
@@ -41,6 +40,7 @@ export const ruleService = {
       updatedAt: new Date().toISOString(),
       createdBy: { id: user.id, name: user.name },
       updatedBy: { id: user.id, name: user.name },
+      permittedActions: ['read', 'write', 'delete'], // Creator gets all permissions
     };
     mockRules.push(newRule);
     return newRule;
@@ -49,7 +49,7 @@ export const ruleService = {
   // Update existing rule
   updateRule: async (
     id: string,
-    rule: Omit<Rule, "id">,
+    rule: Omit<Rule, 'id'>,
     user: User
   ): Promise<RuleWithMeta> => {
     await delay(500);

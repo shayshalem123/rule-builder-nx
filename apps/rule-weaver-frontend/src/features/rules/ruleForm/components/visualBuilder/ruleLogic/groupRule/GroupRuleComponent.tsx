@@ -29,7 +29,7 @@ const GroupRuleComponent: React.FC<GroupRuleComponentProps> = memo(
     onChange,
     onDeleteGroup,
     onValidationChange,
-    category = 'partners-images',
+    category,
   }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 

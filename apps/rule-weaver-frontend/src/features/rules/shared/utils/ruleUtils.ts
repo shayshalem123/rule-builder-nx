@@ -6,37 +6,37 @@ import {
   Operator,
   Rule,
   RuleWithMeta,
-} from "@/features/rules/types/rule";
-import { RuleFormValues } from "@/features/rules/ruleForm/hooks/useRuleForm";
+} from '@/features/rules/types/rule';
+import { RuleFormValues } from '@/features/rules/ruleForm/hooks/useRuleForm';
 
 // Check if a rule is a base rule (with field, operator, value)
 export const isBaseRule = (rule: RuleType): rule is BaseRule => {
-  return "field" in rule && "operator" in rule && "value" in rule;
+  return 'field' in rule && 'operator' in rule && 'value' in rule;
 };
 
 // Check if a rule is an AND rule
 export const isAndRule = (rule: RuleType): rule is AndRule => {
-  return "AND" in rule;
+  return 'AND' in rule;
 };
 
 // Check if a rule is an OR rule
 export const isOrRule = (rule: RuleType): rule is OrRule => {
-  return "OR" in rule;
+  return 'OR' in rule;
 };
 
 // Get the type of a rule as a string
-export const getRuleType = (rule: RuleType): "BASE" | "AND" | "OR" => {
-  if (isBaseRule(rule)) return "BASE";
-  if (isAndRule(rule)) return "AND";
-  if (isOrRule(rule)) return "OR";
-  throw new Error("Unknown rule type");
+export const getRuleType = (rule: RuleType): 'BASE' | 'AND' | 'OR' => {
+  if (isBaseRule(rule)) return 'BASE';
+  if (isAndRule(rule)) return 'AND';
+  if (isOrRule(rule)) return 'OR';
+  throw new Error('Unknown rule type');
 };
 
 // Create a new empty base rule
 export const createEmptyBaseRule = (): BaseRule => ({
-  field: "",
-  operator: "EQUALS",
-  value: "",
+  field: '',
+  operator: 'EQUALS',
+  value: '',
 });
 
 // Create a new empty AND rule
@@ -52,12 +52,12 @@ export const createEmptyOrRule = (): OrRule => ({
 // Create a new empty rule with metadata
 export const createEmptyRule = (
   ruleType: RuleType = createEmptyBaseRule()
-): Rule => ({
-  name: "",
-  description: "",
-  destination: "A", // Default destination
-  category: "partners-images", // Default category
-  type: "",
+): Omit<Rule, 'permittedActions'> => ({
+  name: '',
+  description: '',
+  destination: '', // Default destination
+  category: '', // Default category
+  type: '',
   rule: ruleType,
 });
 
@@ -68,9 +68,9 @@ export const cloneRule = (rule: RuleType): RuleType => {
 
 // List of available operators
 export const operators: { value: Operator; label: string }[] = [
-  { value: "EQUALS", label: "Equals" },
-  { value: "NOT_EQUALS", label: "Not Equals" },
-  { value: "IN", label: "In" },
+  { value: 'EQUALS', label: 'Equals' },
+  { value: 'NOT_EQUALS', label: 'Not Equals' },
+  { value: 'IN', label: 'In' },
 ];
 
 // Group rules by destination

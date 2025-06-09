@@ -1,8 +1,8 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { RuleWithMeta } from "@/features/rules/types/rule";
-import RuleList from "./RuleList";
+import { RuleWithMeta } from '@/features/rules/types/rule';
+import RuleList from './RuleList';
 
 interface DestinationRulesSectionProps {
   destination: string;
@@ -24,11 +24,15 @@ const DestinationRulesSection: React.FC<DestinationRulesSectionProps> = ({
   const navigate = useNavigate();
 
   const handleEditRule = (rule: RuleWithMeta) => {
-    navigate(`/rules/edit/${rule.id}`);
+    if (rule.permittedActions.includes('write')) {
+      navigate(`/rules/edit/${rule.id}`);
+    }
   };
 
   const handleViewRule = (rule: RuleWithMeta) => {
-    navigate(`/rules/${rule.id}`);
+    if (rule.permittedActions.includes('read')) {
+      navigate(`/rules/${rule.id}`);
+    }
   };
 
   const handleRuleDelete = () => {

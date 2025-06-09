@@ -22,7 +22,7 @@ const BaseRuleForm: React.FC<BaseRuleFormProps> = memo(
     rule,
     onChange,
     onValidationChange,
-    category = "partners-images",
+    category,
     className,
   }) => {
     const [errors, setErrors] = useState<Record<BaseRuleInputs, boolean>>({

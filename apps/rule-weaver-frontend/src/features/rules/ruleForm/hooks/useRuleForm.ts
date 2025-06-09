@@ -1,15 +1,15 @@
-import { useFormik } from "formik";
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useFormik } from 'formik';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import {
   RuleType,
   RuleWithMeta,
   destinationOptions as defaultDestinationOptions,
   categoryOptions as defaultCategoryOptions,
-} from "@/features/rules/types/rule";
-import * as ruleUtils from "@/features/rules/shared/utils/ruleUtils";
-import { useCategoriesDestinations } from "../../hooks/useCategoriesDestinations";
-import { useSchema } from "@/features/schemas/hooks/useSchemas";
-import { useRuleValidation } from "@/features/rules/shared/hooks/useRuleValidation";
+} from '@/features/rules/types/rule';
+import * as ruleUtils from '@/features/rules/shared/utils/ruleUtils';
+import { useCategoriesDestinations } from '../../hooks/useCategoriesDestinations';
+import { useSchema } from '@/features/schemas/hooks/useSchemas';
+import { useRuleValidation } from '@/features/rules/shared/hooks/useRuleValidation';
 
 export interface RuleFormValues {
   name: string;
@@ -22,14 +22,14 @@ export interface RuleFormValues {
 }
 
 export const useRuleForm = (
-  onSave: (rule: Omit<RuleWithMeta, "id" | "createdAt" | "updatedAt">) => void,
+  onSave: (rule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>) => void,
   initialRule?: RuleWithMeta
 ) => {
   const [currentCategory, setCurrentCategory] = useState<string>(
-    initialRule?.category || defaultCategoryOptions[0] || ""
+    initialRule?.category || ''
   );
   const [currentDestination, setCurrentDestination] = useState<string>(
-    initialRule?.destination || defaultDestinationOptions[0] || ""
+    initialRule?.destination || ''
   );
 
   const {
@@ -58,11 +58,11 @@ export const useRuleForm = (
 
   const formik = useFormik<RuleFormValues>({
     initialValues: {
-      name: initialRule?.name || "",
-      description: initialRule?.description || "",
+      name: initialRule?.name || '',
+      description: initialRule?.description || '',
       destination: currentDestination,
       category: currentCategory,
-      type: initialRule?.type || "",
+      type: initialRule?.type || '',
       rule: initialRule?.rule || ruleUtils.createEmptyBaseRule(),
       extraProperties: initialRule?.extraProperties,
     },
@@ -89,14 +89,14 @@ export const useRuleForm = (
 
     if (newDestinations.length > 0) {
       if (!newDestinations.includes(formik.values.destination)) {
-        formik.setFieldValue("destination", newDestinations[0]);
+        formik.setFieldValue('destination', newDestinations[0]);
       }
     }
   }, [formik.values.category, categoryDestinationsMap]);
 
   const updateRuleLogic = useCallback(
     (newRule: RuleType) => {
-      formik.setFieldValue("rule", newRule);
+      formik.setFieldValue('rule', newRule);
     },
     [formik]
   );

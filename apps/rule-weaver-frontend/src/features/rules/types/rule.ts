@@ -1,6 +1,8 @@
-import { JsonSchema } from "../hooks/useExtraPropertiesSchemas";
+import { JsonSchema } from '../hooks/useExtraPropertiesSchemas';
 
-export type Operator = "EQUALS" | "NOT_EQUALS" | "IN";
+export type Operator = 'EQUALS' | 'NOT_EQUALS' | 'IN';
+
+export type PermittedAction = 'read' | 'write' | 'delete';
 
 export interface BaseRule {
   field: string;
@@ -18,7 +20,7 @@ export interface OrRule {
 
 export type RuleType = BaseRule | AndRule | OrRule;
 
-export type Rules = "BASE" | "AND" | "OR";
+export type Rules = 'BASE' | 'AND' | 'OR';
 
 export type RuleWithMeta = Rule & {
   createdAt?: string;
@@ -42,13 +44,14 @@ export type Rule = {
   type: string;
   rule: RuleType;
   extraProperties?: Record<string, unknown>;
+  permittedActions: PermittedAction[];
 };
 
-export const destinationOptions = ["A", "B", "C", "D", "E"];
+export const destinationOptions = ['A', 'B', 'C', 'D', 'E'];
 export const categoryOptions = [
-  "partners-images",
-  "partners-algo",
-  "data-processing",
+  'partners-images',
+  'partners-algo',
+  'data-processing',
 ];
 
 // Test case interface for rule testing
@@ -66,7 +69,7 @@ export interface TestCase {
 }
 
 // Default metadata for new test cases
-export const DEFAULT_TEST_METADATA = { metadata: { name: "" } };
+export const DEFAULT_TEST_METADATA = { metadata: { name: '' } };
 
 // Category metadata info type
 export interface CategoryMetaInfo {
@@ -91,6 +94,7 @@ export type DestinationCategoryInfo = {
     options: string[];
   };
   extraProperties: JsonSchema;
+  validOperators?: Operator[];
 };
 
 export type CategoryInfo = {

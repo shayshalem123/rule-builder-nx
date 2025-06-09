@@ -1,7 +1,7 @@
-import React, { memo } from "react";
-import { RuleType } from "@/features/rules/types/rule";
-import { RuleLogicHeader } from "./RuleLogicHeader";
-import { RuleLogicContent } from "./RuleLogicContent";
+import React, { memo } from 'react';
+import { RuleType } from '@/features/rules/types/rule';
+import { RuleLogicHeader } from './RuleLogicHeader';
+import { RuleLogicContent } from './RuleLogicContent';
 
 interface RuleLogicBuilderProps {
   ruleLogic: RuleType;

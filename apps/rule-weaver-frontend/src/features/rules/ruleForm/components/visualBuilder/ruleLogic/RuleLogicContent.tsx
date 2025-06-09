@@ -1,8 +1,8 @@
-import React from "react";
-import { RuleType } from "@/features/rules/types/rule";
-import * as ruleUtils from "@/features/rules/shared/utils/ruleUtils";
-import BaseRuleComponent from "./baseRule/BaseRuleComponent";
-import GroupRuleComponent from "./groupRule/GroupRuleComponent";
+import React from 'react';
+import { RuleType } from '@/features/rules/types/rule';
+import * as ruleUtils from '@/features/rules/shared/utils/ruleUtils';
+import BaseRuleComponent from './baseRule/BaseRuleComponent';
+import GroupRuleComponent from './groupRule/GroupRuleComponent';
 
 interface RuleLogicContentProps {
   ruleLogic: RuleType;

@@ -1,6 +1,6 @@
-import React from "react";
-import { RuleWithMeta } from "@/features/rules/types/rule";
-import RuleCard from "./ruleCard/RuleCard";
+import React from 'react';
+import { RuleWithMeta } from '@/features/rules/types/rule';
+import RuleCard from './ruleCard/RuleCard';
 
 interface RuleGridProps {
   rules: RuleWithMeta[];
@@ -24,9 +24,17 @@ const RuleGrid: React.FC<RuleGridProps> = ({
         >
           <RuleCard
             rule={rule}
-            onEdit={() => onEdit(rule)}
-            onDelete={() => onDelete(rule)}
-            onView={onView ? () => onView(rule) : undefined}
+            onEdit={() =>
+              rule.permittedActions.includes('write') && onEdit(rule)
+            }
+            onDelete={() =>
+              rule.permittedActions.includes('delete') && onDelete(rule)
+            }
+            onView={
+              onView && rule.permittedActions.includes('read')
+                ? () => onView(rule)
+                : undefined
+            }
           />
         </div>
       ))}

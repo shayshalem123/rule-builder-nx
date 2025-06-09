@@ -33,7 +33,7 @@ export const config = defineConfig(({ mode }) => {
     publicDir: path.resolve(__dirname, 'src/assets'),
     plugins: [
       react(),
-      mode === 'development',
+      nxViteTsPaths(),
       monacoPlugin({
         // Define custom worker paths directly in public
         customWorkers: [
@@ -70,7 +70,7 @@ export const config = defineConfig(({ mode }) => {
         // Better handling for workers
         filename: '[name].worker.js',
       }),
-    ].filter(Boolean),
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -100,9 +100,8 @@ export const config = defineConfig(({ mode }) => {
       },
     },
     build: {
-      // Better source maps for debugging
       sourcemap: mode === 'development',
-      // Better CommonJS interop
+      minify: mode === 'production' ? 'esbuild' : false,
       commonjsOptions: {
         transformMixedEsModules: true,
       },

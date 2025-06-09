@@ -1,10 +1,10 @@
-import React from "react";
-import { RuleWithMeta } from "@/features/rules/types/rule";
-import EntityCard from "@/shared/components/EntityCard";
-import EntityUserInfo from "@/shared/components/EntityUserInfo";
-import EntityCardActions from "@/shared/components/EntityCardActions";
-import EntityCardTags, { EntityTag } from "@/shared/components/EntityCardTags";
-import { MapPin, Tag } from "lucide-react";
+import React from 'react';
+import { RuleWithMeta } from '@/features/rules/types/rule';
+import EntityCard from '@/shared/components/EntityCard';
+import EntityUserInfo from '@/shared/components/EntityUserInfo';
+import EntityCardActions from '@/shared/components/EntityCardActions';
+import EntityCardTags, { EntityTag } from '@/shared/components/EntityCardTags';
+import { MapPin, Tag } from 'lucide-react';
 
 interface RuleCardProps {
   rule: RuleWithMeta;
@@ -23,12 +23,12 @@ const RuleCard: React.FC<RuleCardProps> = ({
     {
       icon: <MapPin className="h-3 w-3" />,
       label: `Destination ${rule.destination}`,
-      color: "amber",
+      color: 'amber',
     },
     {
       icon: <Tag className="h-3 w-3" />,
       label: rule.category,
-      color: "green",
+      color: 'green',
     },
   ];
 
@@ -49,6 +49,7 @@ const RuleCard: React.FC<RuleCardProps> = ({
           onEdit={onEdit}
           onDelete={onDelete}
           onView={onView}
+          permittedActions={rule.permittedActions}
         />
       }
       onClick={onView}

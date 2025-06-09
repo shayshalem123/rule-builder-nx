@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import { FormikProps } from "formik";
-import { RuleFormValues } from "../../hooks/useRuleForm";
-import { RuleFormFields } from "./formFields/RuleFormFields";
-import { RuleType } from "@/features/rules/types/rule";
-import { JsonSchema } from "@/features/rules/hooks/useExtraPropertiesSchemas";
-import FullScreenRuleLogicModal from "./ruleLogic/fullscreen/FullScreenRuleLogicModal";
-import { RuleLogicBuilder } from "./ruleLogic/RuleLogicBuilder";
+import React, { useState } from 'react';
+import { FormikProps } from 'formik';
+import { RuleFormValues } from '../../hooks/useRuleForm';
+import { RuleFormFields } from './formFields/RuleFormFields';
+import { RuleType } from '@/features/rules/types/rule';
+import FullScreenRuleLogicModal from './ruleLogic/fullscreen/FullScreenRuleLogicModal';
+import { RuleLogicBuilder } from './ruleLogic/RuleLogicBuilder';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/shared/components/inputs/card";
+} from '@/shared/components/inputs/card';
 
 interface VisualRuleBuilderProps {
   formik: FormikProps<RuleFormValues>;

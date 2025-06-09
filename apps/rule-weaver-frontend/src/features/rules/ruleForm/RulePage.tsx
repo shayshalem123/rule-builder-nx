@@ -1,14 +1,15 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import RuleBuilder from "./components/RuleBuilder";
-import { useCategoriesDestinations } from "../hooks/useCategoriesDestinations";
-import { RuleFormProvider } from "./contexts/RuleFormContext";
-import { useRuleDetails } from "../ruleDetails/hooks/useRuleDetails";
-import ErrorPage from "@/shared/components/ErrorPage";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import RuleBuilder from './components/RuleBuilder';
+import { useCategoriesDestinations } from '../hooks/useCategoriesDestinations';
+import { RuleFormProvider } from './contexts/RuleFormContext';
+import { useRuleDetails } from '../ruleDetails/hooks/useRuleDetails';
+import ErrorPage from '@/shared/components/ErrorPage';
+import { useNavigate } from 'react-router-dom';
+import { RulePermissionGuard } from '@/features/rules/shared/components/RulePermissionGuard';
 
 interface RulePageProps {
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
 }
 
 export const RulePage: React.FC<RulePageProps> = ({ mode }) => {
@@ -17,21 +18,41 @@ export const RulePage: React.FC<RulePageProps> = ({ mode }) => {
 
   const { data: rule, isLoading: isLoadingRule, error } = useRuleDetails(id);
 
-  if (mode === "edit" && error) {
+  if (mode === 'edit' && error) {
     return (
       <ErrorPage
         title="Unable to load rule"
         message="The rule could not be found or accessed. Please try again or navigate back to the rules page."
         navigateBackLabel="Back to Rules"
-        onNavigateBack={() => navigate("/rules")}
+        onNavigateBack={() => navigate('/rules')}
       />
     );
   }
 
+  if (mode === 'create') {
+    return (
+      <RuleFormProvider initialRule={rule} mode={mode} ruleId={id}>
+        <RulePageContent isLoadingRule={isLoadingRule} />
+      </RuleFormProvider>
+    );
+  }
+
   return (
-    <RuleFormProvider initialRule={rule} mode={mode} ruleId={id}>
-      <RulePageContent isLoadingRule={isLoadingRule} />
-    </RuleFormProvider>
+    <RulePermissionGuard
+      rule={rule}
+      isLoading={isLoadingRule}
+      error={error}
+      requiredActions={['write']}
+      errorMessage="You don't have permission to edit this rule. You can only view rules you have read access to."
+      navigateBackLabel="Back to Rules"
+      onNavigateBack={() => navigate('/rules')}
+      loadingTitle="Edit Rule"
+      showBackButton={false}
+    >
+      <RuleFormProvider initialRule={rule} mode={mode} ruleId={id}>
+        <RulePageContent isLoadingRule={false} />
+      </RuleFormProvider>
+    </RulePermissionGuard>
   );
 };
 

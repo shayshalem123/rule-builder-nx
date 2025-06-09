@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { BaseRule, AndRule, OrRule } from "@/features/rules/types/rule";
+import React, { useState } from 'react';
+import { BaseRule, AndRule, OrRule } from '@/features/rules/types/rule';
 import {
   createEmptyAndRule,
   createEmptyOrRule,
-} from "@/features/rules/shared/utils/ruleUtils";
-import BaseRuleForm from "./BaseRuleForm";
-import RuleActions from "./RuleActions";
+} from '@/features/rules/shared/utils/ruleUtils';
+import BaseRuleForm from './BaseRuleForm';
+import RuleActions from './RuleActions';
 
 interface BaseRuleComponentProps {
   rule: BaseRule;
@@ -13,8 +13,9 @@ interface BaseRuleComponentProps {
   onValidationChange?: (isValid: boolean) => void;
   onDelete?: () => void;
   showDelete?: boolean;
-  parentGroupType?: "AND" | "OR" | null;
+  parentGroupType?: 'AND' | 'OR' | null;
   category?: string;
+  destination?: string;
 }
 
 const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
@@ -24,14 +25,15 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   onValidationChange,
   showDelete = true,
   parentGroupType = null,
-  category = "partners-images",
+  category,
+  destination,
 }) => {
   const [isValid, setIsValid] = useState(true);
 
-  const handleConvertToGroup = (type: "AND" | "OR") => {
+  const handleConvertToGroup = (type: 'AND' | 'OR') => {
     const currentRuleCopy = { ...rule };
 
-    if (type === "AND") {
+    if (type === 'AND') {
       const andRule = createEmptyAndRule();
       andRule.AND[0] = currentRuleCopy;
       onChange(andRule);
@@ -52,7 +54,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
   return (
     <div
       className={`p-3 rounded-md border shadow-sm animate-fade-in w-full transition-colors duration-200 ${
-        isValid ? "bg-white border-border-primary" : "bg-red-50 border-red-200"
+        isValid ? 'bg-white border-border-primary' : 'bg-red-50 border-red-200'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -61,6 +63,7 @@ const BaseRuleComponent: React.FC<BaseRuleComponentProps> = ({
             rule={rule}
             onChange={onChange}
             category={category}
+            destination={destination}
             onValidationChange={handleValidationChange}
           />
         </div>

@@ -3,24 +3,24 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
-} from "@/shared/components/inputs/tabs";
-import { FormControls } from "./formControls/FormControls";
-import RuleJsonEditor from "./jsonEditor/RuleJsonEditor";
-import RuleTestSimulator from "./testSimulator/RuleTestSimulator";
-import { VisualRuleBuilder } from "./visualBuilder/VisualRuleBuilder";
-import { TestFormData } from "./testSimulator/components/AddTestForm";
-import { TestCase } from "./testSimulator/types";
-import { DEFAULT_TEST_METADATA, RuleWithMeta } from "../../types/rule";
-import { useRuleForm } from "../hooks";
-import { createRuleObjectFromValues } from "../../shared";
-import { useState, useEffect } from "react";
-import { useRuleContext } from "../contexts/RuleFormContext";
-import { Button } from "@/shared/components/inputs/button";
-import { DatabaseIcon } from "lucide-react";
-import ImpactAnalysisModal from "./ImpactAnalysisModal";
-import { RuleFormValues } from "../hooks/useRuleForm";
+} from '@/shared/components/inputs/tabs';
+import { FormControls } from './formControls/FormControls';
+import RuleJsonEditor from './jsonEditor/RuleJsonEditor';
+import RuleTestSimulator from './testSimulator/RuleTestSimulator';
+import { VisualRuleBuilder } from './visualBuilder/VisualRuleBuilder';
+import { TestFormData } from './testSimulator/components/AddTestForm';
+import { TestCase } from './testSimulator/types';
+import { DEFAULT_TEST_METADATA, RuleWithMeta } from '../../types/rule';
+import { useRuleForm } from '../hooks';
+import { createRuleObjectFromValues } from '../../shared';
+import { useState, useEffect } from 'react';
+import { useRuleContext } from '../contexts/RuleFormContext';
+import { Button } from '@/shared/components/inputs/button';
+import { DatabaseIcon } from 'lucide-react';
+import ImpactAnalysisModal from './ImpactAnalysisModal';
+import { RuleFormValues } from '../hooks/useRuleForm';
 
-export type TabId = "visual" | "json" | "test";
+export type TabId = 'visual' | 'json' | 'test';
 
 interface RuleBuilderProps {
   activeTab: TabId;
@@ -43,7 +43,7 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
   const [currentTestForm, setCurrentTestForm] = useState<TestFormData>({
     metadata: DEFAULT_TEST_METADATA,
     expectedResult: true,
-    name: "",
+    name: '',
   });
 
   const { onSave, initialRule } = useRuleContext();
@@ -53,7 +53,6 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
     initialRule
   );
 
-  // Notify parent component when form values change
   useEffect(() => {
     if (onFormValuesChange) {
       onFormValuesChange(formik.values);
@@ -76,7 +75,7 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
       e.preventDefault();
     }
   };
@@ -89,9 +88,8 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
     setIsImpactModalOpen(false);
   };
 
-  // Create a rule object that includes the current form values
   const currentRule: RuleWithMeta = {
-    id: initialRule?.id || "",
+    id: initialRule?.id || '',
     ...(createRuleObjectFromValues(formik.values, initialRule) as RuleWithMeta),
     createdAt: initialRule?.createdAt,
     updatedAt: initialRule?.updatedAt,
@@ -107,12 +105,10 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
     }
   };
 
-  // Only show the impact analysis on visual and json tabs
-  const showImpactAnalysis = activeTab === "visual" || activeTab === "json";
+  const showImpactAnalysis = activeTab === 'visual' || activeTab === 'json';
 
   return (
     <div className="flex flex-col h-full relative">
-      {/* Impact Analysis Modal */}
       <ImpactAnalysisModal
         isOpen={isImpactModalOpen}
         onClose={closeImpactModal}
@@ -188,7 +184,7 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
           </Tabs>
         </div>
 
-        {activeTab !== "test" && (
+        {activeTab !== 'test' && (
           <div className="sticky bottom-0 bg-background-secondary border-t border-border-primary py-4 px-6 mt-auto">
             <FormControls
               onCancel={onCancel}

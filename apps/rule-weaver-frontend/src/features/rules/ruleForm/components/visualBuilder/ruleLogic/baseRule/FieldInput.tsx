@@ -38,7 +38,7 @@ const FieldInput: React.FC<FieldInputProps> = ({
   value,
   onChange,
   onErrorChange,
-  category = 'partners-images',
+  category,
 }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);

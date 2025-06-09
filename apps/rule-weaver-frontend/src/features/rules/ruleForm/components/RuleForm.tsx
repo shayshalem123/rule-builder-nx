@@ -32,7 +32,7 @@ interface RuleBuilderProps {
   previewRule?: RuleWithMeta;
 }
 
-export const RuleForm: React.FC<RuleBuilderProps> = ({
+const RuleFormContent: React.FC<RuleBuilderProps> = ({
   activeTab,
   onCancel,
   setActiveTab,
@@ -110,99 +110,107 @@ export const RuleForm: React.FC<RuleBuilderProps> = ({
   const showImpactAnalysis = activeTab === 'visual' || activeTab === 'json';
 
   return (
-    <CategoryProvider initialCategory={formik.values.category}>
-      <DestinationProvider initialDestination={formik.values.destination}>
-        <div className="flex flex-col h-full relative">
-          <ImpactAnalysisModal
-            isOpen={isImpactModalOpen}
-            onClose={closeImpactModal}
-            rule={previewRule}
-          />
+    <div className="flex flex-col h-full relative">
+      <ImpactAnalysisModal
+        isOpen={isImpactModalOpen}
+        onClose={closeImpactModal}
+        rule={previewRule}
+      />
 
-          <form
-            onSubmit={showConfirmModal}
-            onKeyDown={handleKeyDown}
-            className="flex flex-col h-full"
+      <form
+        onSubmit={showConfirmModal}
+        onKeyDown={handleKeyDown}
+        className="flex flex-col h-full"
+      >
+        <div className="flex-1 overflow-auto">
+          <Tabs
+            defaultValue="visual"
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as TabId)}
+            className="w-full"
           >
-            <div className="flex-1 overflow-auto">
-              <Tabs
-                defaultValue="visual"
-                value={activeTab}
-                onValueChange={(value) => setActiveTab(value as TabId)}
-                className="w-full"
-              >
-                <div className="flex justify-between items-center mb-4 w-full">
-                  <TabsList className="grid grid-cols-3 w-[500px]">
-                    <TabsTrigger value="visual" className="px-6">
-                      <span className="relative">Visual Builder</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="json" className="px-6">
-                      <span className="relative">JSON Editor</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="test" className="px-6">
-                      <span className="relative">Test Simulator</span>
-                    </TabsTrigger>
-                  </TabsList>
+            <div className="flex justify-between items-center mb-4 w-full">
+              <TabsList className="grid grid-cols-3 w-[500px]">
+                <TabsTrigger value="visual" className="px-6">
+                  <span className="relative">Visual Builder</span>
+                </TabsTrigger>
+                <TabsTrigger value="json" className="px-6">
+                  <span className="relative">JSON Editor</span>
+                </TabsTrigger>
+                <TabsTrigger value="test" className="px-6">
+                  <span className="relative">Test Simulator</span>
+                </TabsTrigger>
+              </TabsList>
 
-                  {showImpactAnalysis && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={openImpactModal}
-                      disabled={!previewRule}
-                      className="flex items-center"
-                    >
-                      <DatabaseIcon className="h-4 w-4 mr-2" />
-                      Analyze Rule Impact
-                    </Button>
-                  )}
-                </div>
-
-                <TabsContent value="visual" className="w-full">
-                  <VisualRuleBuilder
-                    formik={formik}
-                    ruleLogic={formik.values.rule}
-                    handleRuleLogicChange={updateRuleLogic}
-                    category={formik.values.category}
-                  />
-                </TabsContent>
-
-                <TabsContent value="json" className="w-full">
-                  <RuleJsonEditor
-                    formik={formik}
-                    updateFormik={formik.setValues}
-                    schema={schemaDefinition}
-                  />
-                </TabsContent>
-
-                <TabsContent value="test" className="w-full">
-                  <RuleTestSimulator
-                    rule={currentRule}
-                    testCases={testCases}
-                    setTestCases={setTestCases}
-                    currentTestForm={currentTestForm}
-                    setCurrentTestForm={setCurrentTestForm}
-                    schema={schemaDefinition}
-                  />
-                </TabsContent>
-              </Tabs>
+              {showImpactAnalysis && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={openImpactModal}
+                  disabled={!previewRule}
+                  className="flex items-center"
+                >
+                  <DatabaseIcon className="h-4 w-4 mr-2" />
+                  Analyze Rule Impact
+                </Button>
+              )}
             </div>
 
-            {activeTab !== 'test' && (
-              <div className="sticky bottom-0 bg-background-secondary border-t border-border-primary py-4 px-6 mt-auto">
-                <FormControls
-                  onCancel={onCancel}
-                  onReset={handleReset}
-                  onSubmit={showConfirmModal}
-                  formik={formik}
-                  isConfirmModalOpen={isConfirmModalOpen}
-                  onConfirmModalClose={closeConfirmModal}
-                  onConfirmModalConfirm={handleConfirmSave}
-                />
-              </div>
-            )}
-          </form>
+            <TabsContent value="visual" className="w-full">
+              <VisualRuleBuilder
+                formik={formik}
+                ruleLogic={formik.values.rule}
+                handleRuleLogicChange={updateRuleLogic}
+                category={formik.values.category}
+              />
+            </TabsContent>
+
+            <TabsContent value="json" className="w-full">
+              <RuleJsonEditor
+                formik={formik}
+                updateFormik={formik.setValues}
+                schema={schemaDefinition}
+              />
+            </TabsContent>
+
+            <TabsContent value="test" className="w-full">
+              <RuleTestSimulator
+                rule={currentRule}
+                testCases={testCases}
+                setTestCases={setTestCases}
+                currentTestForm={currentTestForm}
+                setCurrentTestForm={setCurrentTestForm}
+                schema={schemaDefinition}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
+
+        {activeTab !== 'test' && (
+          <div className="sticky bottom-0 bg-background-secondary border-t border-border-primary py-4 px-6 mt-auto">
+            <FormControls
+              onCancel={onCancel}
+              onReset={handleReset}
+              onSubmit={showConfirmModal}
+              formik={formik}
+              isConfirmModalOpen={isConfirmModalOpen}
+              onConfirmModalClose={closeConfirmModal}
+              onConfirmModalConfirm={handleConfirmSave}
+            />
+          </div>
+        )}
+      </form>
+    </div>
+  );
+};
+
+export const RuleForm: React.FC<RuleBuilderProps> = (props) => {
+  const { initialRule } = useRuleContext();
+
+  return (
+    <CategoryProvider initialCategory={initialRule?.category || ''}>
+      <DestinationProvider initialDestination={initialRule?.destination || ''}>
+        <RuleFormContent {...props} />
       </DestinationProvider>
     </CategoryProvider>
   );

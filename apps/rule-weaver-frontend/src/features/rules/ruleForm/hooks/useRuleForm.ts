@@ -3,13 +3,13 @@ import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import {
   RuleType,
   RuleWithMeta,
-  destinationOptions as defaultDestinationOptions,
-  categoryOptions as defaultCategoryOptions,
 } from '@/features/rules/types/rule';
 import * as ruleUtils from '@/features/rules/shared/utils/ruleUtils';
 import { useCategoriesDestinations } from '../../hooks/useCategoriesDestinations';
 import { useSchema } from '@/features/schemas/hooks/useSchemas';
 import { useRuleValidation } from '@/features/rules/shared/hooks/useRuleValidation';
+import { useCategory } from '../contexts/CategoryContext';
+import { useDestination } from '../contexts/DestinationContext';
 
 export interface RuleFormValues {
   name: string;
@@ -25,12 +25,8 @@ export const useRuleForm = (
   onSave: (rule: Omit<RuleWithMeta, 'id' | 'createdAt' | 'updatedAt'>) => void,
   initialRule?: RuleWithMeta
 ) => {
-  const [currentCategory, setCurrentCategory] = useState<string>(
-    initialRule?.category || ''
-  );
-  const [currentDestination, setCurrentDestination] = useState<string>(
-    initialRule?.destination || ''
-  );
+  const { category, setCategory } = useCategory();
+  const { destination, setDestination } = useDestination();
 
   const {
     categoriesDestinationsMap,
@@ -39,8 +35,8 @@ export const useRuleForm = (
   } = useCategoriesDestinations();
 
   const schemaId = useMemo(
-    () => getSchemaIdForCategory(currentCategory),
-    [getSchemaIdForCategory, currentCategory]
+    () => getSchemaIdForCategory(category),
+    [getSchemaIdForCategory, category]
   );
 
   const { schema } = useSchema(schemaId);
@@ -52,16 +48,16 @@ export const useRuleForm = (
   const { formikValidationSchema } = useRuleValidation({
     schema: schemaDefinition,
     categoryDestinationsMap: categoriesDestinationsMap,
-    selectedDestination: currentDestination,
-    selectedCategory: currentCategory,
+    selectedDestination: destination,
+    selectedCategory: category,
   });
 
   const formik = useFormik<RuleFormValues>({
     initialValues: {
       name: initialRule?.name || '',
       description: initialRule?.description || '',
-      destination: currentDestination,
-      category: currentCategory,
+      destination: destination,
+      category: category,
       type: initialRule?.type || '',
       rule: initialRule?.rule || ruleUtils.createEmptyBaseRule(),
       extraProperties: initialRule?.extraProperties,
@@ -72,11 +68,11 @@ export const useRuleForm = (
   });
 
   useEffect(() => {
-    if (formik.values.category !== currentCategory) {
-      setCurrentCategory(formik.values.category);
+    if (formik.values.category !== category) {
+      setCategory(formik.values.category);
     }
-    if (formik.values.destination !== currentDestination) {
-      setCurrentDestination(formik.values.destination);
+    if (formik.values.destination !== destination) {
+      setDestination(formik.values.destination);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.category, formik.values.destination]);

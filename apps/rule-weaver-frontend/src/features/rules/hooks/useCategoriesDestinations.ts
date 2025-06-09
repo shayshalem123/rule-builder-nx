@@ -1,9 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { ruleService } from "../services/ruleService";
-import { JsonSchema } from "./useExtraPropertiesSchemas";
-import { CategoriesInfoMap } from "../types/rule";
-import { useMemo } from "react";
+import { ruleService } from '../services/ruleService';
+import { JsonSchema } from './useExtraPropertiesSchemas';
+import { CategoriesInfoMap, Operator } from '../types/rule';
+import { useMemo } from 'react';
+import { operators } from '../shared/utils/ruleUtils';
+
+/**
+ * Get available operators for a specific category-destination combination
+ */
+export const getAvailableOperators = (
+  categoriesDestinationsMap: CategoriesInfoMap,
+  category?: string,
+  destination?: string
+): Operator[] => {
+  if (!category || !destination) {
+    return operators.map((op) => op.value);
+  }
+
+  const destinationOperators =
+    categoriesDestinationsMap[category]?.destinations?.[destination]
+      ?.validOperators;
+
+  if (!destinationOperators) {
+    return operators.map((op) => op.value);
+  }
+
+  return destinationOperators;
+};
 
 /**
  * Hook for fetching categories, destinations and their extra properties
@@ -15,7 +39,7 @@ export const useCategoriesDestinations = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["categories-destinations"],
+    queryKey: ['categories-destinations'],
     queryFn: ruleService.getCategoriesInfo,
     staleTime: Infinity,
     refetchOnMount: true,
@@ -53,11 +77,23 @@ export const useCategoriesDestinations = () => {
     return categoriesDestinationsMap[category]?.schemaId ?? null;
   };
 
+  const getOperatorsForCategoryDestination = (
+    category?: string,
+    destination?: string
+  ): Operator[] => {
+    return getAvailableOperators(
+      categoriesDestinationsMap,
+      category,
+      destination
+    );
+  };
+
   return {
     categoriesDestinationsMap,
     categoryDestinationsMap,
     getExtraPropertiesSchema,
     getSchemaIdForCategory,
+    getOperatorsForCategoryDestination,
     isLoading,
     error,
     categories,

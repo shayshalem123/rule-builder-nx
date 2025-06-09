@@ -1,15 +1,15 @@
-import { useCategoriesDestinations } from "@/features/rules/hooks/useCategoriesDestinations";
-import { createBaseSchema } from "@/features/rules/shared/hooks/useRuleValidation";
-import { CategoriesInfoMap } from "@/features/rules/types/rule";
-import { SchemaDefinition } from "@/features/schemas/types/schema";
-import { useMemo } from "react";
-import zodToJsonSchema from "zod-to-json-schema";
-import { jsonSchemaToZod } from "@n8n/json-schema-to-zod";
-import * as z from "zod";
+import { useCategoriesDestinations } from '@/features/rules/hooks/useCategoriesDestinations';
+import { createBaseSchema } from '@/features/rules/shared/hooks/useRuleValidation';
+import { CategoriesInfoMap } from '@/features/rules/types/rule';
+import { SchemaDefinition } from '@/features/schemas/types/schema';
+import { useMemo } from 'react';
+import zodToJsonSchema from 'zod-to-json-schema';
+import { jsonSchemaToZod } from '@n8n/json-schema-to-zod';
+import * as z from 'zod';
 
 export const useRuleJsonValidation = (options: {
   schema: SchemaDefinition;
-  categoryDestinationsMap: Record<string, any>;
+  categoryDestinationsMap: CategoriesInfoMap;
   selectedDestination: string;
   selectedCategory: string;
 }) => {
@@ -93,7 +93,12 @@ export const createSchemaForDestination = (options: {
       selectedDestination
     ]?.extraProperties;
 
-  const baseRuleSchema = createBaseSchema({ schema });
+  const baseRuleSchema = createBaseSchema({
+    schema,
+    categoryDestinationsMap,
+    category: selectedCategory,
+    destination: selectedDestination,
+  });
 
   const baseSchema = baseRuleSchema
     .extend({

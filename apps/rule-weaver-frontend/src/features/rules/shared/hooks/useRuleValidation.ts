@@ -1,13 +1,13 @@
-import { jsonSchemaToZod } from "@n8n/json-schema-to-zod";
-import * as z from "zod";
+import { jsonSchemaToZod } from '@n8n/json-schema-to-zod';
+import * as z from 'zod';
 import {
   extractFieldPathsFromSchema,
-  extractFieldInfoFromSchema,
   extractFieldMapFromSchema,
-} from "@/shared/hooks/useSchemaFields";
-import { SchemaDefinition } from "@/features/schemas/types/schema";
-import { CategoriesInfoMap } from "../../types/rule";
-import { useMemo } from "react";
+} from '@/shared/hooks/useSchemaFields';
+import { SchemaDefinition } from '@/features/schemas/types/schema';
+import { CategoriesInfoMap } from '../../types/rule';
+import { useMemo } from 'react';
+import { getAvailableOperators } from '../../hooks/useCategoriesDestinations';
 
 /**
  * Hook for rule validation that combines all validation functionality
@@ -49,7 +49,7 @@ export function customZodToFormik(schema: z.ZodType) {
     const formikErrors: Record<string, string> = {};
     if (!result.success) {
       result.error.issues.forEach((issue) => {
-        const path = issue.path.join(".");
+        const path = issue.path.join('.');
         if (!formikErrors[path]) {
           formikErrors[path] = issue.message;
         }
@@ -61,26 +61,49 @@ export function customZodToFormik(schema: z.ZodType) {
 }
 
 // Define all supported operators
-export type Operator = "EQUALS" | "NOT_EQUALS" | "IN";
-const SINGLE_VALUE_OPERATORS = ["EQUALS", "NOT_EQUALS"] as const;
-const ARRAY_VALUE_OPERATORS = ["IN"] as const;
+export type Operator = 'EQUALS' | 'NOT_EQUALS' | 'IN';
+
+/**
+ * Split operators into single-value and array-value categories
+ */
+const categorizeOperators = (availableOperators: Operator[]) => {
+  const singleValueOps = availableOperators.filter(
+    (op) => op === 'EQUALS' || op === 'NOT_EQUALS'
+  );
+  const arrayValueOps = availableOperators.filter((op) => op === 'IN');
+
+  return { singleValueOps, arrayValueOps };
+};
 
 export const createBaseRuleZodSchema = (options: {
   schema?: SchemaDefinition | null;
+  categoryDestinationsMap?: CategoriesInfoMap;
+  category?: string;
+  destination?: string;
 }) => {
-  const { schema } = options;
+  const {
+    schema,
+    categoryDestinationsMap = {},
+    category,
+    destination,
+  } = options;
   const schemaFieldPaths = extractFieldPathsFromSchema(schema);
   const fieldMap = extractFieldMapFromSchema(schema);
 
-  // Helper to create appropriate validator based on field type
+  const availableOperators = getAvailableOperators(
+    categoryDestinationsMap,
+    category,
+    destination
+  );
+  const { singleValueOps, arrayValueOps } =
+    categorizeOperators(availableOperators);
+
   const createValueValidator = (
     fieldPath: string,
     operator: Operator
   ): z.ZodTypeAny => {
-    // Get the field type directly from the field map
     const fieldType = fieldMap[fieldPath];
 
-    // Default validators if type isn't found or isn't supported
     const defaultValidators: Record<Operator, z.ZodTypeAny> = {
       EQUALS: z.string().min(1),
       NOT_EQUALS: z.string().min(1),
@@ -89,66 +112,79 @@ export const createBaseRuleZodSchema = (options: {
 
     if (!fieldType) return defaultValidators[operator];
 
-    // Create type-specific validators
     switch (fieldType) {
-      case "number":
-      case "integer":
-        return operator === "IN" ? z.array(z.number()).min(1) : z.number();
-      case "boolean":
-        return operator === "IN" ? z.array(z.boolean()).min(1) : z.boolean();
-      // Handle more types here as needed
+      case 'number':
+      case 'integer':
+        return operator === 'IN' ? z.array(z.number()).min(1) : z.number();
+      case 'boolean':
+        return operator === 'IN' ? z.array(z.boolean()).min(1) : z.boolean();
       default:
         return defaultValidators[operator];
     }
   };
 
-  // Create a union of all possible field-operator combinations
-  const ruleSchemas = schemaFieldPaths.flatMap((fieldPath) => {
-    // Create schema for single-value operators
-    const singleValueSchema = z
-      .object({
-        field: z.literal(fieldPath),
-        operator: z.enum(SINGLE_VALUE_OPERATORS),
-        value: createValueValidator(fieldPath, "EQUALS"), // Use EQUALS as representative for single value types
-      })
-      .strict();
+  const ruleSchemas: z.ZodTypeAny[] = [];
 
-    // Create schema for array-value operators
-    const arrayValueSchema = z
-      .object({
-        field: z.literal(fieldPath),
-        operator: z.enum(ARRAY_VALUE_OPERATORS),
-        value: createValueValidator(fieldPath, "IN"),
-      })
-      .strict();
+  schemaFieldPaths.forEach((fieldPath) => {
+    if (singleValueOps.length > 0) {
+      const singleValueSchema = z
+        .object({
+          field: z.literal(fieldPath),
+          operator: z.enum(singleValueOps as [Operator, ...Operator[]]),
+          value: createValueValidator(fieldPath, 'EQUALS'),
+        })
+        .strict();
 
-    return [singleValueSchema, arrayValueSchema];
+      ruleSchemas.push(singleValueSchema);
+    }
+
+    if (arrayValueOps.length > 0) {
+      const arrayValueSchema = z
+        .object({
+          field: z.literal(fieldPath),
+          operator: z.enum(arrayValueOps as [Operator, ...Operator[]]),
+          value: createValueValidator(fieldPath, 'IN'),
+        })
+        .strict();
+
+      ruleSchemas.push(arrayValueSchema);
+    }
   });
 
-  // Create a discriminated union with both field and operator as discriminants
   if (ruleSchemas.length === 0) {
-    // Fallback for empty schemas
     return z
       .object({
         field: z.string(),
-        operator: z.enum(["EQUALS", "NOT_EQUALS", "IN"] as const),
+        operator:
+          availableOperators.length > 0
+            ? z.enum(availableOperators as [Operator, ...Operator[]])
+            : z.enum(['EQUALS', 'NOT_EQUALS', 'IN'] as const),
         value: z.union([z.string(), z.array(z.string())]),
       })
       .strict();
   } else if (ruleSchemas.length === 1) {
     return ruleSchemas[0];
   } else {
-    // Use a type assertion to create the union
     return z.union(
       ruleSchemas as unknown as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]
     );
   }
 };
 
-export const createBaseSchema = (options: { schema: SchemaDefinition }) => {
-  const { schema } = options;
+export const createBaseSchema = (options: {
+  schema: SchemaDefinition;
+  categoryDestinationsMap?: CategoriesInfoMap;
+  category?: string;
+  destination?: string;
+}) => {
+  const { schema, categoryDestinationsMap, category, destination } = options;
 
-  const baseRuleSchema = createBaseRuleZodSchema({ schema });
+  const baseRuleSchema = createBaseRuleZodSchema({
+    schema,
+    categoryDestinationsMap,
+    category,
+    destination,
+  });
 
   const ruleTypeSchema = z.lazy(() =>
     z.union([
@@ -160,7 +196,7 @@ export const createBaseSchema = (options: { schema: SchemaDefinition }) => {
 
   const baseSchema = z
     .object({
-      name: z.string().min(1, "Rule name is required"),
+      name: z.string().min(1, 'Rule name is required'),
       description: z.string().optional(),
       rule: ruleTypeSchema,
     })
@@ -178,12 +214,17 @@ export const createRuleValidationSchemaZod = (options: {
 }) => {
   const { schema, categoryDestinationsMap } = options;
 
-  const baseSchema = createBaseSchema({ schema });
-
   const categoriesSchemas = Object.entries(categoryDestinationsMap)
     .map(([category, categoryInfo]) => {
       return Object.entries(categoryInfo.destinations).map(
         ([destinationKey, data]) => {
+          const baseSchema = createBaseSchema({
+            schema,
+            categoryDestinationsMap,
+            category,
+            destination: destinationKey,
+          });
+
           const schemaObj = {
             category: z.literal(category),
             destination: z.literal(destinationKey),
@@ -207,14 +248,11 @@ export const createRuleValidationSchemaZod = (options: {
     })
     .flat();
 
-  // Handle the case with multiple schemas or a single schema
   if (categoriesSchemas.length === 0) {
-    throw new Error("No schemas found for categories and destinations");
+    throw new Error('No schemas found for categories and destinations');
   } else if (categoriesSchemas.length === 1) {
     return categoriesSchemas[0];
   } else {
-    // When we have 2+ schemas, we need to use type assertion
-    // This is safe because we've verified we have at least 2 schemas
     return z.union(
       categoriesSchemas as unknown as [
         z.ZodTypeAny,

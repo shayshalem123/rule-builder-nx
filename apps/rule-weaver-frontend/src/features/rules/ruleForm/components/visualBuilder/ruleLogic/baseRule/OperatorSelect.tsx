@@ -28,17 +28,16 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({
 }) => {
   const { destination } = useDestination();
   const { category } = useCategory();
-  const { categoriesDestinationsMap } = useCategoriesDestinations();
+  const { getOperatorsForCategoryDestination } = useCategoriesDestinations();
 
   const availableOperators = useMemo(() => {
-    const destinationOperators =
-      categoriesDestinationsMap[category]?.destinations?.[destination]
-        ?.validOperators;
+    const allowedOperators = getOperatorsForCategoryDestination(
+      category,
+      destination
+    );
 
-    if (!destinationOperators) return operators;
-
-    return operators.filter((op) => destinationOperators.includes(op.value));
-  }, [category, destination, categoriesDestinationsMap]);
+    return operators.filter((op) => allowedOperators.includes(op.value));
+  }, [category, destination, getOperatorsForCategoryDestination]);
 
   const isValidOperator = useMemo(() => {
     return availableOperators.some((operator) => operator.value === value);

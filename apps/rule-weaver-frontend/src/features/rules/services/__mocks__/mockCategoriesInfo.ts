@@ -73,6 +73,7 @@ export const mockCategoriesInfo: CategoriesInfoMap = {
           fieldName: 'algorithm',
           options: ['json', 'xml', 'csv'],
         },
+        validOperators: ['EQUALS', 'NOT_EQUALS'],
         extraProperties: {
           type: 'object',
           properties: {

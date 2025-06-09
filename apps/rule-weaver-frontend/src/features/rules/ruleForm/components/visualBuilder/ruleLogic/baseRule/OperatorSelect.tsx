@@ -1,16 +1,19 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Operator } from "@/features/rules/types/rule";
+import React, { useEffect, useMemo } from 'react';
+import { Operator } from '@/features/rules/types/rule';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/inputs/select";
-import { operators } from "@/features/rules/shared/utils/ruleUtils";
-import { noBlackBorderFocus } from "@/shared/utils/styles";
-import { cn } from "@/shared/utils/cn";
-import { usePrevious } from "react-use";
+} from '@/shared/components/inputs/select';
+import { operators } from '@/features/rules/shared/utils/ruleUtils';
+import { noBlackBorderFocus } from '@/shared/utils/styles';
+import { cn } from '@/shared/utils/cn';
+import { usePrevious } from 'react-use';
+import { useDestination } from '@/features/rules/ruleForm/contexts/DestinationContext';
+import { useCategory } from '@/features/rules/ruleForm/contexts/CategoryContext';
+import { useCategoriesDestinations } from '@/features/rules/hooks/useCategoriesDestinations';
 
 interface OperatorSelectProps {
   value: Operator;
@@ -23,9 +26,23 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({
   onChange,
   onErrorChange,
 }) => {
+  const { destination } = useDestination();
+  const { category } = useCategory();
+  const { categoriesDestinationsMap } = useCategoriesDestinations();
+
+  const availableOperators = useMemo(() => {
+    const destinationOperators =
+      categoriesDestinationsMap[category]?.destinations?.[destination]
+        ?.validOperators;
+
+    if (!destinationOperators) return operators;
+
+    return operators.filter((op) => destinationOperators.includes(op.value));
+  }, [category, destination, categoriesDestinationsMap]);
+
   const isValidOperator = useMemo(() => {
-    return operators.some((operator) => operator.value === value);
-  }, [value]);
+    return availableOperators.some((operator) => operator.value === value);
+  }, [value, availableOperators]);
 
   const hasError = useMemo(() => {
     return !value || !isValidOperator;
@@ -45,7 +62,7 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({
           <SelectValue placeholder="Select operator" />
         </SelectTrigger>
         <SelectContent>
-          {operators.map((op) => (
+          {availableOperators.map((op) => (
             <SelectItem key={op.value} value={op.value}>
               {op.label}
             </SelectItem>
@@ -56,7 +73,7 @@ const OperatorSelect: React.FC<OperatorSelectProps> = ({
       {hasError && (
         <div
           className="absolute left-0 top-full text-xs text-red-500"
-          style={{ marginTop: "2px", marginLeft: "2px" }}
+          style={{ marginTop: '2px', marginLeft: '2px' }}
         >
           Required
         </div>

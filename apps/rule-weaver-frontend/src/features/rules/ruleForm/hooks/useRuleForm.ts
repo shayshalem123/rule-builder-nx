@@ -1,9 +1,6 @@
 import { useFormik } from 'formik';
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
-import {
-  RuleType,
-  RuleWithMeta,
-} from '@/features/rules/types/rule';
+import { RuleType, RuleWithMeta } from '@/features/rules/types/rule';
 import * as ruleUtils from '@/features/rules/shared/utils/ruleUtils';
 import { useCategoriesDestinations } from '../../hooks/useCategoriesDestinations';
 import { useSchema } from '@/features/schemas/hooks/useSchemas';
